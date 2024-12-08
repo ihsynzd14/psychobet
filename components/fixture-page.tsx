@@ -1,11 +1,9 @@
-'use client';
-
+"use client"
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MatchHeader } from '@/components/match-header';
-import { MatchStats } from '@/components/match-stats';
-import { MatchTimeline } from '@/components/match-timeline';
+import { MatchTabs } from '@/components/match/match-tabs';
 import { api } from '@/lib/api';
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -26,7 +24,7 @@ function FixturePage() {
   const { data: feedData, isLoading: feedLoading } = useQuery({
     queryKey: ['feed', fixtureId],
     queryFn: () => api.getFeedView(fixtureId as string),
-    refetchInterval: isLive ? 500 : 2000,
+    refetchInterval: isLive ? 1 : 2,
   });
 
   const { data: lastAction, isLoading: lastActionLoading } = useQuery({
@@ -39,7 +37,6 @@ function FixturePage() {
   useEffect(() => {
     if (!fixtureId) return;
 
-    // Start the feed when component mounts
     api.startFeed(fixtureId as string)
       .catch(error => {
         toast({
@@ -110,7 +107,7 @@ function FixturePage() {
           goals={goals}
         />
 
-        
+        <MatchTabs matchData={matchData} />
       </div>
     </main>
   );
