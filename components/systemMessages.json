@@ -1,0 +1,271 @@
+...
+...
+...
+"actions": {
+     "systemMessages": [
+                    {
+                        "id": 2,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 999,
+                        "message": "Please be advised that the starting lineups will be confirmed with a slight delay",
+                        "timestamp": "2024-12-08T12:01:39.569Z"
+                    },
+                    {
+                        "id": 3,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Wind: windy",
+                        "timestamp": "2024-12-08T12:02:15.422Z"
+                    },
+                    {
+                        "id": 4,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Weather: rain",
+                        "timestamp": "2024-12-08T12:02:19.439Z"
+                    },
+                    {
+                        "id": 5,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Pitch is artificial",
+                        "timestamp": "2024-12-08T12:02:20.873Z"
+                    },
+                    {
+                        "id": 6,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2000,
+                        "message": "Players NOT on the field",
+                        "timestamp": "2024-12-08T12:14:49.288Z"
+                    },
+                    {
+                        "id": 7,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Attendance is 10%",
+                        "timestamp": "2024-12-08T12:14:50.808Z"
+                    },
+                    {
+                        "id": 8,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 999,
+                        "message": "Please be advised that the starting lineups have been confirmed",
+                        "timestamp": "2024-12-08T12:18:15.591Z"
+                    },
+                    {
+                        "id": 11,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "callcenter control - 1",
+                        "timestamp": "2024-12-08T12:20:33.92Z"
+                    },
+                    {
+                        "id": 12,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "callcenter control - 0",
+                        "timestamp": "2024-12-08T12:20:34.504Z"
+                    },
+                    {
+                        "id": 13,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "callcenter control - 1",
+                        "timestamp": "2024-12-08T12:20:35.04Z"
+                    },
+                    {
+                        "id": 14,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "callcenter control - 0",
+                        "timestamp": "2024-12-08T12:20:35.751Z"
+                    },
+                    {
+                        "id": 15,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "callcenter control - 1",
+                        "timestamp": "2024-12-08T12:20:36.224Z"
+                    },
+                    {
+                        "id": 16,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "callcenter control - 0",
+                        "timestamp": "2024-12-08T12:20:36.968Z"
+                    },
+                    {
+                        "id": 17,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2003,
+                        "message": "Players ON the field",
+                        "timestamp": "2024-12-08T12:26:46.84Z"
+                    },
+                    {
+                        "id": 22,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Standby",
+                        "timestamp": "2024-12-08T12:29:26.206Z"
+                    },
+                    {
+                        "id": 51,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:02:40",
+                        "messageId": 1017,
+                        "message": "The game is suspended due to an injured Away player",
+                        "timestamp": "2024-12-08T12:32:36.854Z"
+                    },
+                    {
+                        "id": 162,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:17:29",
+                        "messageId": 0,
+                        "message": "Team Better: 50-50",
+                        "timestamp": "2024-12-08T12:47:25.915Z"
+                    },
+                    {
+                        "id": 163,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:17:31",
+                        "messageId": 0,
+                        "message": "Game Speed is Fast",
+                        "timestamp": "2024-12-08T12:47:27.191Z"
+                    },
+                    {
+                        "id": 266,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:30:31",
+                        "messageId": 1017,
+                        "message": "The game is suspended due to an injured Away player",
+                        "timestamp": "2024-12-08T13:00:27.824Z"
+                    },
+                    {
+                        "id": 267,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:30:43",
+                        "messageId": 1013,
+                        "message": "The game is suspended due to an injured Home player",
+                        "timestamp": "2024-12-08T13:00:39.603Z"
+                    },
+                    {
+                        "id": 287,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:32:52",
+                        "messageId": 0,
+                        "message": "Team Better: 50-50",
+                        "timestamp": "2024-12-08T13:02:48.266Z"
+                    },
+                    {
+                        "id": 288,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:32:53",
+                        "messageId": 0,
+                        "message": "Game Speed is Fast",
+                        "timestamp": "2024-12-08T13:02:49.179Z"
+                    },
+                    {
+                        "id": 339,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:39:56",
+                        "messageId": 0,
+                        "message": "Please be advised that the game will be renewed with Away Dropped ball.",
+                        "timestamp": "2024-12-08T13:09:52.571Z"
+                    },
+                    {
+                        "id": 357,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:42:42",
+                        "messageId": 999,
+                        "message": "Please be advised that the Player of the Home Yellow Card at ID 356  is currently being under review.",
+                        "timestamp": "2024-12-08T13:12:38.335Z"
+                    },
+                    {
+                        "id": 373,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:45:29",
+                        "messageId": 1039,
+                        "message": "No indication of additional time",
+                        "timestamp": "2024-12-08T13:15:25.53Z"
+                    },
+                    {
+                        "id": 376,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2002,
+                        "message": "Players are coming out",
+                        "timestamp": "2024-12-08T13:15:32.66Z"
+                    },
+                    {
+                        "id": 377,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2000,
+                        "message": "Players NOT on the field",
+                        "timestamp": "2024-12-08T13:15:34.473Z"
+                    },
+                    {
+                        "id": 379,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2003,
+                        "message": "Players ON the field",
+                        "timestamp": "2024-12-08T13:30:08.891Z"
+                    },
+                    {
+                        "id": 382,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Standby",
+                        "timestamp": "2024-12-08T13:30:13.84Z"
+                    },
+                    {
+                        "id": 383,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Standby",
+                        "timestamp": "2024-12-08T13:30:34.893Z"
+                    },
+                    {
+                        "id": 554,
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:18:56",
+                        "messageId": 0,
+                        "message": "Team Better: 50-50",
+                        "timestamp": "2024-12-08T13:50:03.329Z"
+                    },
+                    {
+                        "id": 555,
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:18:57",
+                        "messageId": 0,
+                        "message": "Game Speed is Fast",
+                        "timestamp": "2024-12-08T13:50:04.21Z"
+                    },
+                    {
+                        "id": 565,
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:20:12",
+                        "messageId": 1017,
+                        "message": "The game is suspended due to an injured Away player",
+                        "timestamp": "2024-12-08T13:51:19.444Z"
+                    }
+                ],
+}
