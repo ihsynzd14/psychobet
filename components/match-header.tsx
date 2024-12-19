@@ -3,7 +3,9 @@
 import { format } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Activity, Clock } from 'lucide-react';
+import { Activity, Clock, Flag } from 'lucide-react'; // Added Flag Icon
+import { MatchConditions } from './match/match-conditions';
+import { MatchStats } from './match/match-stats';
 
 interface LastAction {
   type: string;
@@ -38,50 +40,72 @@ interface MatchHeaderProps {
 
 export function MatchHeader({ fixture, lastAction, homeTeam, awayTeam, goals }: MatchHeaderProps) {
   return (
-    <Card className="mb-6">
-      <CardContent className="p-6">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <h3 className="text-xl font-bold mb-2">{homeTeam}</h3>
-            <span className="text-4xl font-bold text-primary">{goals.home}</span>
-          </div>
-          
-          <div className="text-center flex flex-col items-center justify-center">
-            <div className="flex flex-col items-center gap-2">
-              <Badge variant="secondary" className="text-sm">
-                {lastAction?.data?.matchStatus || fixture.matchStatus}
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {lastAction?.data?.lastAction?.phase || fixture.phase}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
-              <Clock className="w-4 h-4" />
-              {format(new Date(fixture.timestamp), 'HH:mm')}
-            </div>
-            {lastAction?.data?.lastAction && (
-              <div className="mt-4 flex flex-col items-center gap-1">
-                <div className="flex items-center gap-2 text-sm bg-primary/10 p-2 rounded-md">
-                  <Activity className="w-4 h-4" />
-                  <span>
-                    {lastAction.data.lastAction.type === 'dangerStateChanges' 
-                      ? lastAction.data.lastAction.dangerState 
-                      : lastAction.data.lastAction.type}
-                  </span>
-                </div>
-                {lastAction.data.lastAction.team && (
-                  <Badge variant="outline" className="text-xs">
-                    {lastAction.data.lastAction.team} Team
-                  </Badge>
-                )}
-              </div>
-            )}
-          </div>
+    <Card className="mb-6 overflow-hidden">
+      <CardContent className="p-0">
+        {/* Match Conditions */}
+        <div className="bg-muted/30 p-4 border-b">
+          <MatchConditions systemMessages={fixture.actions.systemMessages || []} />
+        </div>
 
-          <div className="text-center">
-            <h3 className="text-xl font-bold mb-2">{awayTeam}</h3>
-            <span className="text-4xl font-bold text-primary">{goals.away}</span>
+        {/* Score and Teams Section */}
+        <div className="p-6">
+          <div className="grid grid-cols-3 gap-6 items-center"> {/* Added items-center */}
+            {/* Home Team */}
+            <div className="text-center space-y-3"> {/* Increased spacing */}
+              <h3 className="text-xl font-semibold truncate" title={homeTeam}>{homeTeam}</h3> {/* Changed to font-semibold */}
+                <div className="text-5xl font-bold text-primary leading-none">{goals.home}</div>
+            </div>
+
+            {/* Match Info */}
+            <div className="flex flex-col items-center justify-center space-y-3">
+               {/* Match Status & Time */}
+                <div className="flex flex-col items-center text-center">
+                    <Badge variant="secondary" className="text-sm px-3 py-1 mb-1"> {/* Added mb-1 */}
+                        {lastAction?.data?.matchStatus || fixture.matchStatus}
+                    </Badge>
+                    <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                         <Clock className="w-4 h-4" />
+                         <time>{format(new Date(fixture.timestamp), 'HH:mm')}</time>
+                     </div>
+               </div>
+            
+                {/* Phase */}
+                <Badge variant="outline" className="text-xs">
+                    {lastAction?.data?.lastAction?.phase || fixture.phase}
+                </Badge>
+
+                {/* Last Action - Conditional rendering */}
+                {lastAction?.data?.lastAction && (
+                  <div className="mt-3 space-y-2 flex flex-col items-center">
+                    <div className="flex items-center justify-center gap-2 text-sm">
+                    <div className="px-3 py-1.5 rounded-md bg-primary/10 flex items-center gap-2">
+                      <Activity className="w-4 h-4" />
+                        <span className="font-medium">
+                            {lastAction.data.lastAction.type === 'dangerStateChanges'
+                              ? lastAction.data.lastAction.dangerState
+                              : lastAction.data.lastAction.type}
+                        </span>
+                      </div>
+                    </div>
+                   {lastAction.data.lastAction.team && (
+                      <Badge variant="outline" className="text-xs flex items-center gap-1"> {/* added flex/align */}
+                         <Flag className="w-3 h-3" /> {lastAction.data.lastAction.team} Team
+                        </Badge>
+                   )}
+                 </div>
+               )}
+            </div>
+
+             {/* Away Team */}
+            <div className="text-center space-y-3"> {/* Increased spacing */}
+             <h3 className="text-xl font-semibold truncate" title={awayTeam}>{awayTeam}</h3> {/* Changed to font-semibold */}
+                <div className="text-5xl font-bold text-primary leading-none">{goals.away}</div>
+            </div>
           </div>
+          <br/>
+
+          {/* Stats Section */}
+          <MatchStats matchData={fixture} />
         </div>
       </CardContent>
     </Card>
