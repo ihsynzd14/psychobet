@@ -6,7 +6,7 @@ import { processMatchEvents } from './utils/event-processor';
 import { useMemo } from 'react';
 
 interface MatchActionTimelineProps {
-  fixtureId: string;
+  fixtureId: any;
   matchData: any;
 }
 
@@ -21,6 +21,30 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
     estimateSize: () => 100,
     overscan: 5
   });
+
+  const getEventDescription = (event: any) => {
+    if (event.displaySide === 'center') {
+      if (event.type === 'systemMessages') {
+        return {
+          title: event.message,
+          description: 'System Message'
+        };
+      }
+      if (event.type === 'phaseChanges') {
+        return {
+          title: event.currentPhase,
+          description: 'Period Change'
+        };
+      }
+      if (event.type === 'dangerStateChanges' && event.dangerState === 'Safe') {
+        return {
+          title: 'Game Started',
+          description: 'Match Status'
+        };
+      }
+    }
+    return null;
+  };
 
   return (
     <Card className="relative overflow-hidden">
@@ -37,6 +61,8 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
         >
           {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const event = events[virtualRow.index];
+            const centerEventDetails = getEventDescription(event);
+            
             return (
               <div
                 key={`${event.type}-${event.id}`}
@@ -54,7 +80,10 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
                   transition-colors hover:bg-accent/5
                 `}
               >
-                <EventRow event={event} />
+                <EventRow 
+                  event={event} 
+                  centerEventDetails={centerEventDetails}
+                />
               </div>
             );
           })}

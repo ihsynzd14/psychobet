@@ -6,17 +6,36 @@ import { ProcessedMatchEvent } from './types/match-event';
 
 interface EventRowProps {
   event: ProcessedMatchEvent;
+  centerEventDetails?: {
+    title: string;
+    description: string;
+  } | null;
 }
 
-export const EventRow = memo(function EventRow({ event }: EventRowProps) {
+export const EventRow = memo(function EventRow({ event, centerEventDetails }: EventRowProps) {
   const timestamp = formatTimestamp(event.timestamp);
+  
+  if (event.displaySide === 'center' && centerEventDetails) {
+    return (
+      <div className="flex items-center justify-center p-3">
+        <div className="min-w-[90px] text-sm text-muted-foreground">
+          {timestamp}
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-sm font-medium">{centerEventDetails.title}</span>
+          <Badge variant="outline" className="text-xs">
+            {centerEventDetails.description}
+          </Badge>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div 
       className={`
         flex items-center gap-4 p-3
-        ${event.displaySide === 'center' ? 'justify-center' : 
-          event.displaySide === 'left' ? 'justify-start' : 'flex-row-reverse'}
+        ${event.displaySide === 'right' ? 'flex-row-reverse' : 'flex-row'}
       `}
     >
       <div className="min-w-[90px] text-sm text-muted-foreground">
