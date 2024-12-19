@@ -1,0 +1,793 @@
+{
+    "status_code": 0,
+    "response": [
+        {
+            "fixtureId": "11266623",
+            "timestamp": "2024-12-17T16:13:51.791Z",
+            "matchStatus": "InProgress",
+            "currentVarState": "Safe",
+            "statistics": {
+                "possession": {
+                    "home": 50,
+                    "away": 50
+                }
+            },
+            "sourceInfo": {},
+            "teams": {
+                "home": {
+                    "sourceId": "729712",
+                    "sourceName": "Al-Safa",
+                    "strip": {
+                        "color1": {
+                            "r": 255,
+                            "g": 255,
+                            "b": 255
+                        },
+                        "color2": {
+                            "r": 255,
+                            "g": 255,
+                            "b": 255
+                        },
+                        "pantsColor": null,
+                        "socksColor": null,
+                        "jerseyDesign": "Unknown"
+                    }
+                },
+                "away": {
+                    "sourceId": "1430916",
+                    "sourceName": "Al Zulfi SC",
+                    "strip": {
+                        "color1": {
+                            "r": 255,
+                            "g": 165,
+                            "b": 0
+                        },
+                        "color2": {
+                            "r": 255,
+                            "g": 165,
+                            "b": 0
+                        },
+                        "pantsColor": null,
+                        "socksColor": null,
+                        "jerseyDesign": "Unknown"
+                    }
+                }
+            },
+            "actions": {
+                "goals": [],
+                "yellowCards": [
+                    {
+                        "id": 185,
+                        "timestamp": "2024-12-17T15:02:21.776Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:32:14",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 363,
+                        "timestamp": "2024-12-17T15:58:42.802Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:22:33",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "secondYellowCards": [],
+                "straightRedCards": [],
+                "penalties": [],
+                "penaltyRiskChanges": [],
+                "substitutions": [
+                    {
+                        "id": 266,
+                        "timestamp": "2024-12-17T15:34:57.18Z",
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "team": "Home",
+                        "isConfirmed": true,
+                        "playerOn": null,
+                        "playerOff": null
+                    },
+                    {
+                        "id": 384,
+                        "timestamp": "2024-12-17T16:04:27.157Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:28:18",
+                        "team": "Home",
+                        "isConfirmed": true,
+                        "playerOn": null,
+                        "playerOff": null
+                    }
+                ],
+                "shotsOnTarget": [],
+                "shotsOffTarget": [
+                    {
+                        "id": 100,
+                        "timestamp": "2024-12-17T14:45:24.412Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:15:18",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 112,
+                        "timestamp": "2024-12-17T14:47:24.419Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:17:18",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "shotsOffWoodwork": [],
+                "blockedShots": [
+                    {
+                        "id": 323,
+                        "timestamp": "2024-12-17T15:49:46.825Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:13:38",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 396,
+                        "timestamp": "2024-12-17T16:06:56.239Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:30:47",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "corners": [
+                    {
+                        "id": 36,
+                        "timestamp": "2024-12-17T14:32:38.436Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:02:32",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 76,
+                        "timestamp": "2024-12-17T14:40:37.309Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:10:31",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 375,
+                        "timestamp": "2024-12-17T16:02:33.099Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:26:24",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 397,
+                        "timestamp": "2024-12-17T16:08:00.757Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:31:52",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "penaltiesAwarded": [],
+                "fouls": [
+                    {
+                        "id": 178,
+                        "timestamp": "2024-12-17T15:01:05.557Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:31:00",
+                        "foulingTeam": "Home",
+                        "fouledPlayer": null,
+                        "fouledBy": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 183,
+                        "timestamp": "2024-12-17T15:02:17.115Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:32:11",
+                        "foulingTeam": "Away",
+                        "fouledPlayer": null,
+                        "fouledBy": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 341,
+                        "timestamp": "2024-12-17T15:53:17.284Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:17:08",
+                        "foulingTeam": "Home",
+                        "fouledPlayer": null,
+                        "fouledBy": null,
+                        "isConfirmed": true
+                    }                  
+                ],
+                "offsides": [
+                    {
+                        "id": 81,
+                        "timestamp": "2024-12-17T14:41:28.18Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:11:21",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 320,
+                        "timestamp": "2024-12-17T15:48:59.302Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:12:49",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "goalKicks": [
+                    {
+                        "id": 102,
+                        "timestamp": "2024-12-17T14:45:27.772Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:15:22",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 114,
+                        "timestamp": "2024-12-17T14:47:29.229Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:17:23",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 378,
+                        "timestamp": "2024-12-17T16:02:41.008Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:26:32",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 389,
+                        "timestamp": "2024-12-17T16:05:44.392Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:29:35",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "missedPenalties": [],
+                "savedPenalties": [],
+                "throwIns": [
+                    {
+                        "id": 22,
+                        "timestamp": "2024-12-17T14:30:28.735Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:23",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 40,
+                        "timestamp": "2024-12-17T14:33:03.745Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:02:58",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 433,
+                        "timestamp": "2024-12-17T16:12:44.678Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:36:36",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "possessionChanges": [],
+                "stoppageTimeAnnouncements": [
+                    {
+                        "id": 239,
+                        "timestamp": "2024-12-17T15:15:15.74Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:45:10",
+                        "isConfirmed": true,
+                        "addedMinutes": 4
+                    }
+                ],
+                "phaseChanges": [
+                    {
+                        "id": 18,
+                        "previousPhase": "PreMatch",
+                        "currentPhase": "FirstHalf",
+                        "phaseStartTime": "2024-12-17T14:30:05.54Z",
+                        "isConfirmed": true,
+                        "timestamp": "2024-12-17T14:30:05.54Z"
+                    },
+                    {
+                        "id": 263,
+                        "previousPhase": "FirstHalf",
+                        "currentPhase": "HalfTime",
+                        "phaseStartTime": "2024-12-17T15:20:17.078Z",
+                        "isConfirmed": true,
+                        "timestamp": "2024-12-17T15:20:17.078Z"
+                    },
+                    {
+                        "id": 269,
+                        "previousPhase": "HalfTime",
+                        "currentPhase": "SecondHalf",
+                        "phaseStartTime": "2024-12-17T15:36:08.66Z",
+                        "isConfirmed": true,
+                        "timestamp": "2024-12-17T15:36:08.66Z"
+                    }
+                ],
+                "clockActions": [
+                    {
+                        "id": 19,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:00",
+                        "timestamp": "2024-12-17T14:30:05.54Z",
+                        "activityType": "Start",
+                        "isClockRunning": true,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 262,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:50:11",
+                        "timestamp": "2024-12-17T15:20:17.078Z",
+                        "activityType": "Stop",
+                        "isClockRunning": false,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 270,
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:00:00",
+                        "timestamp": "2024-12-17T15:36:08.66Z",
+                        "activityType": "Start",
+                        "isClockRunning": true,
+                        "isConfirmed": true
+                    }
+                ],
+                "dangerStateChanges": [
+                    {
+                        "id": 18,
+                        "timestamp": "2024-12-17T14:30:05.54Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:00",
+                        "isConfirmed": true,
+                        "dangerState": "Safe"
+                    },
+                    {
+                        "id": 21,
+                        "timestamp": "2024-12-17T14:30:08.66Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:03",
+                        "isConfirmed": true,
+                        "dangerState": "HomeDangerousAttack"
+                    },
+                    {
+                        "id": 22,
+                        "timestamp": "2024-12-17T14:30:28.735Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:23",
+                        "isConfirmed": true,
+                        "dangerState": "HomeSafe"
+                    },
+                    {
+                        "id": 24,
+                        "timestamp": "2024-12-17T14:30:34.22Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:28",
+                        "isConfirmed": true,
+                        "dangerState": "HomeDangerousFreeKick"
+                    },
+                    {
+                        "id": 26,
+                        "timestamp": "2024-12-17T14:30:39.626Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:34",
+                        "isConfirmed": true,
+                        "dangerState": "AwayFreeKick"
+                    },
+                    {
+                        "id": 431,
+                        "timestamp": "2024-12-17T16:12:31.833Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:36:23",
+                        "isConfirmed": true,
+                        "dangerState": "AwayDangerousAttack"
+                    },
+                    {
+                        "id": 432,
+                        "timestamp": "2024-12-17T16:12:41.162Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:36:32",
+                        "isConfirmed": true,
+                        "dangerState": "AwayAttack"
+                    },
+                    {
+                        "id": 433,
+                        "timestamp": "2024-12-17T16:12:44.678Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:36:36",
+                        "isConfirmed": true,
+                        "dangerState": "AwaySafe"
+                    },
+                    {
+                        "id": 434,
+                        "timestamp": "2024-12-17T16:12:46.534Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:36:37",
+                        "isConfirmed": true,
+                        "dangerState": "AwayAttack"
+                    },
+                    {
+                        "id": 435,
+                        "timestamp": "2024-12-17T16:12:59.712Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:36:51",
+                        "isConfirmed": true,
+                        "dangerState": "AwayDangerousAttack"
+                    },
+                    {
+                        "id": 436,
+                        "timestamp": "2024-12-17T16:13:01.87Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:36:53",
+                        "isConfirmed": true,
+                        "dangerState": "HomeSafe"
+                    },
+                    {
+                        "id": 437,
+                        "timestamp": "2024-12-17T16:13:21.408Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:37:12",
+                        "isConfirmed": true,
+                        "dangerState": "AwaySafe"
+                    },
+                    {
+                        "id": 438,
+                        "timestamp": "2024-12-17T16:13:46.476Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:37:37",
+                        "isConfirmed": true,
+                        "dangerState": "HomeAttack"
+                    },
+                    {
+                        "id": 439,
+                        "timestamp": "2024-12-17T16:13:51.156Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:37:42",
+                        "isConfirmed": true,
+                        "dangerState": "AwaySafe"
+                    }
+                ],
+                "bookingStateChanges": [
+                    {
+                        "id": 27,
+                        "timestamp": "2024-12-17T14:30:44.368Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:38",
+                        "isConfirmed": true,
+                        "bookingState": "RedCardDanger"
+                    },
+                    {
+                        "id": 28,
+                        "timestamp": "2024-12-17T14:30:46.617Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:41",
+                        "isConfirmed": true,
+                        "bookingState": "Safe"
+                    },
+                    {
+                        "id": 158,
+                        "timestamp": "2024-12-17T14:55:56.856Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:25:51",
+                        "isConfirmed": true,
+                        "bookingState": "YellowCardDanger"
+                    },
+                    {
+                        "id": 160,
+                        "timestamp": "2024-12-17T14:55:59.437Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:25:51",
+                        "isConfirmed": true,
+                        "bookingState": "Safe"
+                    },
+                    {
+                        "id": 184,
+                        "timestamp": "2024-12-17T15:02:20.43Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:32:14",
+                        "isConfirmed": true,
+                        "bookingState": "YellowCardDanger"
+                    },
+                    {
+                        "id": 186,
+                        "timestamp": "2024-12-17T15:02:23.089Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:32:14",
+                        "isConfirmed": true,
+                        "bookingState": "Safe"
+                    },
+                    {
+                        "id": 349,
+                        "timestamp": "2024-12-17T15:54:36.539Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:18:27",
+                        "isConfirmed": true,
+                        "bookingState": "YellowCardDanger"
+                    },
+                    {
+                        "id": 350,
+                        "timestamp": "2024-12-17T15:54:51.308Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:18:42",
+                        "isConfirmed": true,
+                        "bookingState": "Safe"
+                    },
+                    {
+                        "id": 362,
+                        "timestamp": "2024-12-17T15:58:41.804Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:22:33",
+                        "isConfirmed": true,
+                        "bookingState": "YellowCardDanger"
+                    },
+                    {
+                        "id": 364,
+                        "timestamp": "2024-12-17T15:58:43.52Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:22:33",
+                        "isConfirmed": true,
+                        "bookingState": "Safe"
+                    }
+                ],
+                "lineupUpdates": [],
+                "systemMessages": [
+                    {
+                        "id": 2,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Wind: windy",
+                        "timestamp": "2024-12-17T14:03:22.063Z"
+                    },
+                    {
+                        "id": 3,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Weather: night",
+                        "timestamp": "2024-12-17T14:03:34.439Z"
+                    },
+                    {
+                        "id": 4,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Pitch is regular",
+                        "timestamp": "2024-12-17T14:03:37.198Z"
+                    },
+                    {
+                        "id": 5,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2000,
+                        "message": "Players NOT on the field",
+                        "timestamp": "2024-12-17T14:22:09.392Z"
+                    },
+                    {
+                        "id": 6,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Attendance is 20%",
+                        "timestamp": "2024-12-17T14:22:12.46Z"
+                    },
+                    {
+                        "id": 11,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2003,
+                        "message": "Players ON the field",
+                        "timestamp": "2024-12-17T14:28:08.825Z"
+                    },
+                    {
+                        "id": 16,
+                        "phase": "PreMatch",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Standby",
+                        "timestamp": "2024-12-17T14:29:57.155Z"
+                    },
+                    {
+                        "id": 222,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:40:10",
+                        "messageId": 1017,
+                        "message": "The game is suspended due to an injured Away player",
+                        "timestamp": "2024-12-17T15:10:16.345Z"
+                    },
+                    {
+                        "id": 223,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:42:08",
+                        "messageId": 0,
+                        "message": "Please be advised that the game will be renewed with Home Dropped ball.",
+                        "timestamp": "2024-12-17T15:12:13.693Z"
+                    },
+                    {
+                        "id": 256,
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:48:23",
+                        "messageId": 1013,
+                        "message": "The game is suspended due to an injured Home player",
+                        "timestamp": "2024-12-17T15:18:28.964Z"
+                    },
+                    {
+                        "id": 264,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2000,
+                        "message": "Players NOT on the field",
+                        "timestamp": "2024-12-17T15:21:00.385Z"
+                    },
+                    {
+                        "id": 265,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 999,
+                        "message": "Please be advised that the 1st half finished at ID 258 due to a referee decision",
+                        "timestamp": "2024-12-17T15:21:43.786Z"
+                    },
+                    {
+                        "id": 267,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 0,
+                        "message": "Standby",
+                        "timestamp": "2024-12-17T15:35:48.362Z"
+                    },
+                    {
+                        "id": 268,
+                        "phase": "HalfTime",
+                        "timeElapsed": "00:00:00",
+                        "messageId": 2003,
+                        "message": "Players ON the field",
+                        "timestamp": "2024-12-17T15:36:02.931Z"
+                    },
+                    {
+                        "id": 317,
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:11:34",
+                        "messageId": 1017,
+                        "message": "The game is suspended due to an injured Away player",
+                        "timestamp": "2024-12-17T15:47:43.582Z"
+                    },
+                    {
+                        "id": 329,
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:14:57",
+                        "messageId": 1017,
+                        "message": "The game is suspended due to an injured Away player",
+                        "timestamp": "2024-12-17T15:51:05.893Z"
+                    },
+                    {
+                        "id": 383,
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:27:34",
+                        "messageId": 1017,
+                        "message": "The game is suspended due to an injured Away player",
+                        "timestamp": "2024-12-17T16:03:43.183Z"
+                    }
+                ],
+                "kickOffs": [
+                    {
+                        "id": 20,
+                        "timestamp": "2024-12-17T14:30:05.542Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:00:00",
+                        "team": "Home",
+                        "playerId": null,
+                        "isConfirmed": true
+                    },
+                    {
+                        "id": 271,
+                        "timestamp": "2024-12-17T15:36:08.664Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:00:00",
+                        "team": "Away",
+                        "playerId": null,
+                        "isConfirmed": true
+                    }
+                ],
+                "varStateChanges": [
+                    {
+                        "id": 162,
+                        "timestamp": "2024-12-17T14:56:54.79Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:26:49",
+                        "isConfirmed": true,
+                        "varState": "Danger",
+                        "varReason": "Unknown",
+                        "varOutcome": "NotSet",
+                        "varReasonV2": "Unknown",
+                        "varOutcomeV2": "NotSet"
+                    },
+                    {
+                        "id": 163,
+                        "timestamp": "2024-12-17T14:56:57.996Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:26:52",
+                        "isConfirmed": true,
+                        "varState": "InProgress",
+                        "varReason": "Unknown",
+                        "varOutcome": "NotSet",
+                        "varReasonV2": "Unknown",
+                        "varOutcomeV2": "NotSet"
+                    },
+                    {
+                        "id": 167,
+                        "timestamp": "2024-12-17T14:58:16.594Z",
+                        "phase": "FirstHalf",
+                        "timeElapsed": "00:28:11",
+                        "isConfirmed": true,
+                        "varState": "Safe",
+                        "varReason": "NotSet",
+                        "varOutcome": "NoAction",
+                        "varReasonV2": "NotSet",
+                        "varOutcomeV2": "NoAction"
+                    },
+                    {
+                        "id": 316,
+                        "timestamp": "2024-12-17T15:46:39.144Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:10:30",
+                        "isConfirmed": true,
+                        "varState": "Danger",
+                        "varReason": "Goal",
+                        "varOutcome": "NotSet",
+                        "varReasonV2": "Goal",
+                        "varOutcomeV2": "NotSet"
+                    },
+                    {
+                        "id": 318,
+                        "timestamp": "2024-12-17T15:48:56.251Z",
+                        "phase": "SecondHalf",
+                        "timeElapsed": "00:12:47",
+                        "isConfirmed": true,
+                        "varState": "Safe",
+                        "varReason": "NotSet",
+                        "varOutcome": "NotSet",
+                        "varReasonV2": "NotSet",
+                        "varOutcomeV2": "NotSet"
+                    }
+                ]
+            }
+        }
+    ],
+    "debug": "post"
+}

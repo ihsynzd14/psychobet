@@ -8,6 +8,7 @@ import { api } from '@/lib/api';
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
+import { MatchActionTimeline } from './match/match-action-timeline';
 
 function FixturePage() {
   const router = useRouter();
@@ -24,13 +25,13 @@ function FixturePage() {
   const { data: feedData, isLoading: feedLoading } = useQuery({
     queryKey: ['feed', fixtureId],
     queryFn: () => api.getFeedView(fixtureId as string),
-    refetchInterval: isLive ? 1 : 2,
+    refetchInterval: isLive ? 1 : 1,
   });
 
   const { data: lastAction, isLoading: lastActionLoading } = useQuery({
     queryKey: ['lastAction', fixtureId],
     queryFn: () => api.getLastAction(fixtureId as string),
-    refetchInterval: isLive ? 1 : 2,
+    refetchInterval: isLive ? 1 : 1,
     enabled: !!fixtureId,
   });
 
@@ -107,7 +108,11 @@ function FixturePage() {
           goals={goals}
         />
 
-        <MatchTabs matchData={matchData} />
+        <MatchActionTimeline 
+          fixtureId={fixtureId} 
+          matchData={matchData}
+        />
+
       </div>
     </main>
   );
