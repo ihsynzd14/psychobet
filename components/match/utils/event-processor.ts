@@ -3,12 +3,14 @@ import { MatchEvent, ProcessedMatchEvent } from '../types/match-event';
 const RELEVANT_EVENT_TYPES = [
   'goals', 'yellowCards', 'redCards', 'corners', 'dangerStateChanges',
   'systemMessages', 'phaseChanges', 'shotsOnTarget', 'shotsOffTarget',
-  'blockedShots', 'fouls', 'throwIns', 'substitutions'
+  'blockedShots', 'fouls', 'throwIns', 'substitutions', 'goalKicks',
+  'varStateChanges' // Added varStateChanges
 ] as const;
 
 export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['category'] {
   if (event.type === 'systemMessages') return 'system';
   if (event.type === 'dangerStateChanges') return 'attack';
+  if (event.type === 'varStateChanges') return 'system'; // Add this line
   if (['yellowCards', 'redCards'].includes(event.type)) return 'disciplinary';
   if (['corners', 'throwIns'].includes(event.type)) return 'setpiece';
   if (['goals', 'shotsOnTarget', 'shotsOffTarget'].includes(event.type)) return 'attack';
@@ -19,6 +21,14 @@ export function determineDisplaySide(event: MatchEvent): 'left' | 'right' | 'cen
   if (event.type === 'systemMessages') return 'center';
   if (event.type === 'phaseChanges') return 'center';
   
+  // Handle VAR state changes
+  if (event.type === 'varStateChanges') {
+    if (event.varReason === 'Unknown') return 'center';
+    if (event.varReason?.startsWith('Home')) return 'left';
+    if (event.varReason?.startsWith('Away')) return 'right';
+    return 'center';
+  }
+
   // Handle events with foulingTeam property
   if ('foulingTeam' in event) {
     return event.foulingTeam === 'Home' ? 'left' : 'right';
@@ -37,6 +47,7 @@ export function determineDisplaySide(event: MatchEvent): 'left' | 'right' | 'cen
 
   return 'center';
 }
+
 
 export function processMatchEvents(matchData: any): ProcessedMatchEvent[] {
   const allEvents: ProcessedMatchEvent[] = [];

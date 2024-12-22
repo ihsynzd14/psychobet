@@ -15,6 +15,29 @@ interface EventRowProps {
 export const EventRow = memo(function EventRow({ event, centerEventDetails }: EventRowProps) {
   const timestamp = formatTimestamp(event.timestamp);
   
+  const getEventStyles = (event: ProcessedMatchEvent) => {
+    if (event.displaySide === 'center') {
+      return 'text-center bg-transparent border-none';
+    }
+
+    if (event.type === 'varStateChanges') {
+      switch (event.varState) {
+        case 'Danger':
+          return 'bg-red-100 dark:bg-red-900/20';
+        case 'InProgress':
+          return 'bg-yellow-100 dark:bg-yellow-900/20';
+        case 'Safe':
+          return 'bg-green-100 dark:bg-green-900/20';
+        default:
+          return 'bg-gray-100 dark:bg-gray-900/20';
+      }
+    }
+
+    return event.displaySide === 'left' 
+      ? 'bg-primary/5' 
+      : 'bg-secondary/5';
+  };
+
   if (event.displaySide === 'center' && centerEventDetails) {
     return (
       <div className="flex items-center justify-center p-3">
@@ -36,6 +59,8 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
       className={`
         flex items-center gap-4 p-3
         ${event.displaySide === 'right' ? 'flex-row-reverse' : 'flex-row'}
+        ${getEventStyles(event)}
+        transition-colors hover:bg-accent/5
       `}
     >
       <div className="min-w-[90px] text-sm text-muted-foreground">
@@ -70,7 +95,9 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
           </div>
           
           <span className="text-sm font-medium">
-            {event.dangerState || event.type}
+            {event.type === 'varStateChanges' 
+              ? `VAR ${event.varReason} Check - ${event.varState}`
+              : event.dangerState || event.type}
           </span>
           
           {event.message && (

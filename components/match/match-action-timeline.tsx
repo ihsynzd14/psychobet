@@ -4,11 +4,19 @@ import { Card } from '@/components/ui/card';
 import { EventRow } from './event-row';
 import { processMatchEvents } from './utils/event-processor';
 import { useMemo } from 'react';
+import { cn } from '@/lib/utils';
+import { ProcessedMatchEvent } from './types/match-event';
 
 interface MatchActionTimelineProps {
   fixtureId: any;
   matchData: any;
 }
+
+const varStateMap: Record<string, string> = {
+  'Danger': 'VAR Check Started',
+  'InProgress': 'VAR Review in Progress',
+  'Safe': 'VAR Check Complete'
+};
 
 export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelineProps) {
   const parentRef = useRef<HTMLDivElement>(null);
@@ -22,30 +30,35 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
     overscan: 5
   });
 
-  const getEventDescription = (event: any) => {
+  const getEventDescription = (event: ProcessedMatchEvent) => {
     if (event.displaySide === 'center') {
       if (event.type === 'systemMessages') {
         return {
-          title: event.message,
-          description: 'System Message'
+          title: event.message || 'System Message',
+          description: 'System Update'
         };
       }
       if (event.type === 'phaseChanges') {
         return {
-          title: event.currentPhase,
+          title: event.currentPhase || 'Phase Change',
           description: 'Period Change'
         };
       }
-      if (event.type === 'dangerStateChanges' && event.dangerState === 'Safe') {
+      if (event.type === 'varStateChanges' && event.varState) {
+        const getVarDescription = (event: ProcessedMatchEvent) => {
+          if (event.varReason === 'NotSet') return event.varOutcome || 'VAR Check';
+          return `${event.varReason} Check`;
+        };
+  
         return {
-          title: 'Game Started',
-          description: 'Match Status'
+          title: varStateMap[event.varState] || event.varState,
+          description: getVarDescription(event)
         };
       }
     }
     return null;
   };
-
+    
   return (
     <Card className="relative overflow-hidden">
       <div 
@@ -74,11 +87,14 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
                   height: `${virtualRow.size}px`,
                   transform: `translateY(${virtualRow.start}px)`
                 }}
-                className={`
-                  ${event.displaySide === 'center' ? 'bg-muted/5' :
-                    event.displaySide === 'left' ? 'bg-primary/5' : 'bg-secondary/5'}
-                  transition-colors hover:bg-accent/5
-                `}
+                className={cn(
+                  event.displaySide === 'center' 
+                    ? 'bg-transparent text-center' 
+                    : event.displaySide === 'left' 
+                      ? 'bg-primary/5' 
+                      : 'bg-secondary/5',
+                  'transition-colors hover:bg-accent/5'
+                )}
               >
                 <EventRow 
                   event={event} 
