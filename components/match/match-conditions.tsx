@@ -14,7 +14,7 @@ export function MatchConditions({ systemMessages }: MatchConditionsProps) {
                   msg.message.toLowerCase().startsWith('weather:') ||
                   msg.message.toLowerCase().includes('pitch'))
     .reduce((acc, msg) => {
-      if (msg.message.toLowerCase().includes('pitch')) {
+      if (msg.message.toLowerCase().includes('pitch is')) {
         acc['pitch'] = msg.message.replace('Pitch is', '').trim();
       } else {
         const [type, ...value] = msg.message.split(':').map(s => s.trim());

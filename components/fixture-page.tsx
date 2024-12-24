@@ -3,7 +3,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MatchHeader } from '@/components/match-header';
-import { MatchTabs } from '@/components/match/match-tabs';
 import { api } from '@/lib/api';
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
