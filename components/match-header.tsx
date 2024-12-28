@@ -39,6 +39,17 @@ interface MatchHeaderProps {
   };
 }
 
+const defaultColors = {
+  home: {
+    color1: { r: 30, g: 64, b: 175 }, // Blue
+    color2: { r: 255, g: 255, b: 255 } // White
+  },
+  away: {
+    color1: { r: 185, g: 28, b: 28 }, // Red
+    color2: { r: 255, g: 255, b: 255 } // White
+  }
+};
+
 export function MatchHeader({ fixture, lastAction, homeTeam, awayTeam, goals }: MatchHeaderProps) {
   return (
     <Card className="mb-6 overflow-hidden">
@@ -54,9 +65,11 @@ export function MatchHeader({ fixture, lastAction, homeTeam, awayTeam, goals }: 
             {/* Home Team */}
             <div className="text-center space-y-3">
               <TeamJersey 
-                color1={fixture.teams.home.strip.color1}
-                color2={fixture.teams.home.strip.color2}
-                className="mx-auto mb-2" type={'home'}              />
+                color1={fixture.teams.home.strip?.color1 || defaultColors.home.color1}
+                color2={fixture.teams.home.strip?.color2 || defaultColors.home.color2}
+                className="mx-auto mb-2" 
+                type={'home'}              
+              />
               <h3 className="text-xl font-semibold truncate" title={homeTeam}>{homeTeam}</h3>
               <div className="text-5xl font-bold text-primary leading-none">{goals.home}</div>
             </div>
@@ -101,9 +114,11 @@ export function MatchHeader({ fixture, lastAction, homeTeam, awayTeam, goals }: 
             {/* Away Team */}
             <div className="text-center space-y-3">
               <TeamJersey 
-                color1={fixture.teams.away.strip.color1}
-                color2={fixture.teams.away.strip.color2}
-                className="mx-auto mb-2" type={'home'}              />
+                color1={fixture.teams.away.strip?.color1 || defaultColors.away.color1}
+                color2={fixture.teams.away.strip?.color2 || defaultColors.away.color2}
+                className="mx-auto mb-2" 
+                type={'home'}              
+              />
               <h3 className="text-xl font-semibold truncate" title={awayTeam}>{awayTeam}</h3>
               <div className="text-5xl font-bold text-primary leading-none">{goals.away}</div>
             </div>

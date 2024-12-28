@@ -4,35 +4,34 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MatchHeader } from '@/components/match-header';
 import { api } from '@/lib/api';
-import { useMemo, useCallback, useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { MatchActionTimeline } from './match/match-action-timeline';
+import { useMatchData } from '@/hooks/use-match-data';
 
 function FixturePage() {
   const router = useRouter();
   const { toast } = useToast();
   const { fixtureId } = useParams();
-  const [isLive, setIsLive] = useState(false);
 
-  const { data: fixture, isLoading: fixtureLoading } = useQuery({
-    queryKey: ['fixture', fixtureId],
-    queryFn: () => api.getFixture(fixtureId as string),
-    refetchInterval: isLive ? 1000 : 5000,
+  const { 
+    fixture, 
+    feedData, 
+    lastAction, 
+    isLoading 
+  } = useMatchData({ 
+    fixtureId: fixtureId as string,
+    bufferSize: 10, // Buffer up to 10 updates
+    updateInterval: 1 // Process updates every 100ms
   });
-
-  const { data: feedData, isLoading: feedLoading } = useQuery({
-    queryKey: ['feed', fixtureId],
-    queryFn: () => api.getFeedView(fixtureId as string),
-    refetchInterval: isLive ? 1 : 1,
-  });
-
-  const { data: lastAction, isLoading: lastActionLoading } = useQuery({
-    queryKey: ['lastAction', fixtureId],
-    queryFn: () => api.getLastAction(fixtureId as string),
-    refetchInterval: isLive ? 1 : 1,
-    enabled: !!fixtureId,
-  });
+  
+  const goals = useMemo(() => {
+    const goals = feedData?.response?.[0]?.actions?.goals || [];
+    return {
+      home: goals.filter((g: { team: string }) => g.team === 'Home').length,
+      away: goals.filter((g: { team: string }) => g.team === 'Away').length
+    };
+  }, [feedData]);
 
   useEffect(() => {
     if (!fixtureId) return;
@@ -46,27 +45,12 @@ function FixturePage() {
         });
       });
 
-    const unsubscribe = api.subscribeToFixture(fixtureId as string, (data) => {
-      if (data?.status === 'LIVE' && !isLive) {
-        setIsLive(true);
-      }
-    });
-
     return () => {
-      unsubscribe();
       api.stopFeed(fixtureId as string).catch(console.error);
     };
-  }, [fixtureId, isLive, toast]);
-  
-  const goals = useMemo(() => {
-    const goals = feedData?.response?.[0]?.actions?.goals || [];
-    return {
-      home: goals.filter((g: { team: string }) => g.team === 'Home').length,
-      away: goals.filter((g: { team: string }) => g.team === 'Away').length
-    };
-  }, [feedData]);
+  }, [fixtureId, toast]);
 
-  if (fixtureLoading || feedLoading || lastActionLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
@@ -111,7 +95,6 @@ function FixturePage() {
           fixtureId={fixtureId} 
           matchData={matchData}
         />
-
       </div>
     </main>
   );
