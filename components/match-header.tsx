@@ -30,9 +30,9 @@ interface LastActionResponse {
 
 interface MatchHeaderProps {
   fixture: any;
-  lastAction: LastActionResponse | null;
-  homeTeam: string;
-  awayTeam: string;
+  lastAction: any;
+  homeTeam?: string;
+  awayTeam?: string;
   goals: {
     home: number;
     away: number;
@@ -50,7 +50,13 @@ const defaultColors = {
   }
 };
 
-export function MatchHeader({ fixture, lastAction, homeTeam, awayTeam, goals }: MatchHeaderProps) {
+export function MatchHeader({ 
+  fixture, 
+  lastAction, 
+  homeTeam = 'Home Team', // Default values
+  awayTeam = 'Away Team',
+  goals 
+}: MatchHeaderProps) {
   return (
     <Card className="mb-6 overflow-hidden">
       <CardContent className="p-0">

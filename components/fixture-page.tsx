@@ -8,6 +8,7 @@ import { useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { MatchActionTimeline } from './match/match-action-timeline';
 import { useMatchData } from '@/hooks/use-match-data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function FixturePage() {
   const router = useRouter();
@@ -21,8 +22,8 @@ function FixturePage() {
     isLoading 
   } = useMatchData({ 
     fixtureId: fixtureId as string,
-    bufferSize: 10, // Buffer up to 10 updates
-    updateInterval: 1 // Process updates every 100ms
+    bufferSize: 10,
+    updateInterval: 1
   });
   
   const goals = useMemo(() => {
@@ -59,7 +60,7 @@ function FixturePage() {
   }
 
   const matchData = feedData?.response?.[0];
-  if (!fixture || !matchData) {
+  if (!matchData?.teams?.home || !matchData?.teams?.away) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <p className="text-xl font-semibold">Match data not available</p>

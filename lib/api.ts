@@ -13,10 +13,10 @@ export interface Fixture {
   lineups: string;
 }
 
-// Configure axios instance with optimized settings
+// Optimized axios instance
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 5000,
+  timeout: 3000, // Reduced timeout
   headers: {
     'Accept': 'application/json',
     'Cache-Control': 'no-cache',
@@ -25,38 +25,93 @@ const axiosInstance = axios.create({
   }
 });
 
-// Socket.io connection with reconnection handling
-let socket: any;
+// Singleton WebSocket connection with optimized settings
+class SocketManager {
+  private static instance: SocketManager;
+  private socket: any;
+  private subscriptions: Map<string, Set<(data: any) => void>>;
+  private reconnectAttempts: number = 0;
+  private maxReconnectAttempts: number = 5;
 
-const getSocket = () => {
-  if (!socket) {
-    socket = io(SOCKET_URL, {
+  private constructor() {
+    this.subscriptions = new Map();
+    this.initSocket();
+  }
+
+  static getInstance() {
+    if (!SocketManager.instance) {
+      SocketManager.instance = new SocketManager();
+    }
+    return SocketManager.instance;
+  }
+
+  private initSocket() {
+    this.socket = io(SOCKET_URL, {
       transports: ['websocket'],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5,
-      timeout: 10000
+      reconnectionAttempts: this.maxReconnectAttempts,
+      timeout: 3000,
+      forceNew: false
     });
 
-    socket.on('connect', () => {
+    this.socket.on('connect', () => {
       console.log('Socket connected');
+      this.reconnectAttempts = 0;
+      
+      // Resubscribe to all fixtures after reconnection
+      this.subscriptions.forEach((callbacks, fixtureId) => {
+        this.socket.emit('subscribe', fixtureId);
+      });
     });
 
-    socket.on('connect_error', (error: Error) => {
+    this.socket.on('connect_error', (error: Error) => {
       console.error('Socket connection error:', error);
+      this.reconnectAttempts++;
+      
+      if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+        console.error('Max reconnection attempts reached');
+      }
     });
 
-    socket.on('disconnect', (reason: string) => {
+    this.socket.on('disconnect', (reason: string) => {
       console.log('Socket disconnected:', reason);
       if (reason === 'io server disconnect') {
-        // Reconnect if server disconnected
-        socket.connect();
+        this.socket.connect();
       }
     });
   }
-  return socket;
-};
+
+  subscribe(fixtureId: string, callback: (data: any) => void) {
+    if (!this.subscriptions.has(fixtureId)) {
+      this.subscriptions.set(fixtureId, new Set());
+      this.socket.emit('subscribe', fixtureId);
+    }
+    
+    const callbacks = this.subscriptions.get(fixtureId)!;
+    callbacks.add(callback);
+    
+    // Set up event listener if not already set
+    if (callbacks.size === 1) {
+      this.socket.on(`fixture:${fixtureId}`, (data: any) => {
+        callbacks.forEach(cb => cb(data));
+      });
+    }
+
+    return () => {
+      const callbacks = this.subscriptions.get(fixtureId);
+      if (callbacks) {
+        callbacks.delete(callback);
+        if (callbacks.size === 0) {
+          this.socket.off(`fixture:${fixtureId}`);
+          this.socket.emit('unsubscribe', fixtureId);
+          this.subscriptions.delete(fixtureId);
+        }
+      }
+    };
+  }
+}
 
 export const api = {
   getLiveFixtures: async () => {
@@ -80,20 +135,8 @@ export const api = {
   },
 
   subscribeToFixture: (fixtureId: string, onUpdate: (data: any) => void) => {
-    const socket = getSocket();
-    
-    // Clean up any existing subscription
-    socket.off(`fixture:${fixtureId}`);
-    
-    // Subscribe to new fixture
-    socket.emit('subscribe', fixtureId);
-    socket.on(`fixture:${fixtureId}`, onUpdate);
-    
-    // Return cleanup function
-    return () => {
-      socket.off(`fixture:${fixtureId}`, onUpdate);
-      socket.emit('unsubscribe', fixtureId);
-    };
+    const socketManager = SocketManager.getInstance();
+    return socketManager.subscribe(fixtureId, onUpdate);
   },
 
   getLastAction: async (fixtureId: string) => {
