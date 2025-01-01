@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { getEventIcon } from './event-icons';
 import { formatTimestamp } from '@/lib/utils';
 import { ProcessedMatchEvent } from './types/match-event';
+import { formatMatchTime } from './utils';
 
 interface EventRowProps {
   event: ProcessedMatchEvent;
@@ -13,7 +14,8 @@ interface EventRowProps {
 }
 
 export const EventRow = memo(function EventRow({ event, centerEventDetails }: EventRowProps) {
-  const timestamp = formatTimestamp(event.timestamp);
+  const timestamp = new Date(event.timestamp).toLocaleTimeString();
+  const formattedTime = formatMatchTime(event.timeElapsed, event.phase);
   
   const getEventStyles = (event: ProcessedMatchEvent) => {
     if (event.displaySide === 'center') {
@@ -78,7 +80,7 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs whitespace-nowrap">
-              {event.timeElapsed} - {event.phase}
+              {formattedTime} - {event.phase}
             </Badge>
             {(event.team || event.foulingTeam) && (
               <Badge 
@@ -97,14 +99,8 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
           <span className="text-sm font-medium">
             {event.type === 'varStateChanges' 
               ? `VAR ${event.varReason} Check - ${event.varState}`
-              : event.dangerState || event.type}
+              : event.message || event.dangerState || event.type}
           </span>
-          
-          {event.message && (
-            <p className="text-xs text-muted-foreground">
-              {event.message}
-            </p>
-          )}
         </div>
       </div>
     </div>

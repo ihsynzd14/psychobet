@@ -1,13 +1,15 @@
 import { MatchEvent, ProcessedMatchEvent } from '../types/match-event';
+import { getKickoffDescription } from '../utils';
 
 const RELEVANT_EVENT_TYPES = [
   'goals', 'yellowCards', 'redCards', 'corners', 'dangerStateChanges',
   'systemMessages', 'phaseChanges', 'shotsOnTarget', 'shotsOffTarget',
   'blockedShots', 'fouls', 'throwIns', 'substitutions', 'goalKicks',
-  'varStateChanges', 'offsides', 'stoppageTimeAnnouncements'
+  'varStateChanges', 'offsides', 'stoppageTimeAnnouncements', 'kickOffs'
 ] as const;
 
 export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['category'] {
+  if (event.type === 'kickOffs') return 'system';
   if (event.type === 'systemMessages') return 'system';
   if (event.type === 'dangerStateChanges') return 'attack';
   if (event.type === 'varStateChanges') return 'system';
@@ -20,15 +22,11 @@ export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['
 }
 
 export function determineDisplaySide(event: MatchEvent): 'left' | 'right' | 'center' {
-  // Handle stoppage time announcements
-  if (event.type === 'stoppageTimeAnnouncements') {
+  // Handle kickoffs and other center events
+  if (['kickOffs', 'stoppageTimeAnnouncements', 'systemMessages', 'phaseChanges'].includes(event.type)) {
     return 'center';
   }
-
-  if (event.type === 'systemMessages') return 'center';
-  if (event.type === 'phaseChanges') return 'center';
   
-  // Handle VAR state changes
   if (event.type === 'varStateChanges') {
     if (event.varReason === 'Unknown') return 'center';
     if (event.varReason?.startsWith('Home')) return 'left';
@@ -36,18 +34,15 @@ export function determineDisplaySide(event: MatchEvent): 'left' | 'right' | 'cen
     return 'center';
   }
 
-  // Handle events with foulingTeam property
   if ('foulingTeam' in event) {
     return event.foulingTeam === 'Home' ? 'left' : 'right';
   }
 
-  // Handle events with team property (including offsides)
   if (event.team) {
     return event.team === 'Home' ? 'left' : 'right';
   }
 
-  // Handle danger states - skip if in HalfTime
-  if (event.dangerState && event.phase !== 'HalfTime') {
+  if (event.dangerState && !['HalfTime', 'FullTimeNormalTime'].includes(event.phase)) {
     if (event.dangerState.startsWith('Home')) return 'left';
     if (event.dangerState.startsWith('Away')) return 'right';
   }
@@ -62,22 +57,26 @@ export function processMatchEvents(matchData: any): ProcessedMatchEvent[] {
   RELEVANT_EVENT_TYPES.forEach(type => {
     if (Array.isArray(actions[type])) {
       actions[type].forEach((event: MatchEvent) => {
-        // Skip danger states during HalfTime
-        if (type === 'dangerStateChanges' && event.phase === 'HalfTime') {
+        if (type === 'dangerStateChanges' && ['HalfTime', 'FullTimeNormalTime'].includes(event.phase)) {
           return;
         }
 
-        // Extract addedMinutes from stoppageTimeAnnouncements
         const addedMinutes = type === 'stoppageTimeAnnouncements' 
           ? (event as any).addedMinutes 
           : undefined;
 
+        // Add description for kickoffs
+        const message = type === 'kickOffs' 
+          ? getKickoffDescription(event.team || '', event.phase)
+          : event.message;
+
         allEvents.push({
           ...event,
           type,
+          message,
           displaySide: determineDisplaySide(event),
           category: determineEventCategory(event),
-          addedMinutes // Include addedMinutes in the processed event
+          addedMinutes
         });
       });
     }

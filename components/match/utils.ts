@@ -41,3 +41,30 @@ export const combineMatchEvents = (matchData: any): TimelineEvent[] => {
     }))];
   }, []);
 };
+
+export function formatMatchTime(timeElapsed: string, phase: string): string {
+  // Handle empty or invalid time
+  if (!timeElapsed) return '00:00';
+
+  // Parse the time elapsed
+  const [hours, minutes, seconds] = timeElapsed.split(':').map(Number);
+  
+  // For second half, add 45 minutes
+  if (phase === 'SecondHalf') {
+    const totalMinutes = (hours * 60) + minutes + 45;
+    return `${String(totalMinutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
+  // For first half, just return the original time without hours
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+export function getKickoffDescription(team: string, phase: string): string {
+  if (phase === 'FirstHalf') {
+    return `Match kicked off by ${team} Team`;
+  }
+  if (phase === 'SecondHalf') {
+    return `Second half kicked off by ${team} Team`;
+  }
+  return `Kickoff by ${team} Team`;
+}
