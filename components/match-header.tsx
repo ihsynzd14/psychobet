@@ -3,10 +3,12 @@
 import { format } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Activity, Clock, Flag } from 'lucide-react';
+import { Activity, ArrowLeft, Clock, Flag } from 'lucide-react';
 import { MatchConditions } from './match/match-conditions';
 import { MatchStats } from './match/match-stats';
 import { TeamJersey } from './match/jerseys/team-jersey';
+import router from 'next/router';
+import { Button } from './ui/button';
 
 interface LastAction {
   type: string;
@@ -58,10 +60,17 @@ export function MatchHeader({
   goals 
 }: MatchHeaderProps) {
   return (
-    <Card className="mb-6 overflow-hidden">
+    <Card className="overflow-hidden">
       <CardContent className="p-0">
         {/* Match Conditions */}
         <div className="bg-muted/30 p-4 border-b">
+          <Button 
+            variant="ghost" 
+            onClick={() => router.push('/')}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Fixtures
+          </Button>
           <MatchConditions systemMessages={fixture.actions.systemMessages || []} />
         </div>
 
@@ -70,12 +79,17 @@ export function MatchHeader({
           <div className="grid grid-cols-3 gap-6 items-center">
             {/* Home Team */}
             <div className="text-center space-y-3">
-              <TeamJersey 
-                color1={fixture.teams.home.strip?.color1 || defaultColors.home.color1}
-                color2={fixture.teams.home.strip?.color2 || defaultColors.home.color2}
-                className="mx-auto mb-2" 
-                type={'home'}              
-              />
+              <div className="relative w-fit mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent rounded-full blur-sm" />
+                <div className="relative p-2 rounded-full bg-gradient-to-t from-background/10 to-background/5 ring-1 ring-white/10 dark:bg-[#2e2e2e] bg-[#e2e2e2]">
+                  <TeamJersey 
+                    color1={fixture.teams.home.strip?.color1 || defaultColors.home.color1}
+                    color2={fixture.teams.home.strip?.color2 || defaultColors.home.color2}
+                    className="relative z-10" 
+                    type={'home'}              
+                  />
+                </div>
+              </div>
               <h3 className="text-xl font-semibold truncate" title={homeTeam}>{homeTeam}</h3>
               <div className="text-5xl font-bold text-primary leading-none">{goals.home}</div>
             </div>
@@ -119,12 +133,17 @@ export function MatchHeader({
 
             {/* Away Team */}
             <div className="text-center space-y-3">
-              <TeamJersey 
-                color1={fixture.teams.away.strip?.color1 || defaultColors.away.color1}
-                color2={fixture.teams.away.strip?.color2 || defaultColors.away.color2}
-                className="mx-auto mb-2" 
-                type={'home'}              
-              />
+              <div className="relative w-fit mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent rounded-full blur-sm" />
+                <div className="relative p-2 rounded-full bg-gradient-to-t from-background/10 to-background/5 ring-1 ring-white/10 dark:bg-[#2e2e2e] bg-[#e2e2e2]">
+                  <TeamJersey 
+                    color1={fixture.teams.away.strip?.color1 || defaultColors.away.color1}
+                    color2={fixture.teams.away.strip?.color2 || defaultColors.away.color2}
+                    className="relative z-10" 
+                    type={'home'}              
+                  />
+                </div>
+              </div>
               <h3 className="text-xl font-semibold truncate" title={awayTeam}>{awayTeam}</h3>
               <div className="text-5xl font-bold text-primary leading-none">{goals.away}</div>
             </div>

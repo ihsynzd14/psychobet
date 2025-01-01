@@ -74,16 +74,8 @@ function FixturePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
-        <Button 
-          variant="ghost" 
-          onClick={() => router.push('/')}
-          className="mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Fixtures
-        </Button>
-
+      {/* Full width MatchHeader */}
+      <div className="w-full">
         <MatchHeader 
           fixture={matchData}
           lastAction={lastAction}
@@ -91,7 +83,10 @@ function FixturePage() {
           awayTeam={matchData.teams.away.sourceName}
           goals={goals}
         />
+      </div>
 
+      {/* Full width MatchActionTimeline */}
+      <div className="w-full">
         <MatchActionTimeline 
           fixtureId={fixtureId} 
           matchData={matchData}

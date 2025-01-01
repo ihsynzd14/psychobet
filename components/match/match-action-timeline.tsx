@@ -61,6 +61,7 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
     
   return (
     <Card className="relative overflow-hidden">
+      <h1 className='text-center font-light py-2 underline underline-offset-4 decoration-2 decoration-red-800'>Timeline</h1>
       <div 
         ref={parentRef}
         className="h-[600px] overflow-auto overscroll-none scroll-smooth"
