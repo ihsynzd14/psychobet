@@ -2,7 +2,8 @@ import {
   Trophy, Flag, AlertTriangle, Shield, FileWarningIcon,
   ArrowLeftRight, MessageSquare, LucideRectangleVertical,
   Goal, CornerUpRight, Footprints, PlayCircle, Target,
-  XCircle, ShieldOff, BatteryWarning, Clock, Repeat, Info
+  XCircle, ShieldOff, BatteryWarning, Clock, Repeat, Info,
+  Timer // Added for stoppage time
 } from 'lucide-react';
 
 export const getEventIcon = (type: string, dangerState?: string) => {
@@ -14,7 +15,7 @@ export const getEventIcon = (type: string, dangerState?: string) => {
 
   const iconMap: Record<string, JSX.Element> = {
     goal: <Goal className="h-5 w-5 text-green-500" />,
-    offside: <Flag className="h-5 w-5 text-blue-500" />,
+    offside: <Flag className="h-5 w-5 text-yellow-500" />, // Updated color for offsides
     foul: <FileWarningIcon className="h-5 w-5 text-red-500" />,
     substitution: <ArrowLeftRight className="h-5 w-5 text-green-500" />,
     yellowcard: <LucideRectangleVertical className="h-5 w-5 text-yellow-500" />,
@@ -27,7 +28,9 @@ export const getEventIcon = (type: string, dangerState?: string) => {
     shotofftarget: <XCircle className="h-5 w-5 text-red-500" />,
     blockedshot: <ShieldOff className="h-5 w-5 text-orange-500" />,
     goalkick: <Repeat className="h-5 w-5 text-gray-500" />,
-    clockaction: <Clock className="h-5 w-5 text-gray-500" />
+    clockaction: <Clock className="h-5 w-5 text-gray-500" />,
+    stoppageTimeAnnouncements: <Timer className="h-5 w-5 text-blue-500" />,
+    offsides: <Flag className="h-5 w-5 text-yellow-500" />
   };
 
   return iconMap[type.toLowerCase()] || <Info className="h-5 w-5 text-gray-500" />;

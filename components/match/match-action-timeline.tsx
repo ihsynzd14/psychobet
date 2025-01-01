@@ -44,12 +44,18 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
           description: 'Period Change'
         };
       }
+      if (event.type === 'stoppageTimeAnnouncements') {
+        return {
+          title: `Added Time: ${event.addedMinutes} minutes`,
+          description: 'Stoppage Time'
+        };
+      }
       if (event.type === 'varStateChanges' && event.varState) {
         const getVarDescription = (event: ProcessedMatchEvent) => {
           if (event.varReason === 'NotSet') return event.varOutcome || 'VAR Check';
           return `${event.varReason} Check`;
         };
-  
+    
         return {
           title: varStateMap[event.varState] || event.varState,
           description: getVarDescription(event)

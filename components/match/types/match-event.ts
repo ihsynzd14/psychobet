@@ -15,12 +15,14 @@ export interface MatchEvent {
   varOutcome?: string;
   varReasonV2?: string;
   varOutcomeV2?: string;
-  currentPhase?: string; // Add this for phase changes
+  currentPhase?: string;
+  addedMinutes?: number; // Make addedMinutes optional in base interface
 }
 
 export interface ProcessedMatchEvent extends MatchEvent {
   displaySide: 'left' | 'right' | 'center';
   category: 'attack' | 'defense' | 'setpiece' | 'disciplinary' | 'system' | 'other';
+  addedMinutes?: number; // Make it optional in ProcessedMatchEvent as well
 }
 
 export type EventCategory = ProcessedMatchEvent['category'];
