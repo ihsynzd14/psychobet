@@ -50,6 +50,27 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
           description: 'Stoppage Time'
         };
       }
+      if (event.type === 'bookingStateChanges') {
+        const getBookingStateTitle = (state: string | undefined) => {
+          if (!state) return 'Booking State Change';
+          
+          switch (state) {
+            case 'YellowCardDanger':
+              return 'Yellow Card Warning';
+            case 'RedCardDanger':
+              return 'Red Card Warning';
+            case 'Safe':
+              return 'Booking Check Complete';
+            default:
+              return 'Booking State Change';
+          }
+        };
+        
+        return {
+          title: getBookingStateTitle(event.bookingState),
+          description: event.bookingState === 'Safe' ? 'Check Complete' : 'Booking Check'
+        };
+      }
       if (event.type === 'varStateChanges' && event.varState) {
         const getVarDescription = (event: ProcessedMatchEvent) => {
           if (event.varReason === 'NotSet') return event.varOutcome || 'VAR Check';

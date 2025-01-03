@@ -5,7 +5,8 @@ const RELEVANT_EVENT_TYPES = [
   'goals', 'yellowCards', 'redCards', 'corners', 'dangerStateChanges',
   'systemMessages', 'phaseChanges', 'shotsOnTarget', 'shotsOffTarget',
   'blockedShots', 'fouls', 'throwIns', 'substitutions', 'goalKicks',
-  'varStateChanges', 'offsides', 'stoppageTimeAnnouncements', 'kickOffs'
+  'varStateChanges', 'offsides', 'stoppageTimeAnnouncements', 'kickOffs',
+  'bookingStateChanges' // Add this line
 ] as const;
 
 export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['category'] {
@@ -14,6 +15,7 @@ export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['
   if (event.type === 'dangerStateChanges') return 'attack';
   if (event.type === 'varStateChanges') return 'system';
   if (event.type === 'stoppageTimeAnnouncements') return 'system';
+  if (event.type === 'bookingStateChanges') return 'disciplinary'; // Add this line
   if (event.type === 'offsides') return 'attack';
   if (['yellowCards', 'redCards'].includes(event.type)) return 'disciplinary';
   if (['corners', 'throwIns'].includes(event.type)) return 'setpiece';
@@ -22,8 +24,7 @@ export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['
 }
 
 export function determineDisplaySide(event: MatchEvent): 'left' | 'right' | 'center' {
-  // Handle kickoffs and other center events
-  if (['kickOffs', 'stoppageTimeAnnouncements', 'systemMessages', 'phaseChanges'].includes(event.type)) {
+  if (['kickOffs', 'stoppageTimeAnnouncements', 'systemMessages', 'phaseChanges', 'bookingStateChanges'].includes(event.type)) {
     return 'center';
   }
   
