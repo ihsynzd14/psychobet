@@ -87,11 +87,11 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
   };
     
   return (
-    <Card className="relative overflow-hidden">
-      <h1 className='text-center font-light py-2 underline underline-offset-4 decoration-2 decoration-red-800'>Timeline</h1>
+    <Card className="relative overflow-hidden border-none shadow-none ">
+      <h1 className="text-center font-medium py-3 text-lg">Match Timeline</h1>
       <div 
         ref={parentRef}
-        className="h-[600px] overflow-auto overscroll-none scroll-smooth"
+        className="h-[600px] overflow-auto overscroll-none scroll-smooth px-2"
       >
         <div
           style={{
@@ -116,12 +116,8 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
                   transform: `translateY(${virtualRow.start}px)`
                 }}
                 className={cn(
-                  event.displaySide === 'center' 
-                    ? 'bg-transparent text-center' 
-                    : event.displaySide === 'left' 
-                      ? 'bg-primary/5' 
-                      : 'bg-secondary/5',
-                  'transition-colors hover:bg-accent/5'
+                  'px-2',
+                  event.displaySide === 'center' && 'flex justify-center'
                 )}
               >
                 <EventRow 

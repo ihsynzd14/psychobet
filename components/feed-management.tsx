@@ -15,37 +15,46 @@ export function FeedManagement() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-
-  // Lift activeFeeds state to parent component
-  const activeFeeds = useQuery({
-    queryKey: ['activeFeeds'],
-    queryFn: () => new Set<string>(),
-    initialData: new Set<string>()
-  });
+  const [activeFeeds, setActiveFeeds] = useState<Set<string>>(new Set());
 
   const { data: fixtures, isLoading } = useQuery({
     queryKey: ['fixtures'],
-    queryFn: api.getLiveFixtures,
+    queryFn: async () => {
+      const data = await api.getLiveFixtures();
+      return data.sort((a, b) => a.fixtureId.localeCompare(b.fixtureId));
+    },
     refetchInterval: 3000,
     refetchIntervalInBackground: true,
   });
 
   const handleStartFeed = async (fixtureId: string) => {
-    await startFeedMutation.mutateAsync(fixtureId);
-    // Update active feeds
-    const newActiveFeeds = new Set(activeFeeds.data);
-    newActiveFeeds.add(fixtureId);
-    queryClient.setQueryData(['activeFeeds'], newActiveFeeds);
+    try {
+      await startFeedMutation.mutateAsync(fixtureId);
+      // Update active feeds
+      setActiveFeeds(prev => {
+        const newSet = new Set(prev);
+        newSet.add(fixtureId);
+        return newSet;
+      });
+    } catch (error) {
+      console.error('Error starting feed:', error);
+    }
   };
 
   const handleStopFeed = async (fixtureId: string) => {
-    await stopFeedMutation.mutateAsync(fixtureId);
-    // Update active feeds
-    const newActiveFeeds = new Set(activeFeeds.data);
-    newActiveFeeds.delete(fixtureId);
-    queryClient.setQueryData(['activeFeeds'], newActiveFeeds);
-    // Clear the last action data
-    queryClient.setQueryData(['lastAction', fixtureId], null);
+    try {
+      await stopFeedMutation.mutateAsync(fixtureId);
+      // Update active feeds
+      setActiveFeeds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(fixtureId);
+        return newSet;
+      });
+      // Clear the last action data
+      queryClient.setQueryData(['lastAction', fixtureId], null);
+    } catch (error) {
+      console.error('Error stopping feed:', error);
+    }
   };
 
   const startFeedMutation = useMutation({
@@ -75,7 +84,7 @@ export function FeedManagement() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['fixtures'] });
       // Clear all active feeds
-      queryClient.setQueryData(['activeFeeds'], new Set<string>());
+      setActiveFeeds(new Set());
       toast({
         title: 'All Feeds Stopped',
         description: 'All feeds have been stopped successfully.',
@@ -154,12 +163,12 @@ export function FeedManagement() {
       </div>
 
       {viewMode === 'grid' ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {fixtures?.map((fixture) => (
             <LiveFixture
               key={fixture.fixtureId}
               fixture={fixture}
-              activeFeeds={activeFeeds.data}
+              activeFeeds={activeFeeds}
               onStart={() => handleStartFeed(fixture.fixtureId)}
               onStop={() => handleStopFeed(fixture.fixtureId)}
             />
@@ -168,7 +177,7 @@ export function FeedManagement() {
       ) : (
         <FeedTable
           fixtures={fixtures || []}
-          activeFeeds={activeFeeds.data}
+          activeFeeds={activeFeeds}
           onStart={handleStartFeed}
           onStop={handleStopFeed}
         />

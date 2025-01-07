@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { MatchActionTimeline } from './match/match-action-timeline';
 import { useMatchData } from '@/hooks/use-match-data';
 import { Skeleton } from '@/components/ui/skeleton';
+import { MatchUnavailable } from '@/components/match-unavailable';
 
 function FixturePage() {
   const router = useRouter();
@@ -61,15 +62,7 @@ function FixturePage() {
 
   const matchData = feedData?.response?.[0];
   if (!matchData?.teams?.home || !matchData?.teams?.away) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-        <p className="text-xl font-semibold">Match data not available</p>
-        <Button onClick={() => router.push('/')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Fixtures
-        </Button>
-      </div>
-    );
+    return <MatchUnavailable />;
   }
 
   return (

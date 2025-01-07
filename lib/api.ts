@@ -6,11 +6,11 @@ const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3000'
 
 export interface Fixture {
   fixtureId: string;
-  timeRaisedUtc: string;
-  startDateUtc: string;
   status: string;
   origin: string;
-  lineups: string;
+  startDateUtc: string;
+  name: string;
+  competitionName: string;
 }
 
 // Optimized axios instance
@@ -116,7 +116,7 @@ class SocketManager {
 export const api = {
   getLiveFixtures: async () => {
     try {
-      const { data } = await axiosInstance.get<Fixture[]>('/fixtures/live');
+      const { data } = await axiosInstance.get<Fixture[]>('/fixtures/live/enhanced');
       return data;
     } catch (error) {
       console.error('Error fetching live fixtures:', error);

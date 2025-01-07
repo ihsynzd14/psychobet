@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table';
 import { api } from '@/lib/api';
 import type { Fixture } from '@/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface FeedTableProps {
   fixtures: Fixture[];
@@ -23,6 +24,7 @@ interface FeedTableProps {
 
 export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const lastActions = Object.fromEntries(
     fixtures.map(fixture => {
@@ -31,9 +33,24 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
         fixture.fixtureId,
         useQuery({
           queryKey: ['lastAction', fixture.fixtureId],
-          queryFn: () => api.getLastAction(fixture.fixtureId),
+          queryFn: async () => {
+            try {
+              const result = await api.getLastAction(fixture.fixtureId);
+              return result;
+            } catch (error) {
+              console.error(`Feed error for fixture ${fixture.fixtureId}:`, error);
+              // Return previous data if available to prevent feed interruption
+              const previousData = queryClient.getQueryData(['lastAction', fixture.fixtureId]);
+              if (previousData) return previousData;
+              return null;
+            }
+          },
           enabled: isActive,
           refetchInterval: isActive ? 5000 : false,
+          staleTime: Infinity,
+          gcTime: Infinity,
+          retry: 3,
+          retryDelay: 1000
         })
       ];
     })
@@ -72,9 +89,11 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
-              <TableHead className="w-[250px] font-semibold">Match Details</TableHead>
-              <TableHead className="font-semibold">Status</TableHead>
-              <TableHead className="font-semibold">Kickoff Time</TableHead>
+              <TableHead className="w-[100px] font-semibold">ID</TableHead>
+              <TableHead className="w-[300px] font-semibold">Match</TableHead>
+              <TableHead className="w-[200px] font-semibold">Tournament</TableHead>
+              <TableHead className="w-[120px] font-semibold">Status</TableHead>
+              <TableHead className="w-[180px] font-semibold">Start Time</TableHead>
               <TableHead className="font-semibold">Last Action</TableHead>
               <TableHead className="text-right w-[250px] font-semibold">Actions</TableHead>
             </TableRow>
@@ -87,29 +106,38 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
               return (
                 <TableRow 
                   key={fixture.fixtureId} 
-                  className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-100 dark:border-gray-800"
+                  className="hover:bg-gray-50/80 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-100 dark:border-gray-800"
                 >
+                  <TableCell className="font-mono">
+                    #{fixture.fixtureId}
+                  </TableCell>
                   <TableCell>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-lg bg-blue-500/10">
-                          <Shield className="w-4 h-4 text-blue-500" />
-                        </div>
-                        <span className="font-medium text-gray-900 dark:text-white">{fixture.fixtureId}</span>
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-indigo-500/10">
+                        <Shield className="w-4 h-4 text-indigo-500" />
                       </div>
+                      <span className="font-medium text-gray-900 dark:text-white">{fixture.name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-amber-500/10">
+                        <Trophy className="w-4 h-4 text-amber-500" />
+                      </div>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{fixture.competitionName}</span>
                     </div>
                   </TableCell>
                   <TableCell>
                     <Badge 
                       variant="outline" 
-                      className={`${getStatusColor(fixture.status)} px-4 py-1`}
+                      className={`${getStatusColor(fixture.status)} px-3 py-1`}
                     >
                       {fixture.status}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-4 h-4 text-blue-500" />
                       <time className="tabular-nums">
                         {new Date(fixture.startDateUtc).toLocaleString(undefined, {
                           month: 'short',
