@@ -19,7 +19,6 @@ export interface MatchEvent {
   addedMinutes?: number;
   bookingState?: 'YellowCardDanger' | 'RedCardDanger' | 'Safe' ; // Added this property
 }
-
 export interface ProcessedMatchEvent extends MatchEvent {
   displaySide: 'left' | 'right' | 'center';
   category: 'attack' | 'defense' | 'setpiece' | 'disciplinary' | 'system' | 'other';
