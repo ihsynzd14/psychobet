@@ -4,6 +4,21 @@ import { TimelineEvent } from './types';
 import { getEventIcon } from './event-icons';
 import { cleanEventName } from './utils';
 
+const formatDangerState = (dangerState: string | undefined) => {
+  if (!dangerState) return '';
+  
+  if (dangerState.includes('Safe')) return 'Safe';
+  if (dangerState.includes('CornerDanger')) return 'Corner Risk';
+  if (dangerState.includes('Corner')) return 'Corner Awarded';
+  if (dangerState.includes('DangerousAttack')) return 'Dangerous Attack';
+  if (dangerState.includes('Attack')) return 'Attack';
+  if (dangerState.includes('DangerousFreeKick')) return 'Free Kick - Dangerous Attack';
+  if (dangerState.includes('AttackingFreeKick')) return 'Free Kick - Attack';
+  if (dangerState.includes('FreeKick')) return 'Free Kick - Safe';
+  
+  return dangerState;
+};
+
 interface EventCardProps {
   event: TimelineEvent;
 }
@@ -84,7 +99,9 @@ export function EventCard({ event }: EventCardProps) {
         
         {event.dangerState && (
           <p className="text-sm font-medium">
-            {cleanEventName(event.dangerState)}
+            {event.type === 'dangerStateChanges' 
+              ? formatDangerState(event.dangerState)
+              : cleanEventName(event.dangerState)}
           </p>
         )}
 

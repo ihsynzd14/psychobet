@@ -5,6 +5,21 @@ import { formatTimestamp } from '@/lib/utils';
 import { ProcessedMatchEvent } from './types/match-event';
 import { formatMatchTime } from './utils';
 
+const formatDangerState = (dangerState: string | undefined) => {
+  if (!dangerState) return '';
+  
+  if (dangerState.includes('Safe')) return 'Safe';
+  if (dangerState.includes('CornerDanger')) return 'Corner Risk';
+  if (dangerState.includes('Corner')) return 'Corner Awarded';
+  if (dangerState.includes('DangerousAttack')) return 'Dangerous Attack';
+  if (dangerState.includes('Attack')) return 'Attack';
+  if (dangerState.includes('DangerousFreeKick')) return 'Free Kick - Dangerous Attack';
+  if (dangerState.includes('AttackingFreeKick')) return 'Free Kick - Attack';
+  if (dangerState.includes('FreeKick')) return 'Free Kick - Safe';
+  
+  return dangerState;
+};
+
 interface EventRowProps {
   event: ProcessedMatchEvent;
   centerEventDetails?: {
@@ -107,9 +122,26 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
                       ? `VAR ${event.varReason} Check - ${event.varState}`
+                      : event.type === 'dangerStateChanges'
+                      ? formatDangerState(event.dangerState)
+                      : event.type === 'shotsOnTarget'
+                      ? 'Shot on Target'
+                      : event.type === 'shotsOffTarget'
+                      ? 'Shot off Target'
+                      : event.type === 'blockedShots'
+                      ? 'Shot Blocked'
+                      : event.type === 'shotsOffWoodwork'
+                      ? 'Shot hit Woodwork'
+                      : event.type === 'throwIns' && event.dangerState?.includes('DangerousAttack')
+                      ? 'Throw In Dangerous Attack'
+                      : event.type === 'throwIns' && event.dangerState?.includes('Attack')
+                      ? 'Throw In Attack'
+                      : event.type === 'throwIns' && event.dangerState?.includes('Safe')
+                      ? 'Throw In Safe'
                       : event.message || event.dangerState || event.type}
                   </span>
-                  {(event.team || event.foulingTeam) && (
+                  {(event.team || event.foulingTeam) && 
+                   !['kickOffs', 'shotsOnTarget', 'shotsOffTarget', 'blockedShots', 'shotsOffWoodwork', 'throwIns'].includes(event.type) && (
                     <span className="text-xs text-muted-foreground/80">
                       {event.team || event.foulingTeam}
                     </span>
@@ -150,9 +182,26 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
                       ? `VAR ${event.varReason} Check - ${event.varState}`
+                      : event.type === 'dangerStateChanges'
+                      ? formatDangerState(event.dangerState)
+                      : event.type === 'shotsOnTarget'
+                      ? 'Shot on Target'
+                      : event.type === 'shotsOffTarget'
+                      ? 'Shot off Target'
+                      : event.type === 'blockedShots'
+                      ? 'Shot Blocked'
+                      : event.type === 'shotsOffWoodwork'
+                      ? 'Shot hit Woodwork'
+                      : event.type === 'throwIns' && event.dangerState?.includes('DangerousAttack')
+                      ? 'Throw In Dangerous Attack'
+                      : event.type === 'throwIns' && event.dangerState?.includes('Attack')
+                      ? 'Throw In Attack'
+                      : event.type === 'throwIns' && event.dangerState?.includes('Safe')
+                      ? 'Throw In Safe'
                       : event.message || event.dangerState || event.type}
                   </span>
-                  {(event.team || event.foulingTeam) && (
+                  {(event.team || event.foulingTeam) && 
+                   !['kickOffs', 'shotsOnTarget', 'shotsOffTarget', 'blockedShots', 'shotsOffWoodwork', 'throwIns'].includes(event.type) && (
                     <span className="text-xs text-muted-foreground/80">
                       {event.team || event.foulingTeam}
                     </span>
