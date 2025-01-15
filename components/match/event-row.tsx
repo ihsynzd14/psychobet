@@ -1,9 +1,9 @@
 import { memo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { getEventIcon } from './event-icons';
-import { formatTimestamp } from '@/lib/utils';
-import { ProcessedMatchEvent } from './types/match-event';
 import { formatMatchTime } from './utils';
+import { ProcessedMatchEvent } from './types/match-event';
+import { getEventUIName } from '@/lib/event-mappings';
 
 interface EventRowProps {
   event: ProcessedMatchEvent;
@@ -16,6 +16,7 @@ interface EventRowProps {
 export const EventRow = memo(function EventRow({ event, centerEventDetails }: EventRowProps) {
   const timestamp = new Date(event.timestamp).toLocaleTimeString();
   const formattedTime = formatMatchTime(event.timeElapsed, event.phase);
+  const eventName = getEventUIName(event);
   
   const getEventStyles = (event: ProcessedMatchEvent) => {
     if (event.displaySide === 'center') {
@@ -35,19 +36,6 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
       return 'bg-slate-100/80 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800';
     }
 
-    // Danger state based colors
-    if (event.dangerState?.includes('DangerousAttack')) {
-      return 'bg-red-200/90 dark:bg-red-950/50 border border-red-300 dark:border-red-900';
-    }
-
-    if (event.dangerState?.includes('Attack')) {
-      return 'bg-amber-100/90 dark:bg-amber-900/40 border border-amber-200 dark:border-amber-800';
-    }
-
-    if (event.dangerState?.includes('Safe')) {
-      return 'bg-green-100/80 dark:bg-green-900/30 border border-green-200 dark:border-green-800';
-    }
-
     // VAR states
     if (event.type === 'varStateChanges') {
       switch (event.varState) {
@@ -64,6 +52,7 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
 
     return 'bg-gray-100/80 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-800';
   };
+
 
   if (event.displaySide === 'center' && centerEventDetails) {
     return (
@@ -105,9 +94,7 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                 </div>
                 <div className="flex flex-col gap-0.5 min-w-0 flex-grow">
                   <span className="text-sm font-medium leading-tight truncate">
-                    {event.type === 'varStateChanges' 
-                      ? `VAR ${event.varReason} Check - ${event.varState}`
-                      : event.message || event.dangerState || event.type}
+                  {eventName}
                   </span>
                   {(event.team || event.foulingTeam) && (
                     <span className="text-xs text-muted-foreground/80">
@@ -147,16 +134,14 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   {getEventIcon(event.type, event.dangerState)}
                 </div>
                 <div className="flex flex-col gap-0.5 min-w-0 flex-grow">
-                  <span className="text-sm font-medium leading-tight truncate">
-                    {event.type === 'varStateChanges' 
-                      ? `VAR ${event.varReason} Check - ${event.varState}`
-                      : event.message || event.dangerState || event.type}
+                <span className="text-sm font-medium leading-tight truncate">
+                  {eventName}
+                </span>
+                {(event.team || event.foulingTeam) && (
+                  <span className="text-xs text-muted-foreground/80">
+                    {event.team || event.foulingTeam}
                   </span>
-                  {(event.team || event.foulingTeam) && (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.team || event.foulingTeam}
-                    </span>
-                  )}
+                )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">

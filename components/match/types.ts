@@ -7,6 +7,7 @@ export interface TimelineEvent {
   team?: string;
   isConfirmed: boolean;
   dangerState?: string;
+  uiName?: string;
   description?: string;
   message?: string;
   previousPhase?: string;
@@ -19,7 +20,6 @@ export interface MatchData {
     yellowCards: TimelineEvent[];
     redCards: TimelineEvent[];
     corners: TimelineEvent[];
-    fouls: TimelineEvent[];
     throwIns: TimelineEvent[];
     substitutions: TimelineEvent[];
     offsides: TimelineEvent[];

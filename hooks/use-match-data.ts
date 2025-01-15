@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 
@@ -10,95 +10,108 @@ interface UseMatchDataOptions {
 
 export function useMatchData({ 
   fixtureId, 
-  bufferSize = 5, // Reduced buffer size for faster processing
-  updateInterval = 1 // 1ms interval
+  bufferSize = 5,
+  updateInterval = 16 // Sync with monitor refresh rate (~60fps)
 }: UseMatchDataOptions) {
   const queryClient = useQueryClient();
   const updateBuffer = useRef<any[]>([]);
-  const updateTimeoutRef = useRef<number>();
+  const rafRef = useRef<number>();
   const lastProcessTime = useRef<number>(Date.now());
+  const isProcessing = useRef(false);
 
-  // Main data queries with minimal refetch intervals
-  const { data: fixture } = useQuery({
-    queryKey: ['fixture', fixtureId],
-    queryFn: () => api.getFixture(fixtureId),
-    refetchInterval: updateInterval,
-  });
-
-  const { data: feedData } = useQuery({
-    queryKey: ['feed', fixtureId],
-    queryFn: () => api.getFeedView(fixtureId),
-    refetchInterval: updateInterval,
-  });
-
-  const { data: lastAction } = useQuery({
-    queryKey: ['lastAction', fixtureId],
-    queryFn: () => api.getLastAction(fixtureId),
-    refetchInterval: updateInterval,
-  });
-
-  // Process buffered updates using requestAnimationFrame
-  const processBuffer = () => {
-    if (updateBuffer.current.length === 0) return;
+  // Optimized processing function
+  const processBuffer = useCallback(() => {
+    if (!updateBuffer.current.length || isProcessing.current) return;
 
     const now = Date.now();
-    // Ensure minimum time between updates to prevent overwhelming the UI
     if (now - lastProcessTime.current < updateInterval) {
-      updateTimeoutRef.current = requestAnimationFrame(processBuffer);
+      rafRef.current = requestAnimationFrame(processBuffer);
       return;
     }
 
-    // Take the most recent state for each type of update
-    const updates = updateBuffer.current.reduce((acc, update) => {
-      acc[update.type] = update.data;
-      return acc;
-    }, {} as Record<string, any>);
+    isProcessing.current = true;
 
-    // Apply all updates at once
-    Object.entries(updates).forEach(([type, data]) => {
-      queryClient.setQueryData([type, fixtureId], data);
-    });
+    try {
+      // Take the most recent state for each type of update
+      const updates = updateBuffer.current.reduce((acc, update) => {
+        acc[update.type] = update.data;
+        return acc;
+      }, {} as Record<string, any>);
 
-    // Clear the buffer and update last process time
-    updateBuffer.current = [];
-    lastProcessTime.current = now;
-  };
+      // Batch update all queries
+      queryClient.setQueriesData(
+        { queryKey: ['fixture', fixtureId] },
+        updates.fixture
+      );
+      queryClient.setQueriesData(
+        { queryKey: ['feed', fixtureId] },
+        updates.feed
+      );
+      queryClient.setQueriesData(
+        { queryKey: ['lastAction', fixtureId] },
+        updates.lastAction
+      );
 
-  // Buffer updates and schedule processing
-  const bufferUpdate = (type: string, data: any) => {
+      // Clear the buffer
+      updateBuffer.current = [];
+      lastProcessTime.current = now;
+    } finally {
+      isProcessing.current = false;
+    }
+  }, [fixtureId, queryClient, updateInterval]);
+
+  // Optimized buffer update function
+  const bufferUpdate = useCallback((type: string, data: any) => {
     updateBuffer.current.push({ type, data });
 
     if (updateBuffer.current.length >= bufferSize) {
-      if (updateTimeoutRef.current) {
-        cancelAnimationFrame(updateTimeoutRef.current);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
       }
-      updateTimeoutRef.current = requestAnimationFrame(processBuffer);
+      rafRef.current = requestAnimationFrame(processBuffer);
     }
-  };
+  }, [bufferSize, processBuffer]);
 
   // Subscribe to real-time updates
   useEffect(() => {
     if (!fixtureId) return;
 
     const unsubscribe = api.subscribeToFixture(fixtureId, (data) => {
-      if (data?.fixture) {
-        bufferUpdate('fixture', data.fixture);
-      }
-      if (data?.feed) {
-        bufferUpdate('feed', data.feed);
-      }
-      if (data?.lastAction) {
-        bufferUpdate('lastAction', data.lastAction);
-      }
+      if (data?.fixture) bufferUpdate('fixture', data.fixture);
+      if (data?.feed) bufferUpdate('feed', data.feed);
+      if (data?.lastAction) bufferUpdate('lastAction', data.lastAction);
     });
 
+    // Cleanup function
     return () => {
-      if (updateTimeoutRef.current) {
-        cancelAnimationFrame(updateTimeoutRef.current);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
       }
       unsubscribe();
     };
-  }, [fixtureId]);
+  }, [fixtureId, bufferUpdate]);
+
+  // Optimized queries with minimal refetch intervals
+  const { data: fixture } = useQuery({
+    queryKey: ['fixture', fixtureId],
+    queryFn: () => api.getFixture(fixtureId),
+    staleTime: updateInterval,
+    gcTime: Infinity,
+  });
+
+  const { data: feedData } = useQuery({
+    queryKey: ['feed', fixtureId],
+    queryFn: () => api.getFeedView(fixtureId),
+    staleTime: updateInterval,
+    gcTime: Infinity,
+  });
+
+  const { data: lastAction } = useQuery({
+    queryKey: ['lastAction', fixtureId],
+    queryFn: () => api.getLastAction(fixtureId),
+    staleTime: updateInterval,
+    gcTime: Infinity,
+  });
 
   return {
     fixture,

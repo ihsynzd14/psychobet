@@ -82,6 +82,12 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
           description: getVarDescription(event)
         };
       }
+      if (event.type === 'dangerStateChanges') {
+        return {
+          title: event.uiName || 'Danger State Change',
+          description: 'Match State Update'
+        };
+      }
     }
     return null;
   };

@@ -1,13 +1,5 @@
 import { TimelineEvent } from './types';
 
-export const cleanEventName = (eventName: string): string => {
-  // Remove Home/Away prefix
-  const withoutTeam = eventName.replace(/(Home|Away)/, '').trim();
-  
-  // Add spaces before capital letters
-  return withoutTeam.replace(/([A-Z])/g, ' $1').trim();
-};
-
 export const sortEventsByTimestamp = (events: TimelineEvent[]): TimelineEvent[] => {
   return events.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 };

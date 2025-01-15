@@ -7,6 +7,7 @@ export interface MatchEvent {
   isConfirmed: boolean;
   type: string;
   dangerState?: string;
+  uiName?: string;
   message?: string;
   playerId?: string | null;
   foulingTeam?: 'Home' | 'Away';

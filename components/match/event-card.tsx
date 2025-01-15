@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge';
 import { formatTimestamp } from '@/lib/utils';
 import { TimelineEvent } from './types';
 import { getEventIcon } from './event-icons';
-import { cleanEventName } from './utils';
 
 interface EventCardProps {
   event: TimelineEvent;
@@ -58,7 +57,7 @@ export function EventCard({ event }: EventCardProps) {
         <div className="flex items-center gap-2">
           {getEventIcon(event.type, event.dangerState)}
           <span className="font-medium text-sm">
-            {cleanEventName(event.type)}
+            {event.type}
           </span>
         </div>
         <span className="text-sm text-muted-foreground">
@@ -84,7 +83,7 @@ export function EventCard({ event }: EventCardProps) {
         
         {event.dangerState && (
           <p className="text-sm font-medium">
-            {cleanEventName(event.dangerState)}
+            {event.uiName || event.dangerState}
           </p>
         )}
 

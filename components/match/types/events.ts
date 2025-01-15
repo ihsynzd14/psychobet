@@ -19,6 +19,5 @@ export type EventType =
   | 'yellowCards'
   | 'redCards'
   | 'corners'
-  | 'fouls'
   | 'dangerStateChanges'
   | 'systemMessages';

@@ -26,15 +26,20 @@ const axiosInstance = axios.create({
 });
 
 // Singleton WebSocket connection with optimized settings
+// Update the SocketManager class
 class SocketManager {
   private static instance: SocketManager;
   private socket: any;
   private subscriptions: Map<string, Set<(data: any) => void>>;
-  private reconnectAttempts: number = 0;
-  private maxReconnectAttempts: number = 5;
+  private messageBuffer: Map<string, any[]>;
+  private bufferTimeout: number = 16; // ~60fps
+  private maxBufferSize: number = 10;
+  private processingTimers: Map<string, NodeJS.Timeout>;
 
   private constructor() {
     this.subscriptions = new Map();
+    this.messageBuffer = new Map();
+    this.processingTimers = new Map();
     this.initSocket();
   }
 
@@ -51,65 +56,121 @@ class SocketManager {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      reconnectionAttempts: this.maxReconnectAttempts,
-      timeout: 3000,
-      forceNew: false
+      timeout: 2000,
+      forceNew: false,
+      // Enable binary data transfer for better performance
+      binaryType: 'arraybuffer',
+      // Increase performance with larger buffer size
+      maxHttpBufferSize: 1e8,
+      // Reduce ping interval for more responsive connection
+      pingInterval: 2000,
+      pingTimeout: 5000
     });
 
+    this.setupSocketListeners();
+  }
+
+  private setupSocketListeners() {
     this.socket.on('connect', () => {
       console.log('Socket connected');
-      this.reconnectAttempts = 0;
-      
-      // Resubscribe to all fixtures after reconnection
-      this.subscriptions.forEach((callbacks, fixtureId) => {
-        this.socket.emit('subscribe', fixtureId);
-      });
-    });
-
-    this.socket.on('connect_error', (error: Error) => {
-      console.error('Socket connection error:', error);
-      this.reconnectAttempts++;
-      
-      if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-        console.error('Max reconnection attempts reached');
-      }
+      this.resubscribeAll();
     });
 
     this.socket.on('disconnect', (reason: string) => {
-      console.log('Socket disconnected:', reason);
       if (reason === 'io server disconnect') {
         this.socket.connect();
       }
     });
   }
 
+  private resubscribeAll() {
+    this.subscriptions.forEach((_, fixtureId) => {
+      this.socket.emit('subscribe', fixtureId);
+    });
+  }
+
+  private processMessageBuffer(fixtureId: string) {
+    const buffer = this.messageBuffer.get(fixtureId) || [];
+    if (buffer.length === 0) return;
+
+    // Get callbacks for this fixture
+    const callbacks = this.subscriptions.get(fixtureId);
+    if (!callbacks) return;
+
+    // Process all messages in the buffer
+    const latestMessage = buffer[buffer.length - 1];
+    
+    // Use requestAnimationFrame for smooth updates
+    requestAnimationFrame(() => {
+      callbacks.forEach(callback => {
+        try {
+          callback(latestMessage);
+        } catch (error) {
+          console.error('Error in callback:', error);
+        }
+      });
+    });
+
+    // Clear the buffer
+    this.messageBuffer.set(fixtureId, []);
+  }
+
   subscribe(fixtureId: string, callback: (data: any) => void) {
     if (!this.subscriptions.has(fixtureId)) {
       this.subscriptions.set(fixtureId, new Set());
+      this.messageBuffer.set(fixtureId, []);
       this.socket.emit('subscribe', fixtureId);
-    }
-    
-    const callbacks = this.subscriptions.get(fixtureId)!;
-    callbacks.add(callback);
-    
-    // Set up event listener if not already set
-    if (callbacks.size === 1) {
+
+      // Set up event listener for this fixture
       this.socket.on(`fixture:${fixtureId}`, (data: any) => {
-        callbacks.forEach(cb => cb(data));
+        const buffer = this.messageBuffer.get(fixtureId) || [];
+        buffer.push(data);
+        this.messageBuffer.set(fixtureId, buffer);
+
+        // Clear existing timer
+        const existingTimer = this.processingTimers.get(fixtureId);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+        }
+
+        // Process immediately if buffer is full
+        if (buffer.length >= this.maxBufferSize) {
+          this.processMessageBuffer(fixtureId);
+        } else {
+          // Schedule processing
+          const timer = setTimeout(() => {
+            this.processMessageBuffer(fixtureId);
+          }, this.bufferTimeout);
+          this.processingTimers.set(fixtureId, timer);
+        }
       });
     }
+
+    const callbacks = this.subscriptions.get(fixtureId)!;
+    callbacks.add(callback);
 
     return () => {
       const callbacks = this.subscriptions.get(fixtureId);
       if (callbacks) {
         callbacks.delete(callback);
         if (callbacks.size === 0) {
-          this.socket.off(`fixture:${fixtureId}`);
-          this.socket.emit('unsubscribe', fixtureId);
-          this.subscriptions.delete(fixtureId);
+          this.unsubscribe(fixtureId);
         }
       }
     };
+  }
+
+  private unsubscribe(fixtureId: string) {
+    this.socket.off(`fixture:${fixtureId}`);
+    this.socket.emit('unsubscribe', fixtureId);
+    this.subscriptions.delete(fixtureId);
+    this.messageBuffer.delete(fixtureId);
+    
+    const timer = this.processingTimers.get(fixtureId);
+    if (timer) {
+      clearTimeout(timer);
+      this.processingTimers.delete(fixtureId);
+    }
   }
 }
 
