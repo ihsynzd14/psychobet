@@ -96,7 +96,8 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   <span className="text-sm font-medium leading-tight truncate">
                   {eventName}
                   </span>
-                  {(event.team || event.foulingTeam) && (
+                  {(event.team || event.foulingTeam) && 
+                   !['kickOffs', 'shotsOnTarget', 'shotsOffTarget', 'blockedShots', 'shotsOffWoodwork', 'throwIns'].includes(event.type) && (
                     <span className="text-xs text-muted-foreground/80">
                       {event.team || event.foulingTeam}
                     </span>

@@ -53,10 +53,10 @@ export function formatMatchTime(timeElapsed: string, phase: string): string {
 
 export function getKickoffDescription(team: string, phase: string): string {
   if (phase === 'FirstHalf') {
-    return `Kick off`;
+    return `Kick Off`;
   }
   if (phase === 'SecondHalf') {
-    return `Kick off`;
+    return `Kick Off`;
   }
   return `Kickoff by ${team} Team`;
 }

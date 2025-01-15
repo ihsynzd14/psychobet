@@ -52,38 +52,41 @@ export function determineDisplaySide(event: MatchEvent): 'left' | 'right' | 'cen
 }
 
 export function processMatchEvents(matchData: any): ProcessedMatchEvent[] {
-  const allEvents: ProcessedMatchEvent[] = [];
   const actions = matchData?.actions || {};
+  const throwIns = actions['throwIns'] || [];
+  const allEvents: ProcessedMatchEvent[] = [];
+  
+  // Create a Map for faster lookups of throw in timestamps
+  const throwInMap = new Map<string, boolean>();
+  for (let i = 0; i < throwIns.length; i++) {
+    throwInMap.set(throwIns[i].timestamp, true);
+  }
 
-  RELEVANT_EVENT_TYPES.forEach(type => {
-    if (Array.isArray(actions[type])) {
-      actions[type].forEach((event: MatchEvent) => {
-        if (type === 'dangerStateChanges' && ['HalfTime', 'FullTimeNormalTime'].includes(event.phase)) {
-          return;
+  // Process all events in a single loop
+  for (const type of RELEVANT_EVENT_TYPES) {
+    const events = actions[type] || [];
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
+      
+      // Skip invalid events
+      if (type === 'dangerStateChanges') {
+        if (['HalfTime', 'FullTimeNormalTime'].includes(event.phase) || throwInMap.has(event.timestamp)) {
+          continue;
         }
+      }
 
-        const addedMinutes = type === 'stoppageTimeAnnouncements' 
-          ? (event as any).addedMinutes 
-          : undefined;
-
-        // Add description for kickoffs
-        const message = type === 'kickOffs' 
-          ? getKickoffDescription(event.team || '', event.phase)
-          : event.message;
-
-        allEvents.push({
-          ...event,
-          type,
-          message,
-          displaySide: determineDisplaySide(event),
-          category: determineEventCategory(event),
-          addedMinutes
-        });
+      // Process event
+      allEvents.push({
+        ...event,
+        type,
+        message: type === 'kickOffs' ? getKickoffDescription(event.team || '', event.phase) : event.message,
+        displaySide: determineDisplaySide(event),
+        category: determineEventCategory(event),
+        addedMinutes: type === 'stoppageTimeAnnouncements' ? (event as any).addedMinutes : undefined
       });
     }
-  });
+  }
 
-  return allEvents.sort((a, b) => 
-    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-  );
+  // Sort using timestamp comparison instead of Date objects
+  return allEvents.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
 }
