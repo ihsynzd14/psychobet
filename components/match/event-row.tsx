@@ -73,7 +73,7 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
         </div>
         <div className="flex flex-col items-center gap-0.5">
           <span className="text-sm font-medium">{centerEventDetails.title}</span>
-          <span className="text-xs text-muted-foreground">{event.phase}</span>
+          <span className="text-xs text-muted-foreground">{event.phaseDisplay || event.phase}</span>
         </div>
       </div>
     );
@@ -106,19 +106,23 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                 <div className="flex flex-col gap-0.5 min-w-0 flex-grow">
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
-                      ? `VAR ${event.varReason} Check - ${event.varState}`
-                      : event.message || event.dangerState || event.type}
+                      ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
+                      : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
-                  {(event.team || event.foulingTeam) && (
+                  {((event.team || event.foulingTeam) && event.type !== 'dangerStateChanges') ? (
                     <span className="text-xs text-muted-foreground/80">
                       {event.team || event.foulingTeam}
+                    </span>
+                  ) : event.type === 'dangerStateChanges' && (
+                    <span className="text-xs text-muted-foreground/80">
+                      {event.dangerStateDisplay || event.dangerState}
                     </span>
                   )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
                 <span className="text-sm font-medium">{formattedTime}</span>
-                <span className="text-xs text-muted-foreground/80">{event.phase}</span>
+                <span className="text-xs text-muted-foreground/80">{event.phaseDisplay || event.phase}</span>
               </div>
             </div>
           </div>
@@ -149,19 +153,23 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                 <div className="flex flex-col gap-0.5 min-w-0 flex-grow">
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
-                      ? `VAR ${event.varReason} Check - ${event.varState}`
-                      : event.message || event.dangerState || event.type}
+                      ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
+                      : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
-                  {(event.team || event.foulingTeam) && (
+                  {((event.team || event.foulingTeam) && event.type !== 'dangerStateChanges') ? (
                     <span className="text-xs text-muted-foreground/80">
                       {event.team || event.foulingTeam}
+                    </span>
+                  ) : event.type === 'dangerStateChanges' && (
+                    <span className="text-xs text-muted-foreground/80">
+                      {event.dangerStateDisplay || event.dangerState}
                     </span>
                   )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
                 <span className="text-sm font-medium">{formattedTime}</span>
-                <span className="text-xs text-muted-foreground/80">{event.phase}</span>
+                <span className="text-xs text-muted-foreground/80">{event.phaseDisplay || event.phase}</span>
               </div>
             </div>
           </div>
