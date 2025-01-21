@@ -1,16 +1,38 @@
-import { useRef } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Card } from '@/components/ui/card';
 import { EventRow } from './event-row';
 import { processMatchEvents } from './utils/event-processor';
-import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { ProcessedMatchEvent } from './types/match-event';
+import { EventSettingsSheet } from './event-settings-sheet';
 
 interface MatchActionTimelineProps {
   fixtureId: any;
   matchData: any;
 }
+
+const EVENT_TYPES = [
+  { id: 'goals', label: 'Goals' },
+  { id: 'yellowCards', label: 'Yellow Cards' },
+  { id: 'redCards', label: 'Red Cards' },
+  { id: 'corners', label: 'Corners' },
+  { id: 'dangerStateChanges', label: 'Danger States' },
+  { id: 'systemMessages', label: 'System Messages' },
+  { id: 'phaseChanges', label: 'Phase Changes' },
+  { id: 'shotsOnTarget', label: 'Shots on Target' },
+  { id: 'shotsOffTarget', label: 'Shots off Target' },
+  { id: 'blockedShots', label: 'Blocked Shots' },
+  { id: 'fouls', label: 'Fouls' },
+  { id: 'throwIns', label: 'Throw Ins' },
+  { id: 'substitutions', label: 'Substitutions' },
+  { id: 'goalKicks', label: 'Goal Kicks' },
+  { id: 'varStateChanges', label: 'VAR States' },
+  { id: 'offsides', label: 'Offsides' },
+  { id: 'stoppageTimeAnnouncements', label: 'Stoppage Time' },
+  { id: 'kickOffs', label: 'Kick Offs' },
+  { id: 'bookingStateChanges', label: 'Booking States' }
+];
 
 const varStateMap: Record<string, string> = {
   'Danger': 'VAR Check Started',
@@ -20,8 +42,12 @@ const varStateMap: Record<string, string> = {
 
 export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelineProps) {
   const parentRef = useRef<HTMLDivElement>(null);
+  const [visibleEvents, setVisibleEvents] = useState<Set<string>>(new Set(EVENT_TYPES.map(et => et.id)));
   
-  const events = useMemo(() => processMatchEvents(matchData), [matchData]);
+  const events = useMemo(() => {
+    const processedEvents = processMatchEvents(matchData);
+    return processedEvents.filter(event => visibleEvents.has(event.type));
+  }, [matchData, visibleEvents]);
 
   const rowVirtualizer = useVirtualizer({
     count: events.length,
@@ -87,8 +113,19 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
   };
     
   return (
-    <Card className="relative overflow-hidden border-none shadow-none ">
-      <h1 className="text-center font-medium py-3 text-lg">Match Timeline</h1>
+    <Card className="relative overflow-hidden border-none shadow-none">
+      <div className="flex justify-between items-center px-4 py-3">
+        <div className="flex-1 flex justify-center">
+          <div className="relative">
+            <div className="absolute -bottom-1 left-0 right-0 h-[2px] bg-red-500"></div>
+          </div>
+        </div>
+        <EventSettingsSheet 
+          eventTypes={EVENT_TYPES}
+          visibleEvents={visibleEvents}
+          onVisibilityChange={setVisibleEvents}
+        />
+      </div>
       <div 
         ref={parentRef}
         className="h-[600px] overflow-auto overscroll-none scroll-smooth px-2"

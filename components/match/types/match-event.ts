@@ -37,6 +37,10 @@ export interface ProcessedMatchEvent {
   varState?: string;
   varStateDisplay?: string;
   varReason?: string;
+  varOutcome?: string;
+  currentPhase?: string;
+  addedMinutes?: number;
+  bookingState?: 'YellowCardDanger' | 'RedCardDanger' | 'Safe';
   isConfirmed: boolean;
   category?: 'attack' | 'defense' | 'setpiece' | 'disciplinary' | 'system' | 'other';
 }
