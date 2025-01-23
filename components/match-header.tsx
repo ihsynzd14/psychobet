@@ -7,7 +7,7 @@ import { Activity, ArrowLeft, Clock, Flag } from 'lucide-react';
 import { MatchConditions } from './match/match-conditions';
 import { MatchStats } from './match/match-stats';
 import { TeamJersey } from './match/jerseys/team-jersey';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 
 interface LastAction {
@@ -59,6 +59,8 @@ export function MatchHeader({
   awayTeam = 'Away Team',
   goals 
 }: MatchHeaderProps) {
+  const router = useRouter();
+  
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0">

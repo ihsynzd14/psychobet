@@ -117,17 +117,10 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
                       ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
+                      : event.type === 'dangerStateChanges'
+                      ? event.dangerStateDisplay
                       : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
-                  {((event.team || event.foulingTeam) && event.type !== 'dangerStateChanges') ? (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.team || event.foulingTeam}
-                    </span>
-                  ) : event.type === 'dangerStateChanges' && (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.dangerStateDisplay || event.dangerState}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
@@ -164,17 +157,10 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
                       ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
+                      : event.type === 'dangerStateChanges'
+                      ? event.dangerStateDisplay
                       : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
-                  {((event.team || event.foulingTeam) && event.type !== 'dangerStateChanges') ? (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.team || event.foulingTeam}
-                    </span>
-                  ) : event.type === 'dangerStateChanges' && (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.dangerStateDisplay || event.dangerState}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
