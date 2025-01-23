@@ -81,9 +81,19 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
 
   const TimelinePoint = () => (
     <div className="flex items-center gap-2">
-      <div className="text-xs text-muted-foreground/70 min-w-[60px]">{timestamp}</div>
-      <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-      <div className="h-[1px] flex-grow bg-muted-foreground/20" />
+      {event.displaySide === 'right' ? (
+        <>
+          <div className="text-xs text-muted-foreground/70 min-w-[60px]">{timestamp}</div>
+          <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+          <div className="h-[1px] flex-grow bg-muted-foreground/20" />
+        </>
+      ) : (
+        <>
+          <div className="h-[1px] flex-grow bg-muted-foreground/20" />
+          <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+          <div className="text-xs text-muted-foreground/70 min-w-[60px]">{timestamp}</div>
+        </>
+      )}
     </div>
   );
   
@@ -107,17 +117,10 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
                       ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
+                      : event.type === 'dangerStateChanges'
+                      ? event.dangerStateDisplay
                       : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
-                  {((event.team || event.foulingTeam) && event.type !== 'dangerStateChanges') ? (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.team || event.foulingTeam}
-                    </span>
-                  ) : event.type === 'dangerStateChanges' && (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.dangerStateDisplay || event.dangerState}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
@@ -154,17 +157,10 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                   <span className="text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
                       ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
+                      : event.type === 'dangerStateChanges'
+                      ? event.dangerStateDisplay
                       : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
-                  {((event.team || event.foulingTeam) && event.type !== 'dangerStateChanges') ? (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.team || event.foulingTeam}
-                    </span>
-                  ) : event.type === 'dangerStateChanges' && (
-                    <span className="text-xs text-muted-foreground/80">
-                      {event.dangerStateDisplay || event.dangerState}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
