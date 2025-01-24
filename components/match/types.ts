@@ -19,7 +19,6 @@ export interface MatchData {
     yellowCards: TimelineEvent[];
     redCards: TimelineEvent[];
     corners: TimelineEvent[];
-    fouls: TimelineEvent[];
     throwIns: TimelineEvent[];
     substitutions: TimelineEvent[];
     offsides: TimelineEvent[];

@@ -39,6 +39,7 @@ export interface ProcessedMatchEvent {
   varReason?: string;
   isConfirmed: boolean;
   category?: 'attack' | 'defense' | 'setpiece' | 'disciplinary' | 'system' | 'other';
+  addedMinutes?: number;
 }
 
 export type EventCategory = 'attack' | 'defense' | 'setpiece' | 'disciplinary' | 'system' | 'other';

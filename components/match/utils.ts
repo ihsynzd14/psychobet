@@ -18,7 +18,6 @@ export const combineMatchEvents = (matchData: any): TimelineEvent[] => {
     { key: 'yellowCards', type: 'yellowCard' },
     { key: 'redCards', type: 'redCard' },
     { key: 'corners', type: 'corner' },
-    { key: 'fouls', type: 'foul', teamKey: 'foulingTeam' },
     { key: 'throwIns', type: 'throwIn' },
     { key: 'substitutions', type: 'substitution' },
     { key: 'offsides', type: 'offside' },
@@ -37,7 +36,6 @@ export const combineMatchEvents = (matchData: any): TimelineEvent[] => {
     return [...acc, ...events.map((e: any) => ({
       ...e,
       type: mapping.type,
-      team: mapping.teamKey ? e[mapping.teamKey] : e.team
     }))];
   }, []);
 };

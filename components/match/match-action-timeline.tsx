@@ -13,7 +13,7 @@ interface MatchActionTimelineProps {
 }
 
 const varStateMap: Record<string, string> = {
-  'Danger': 'VAR Check Started',
+  'Danger': 'Possible VAR',
   'InProgress': 'VAR Review in Progress',
   'Safe': 'VAR Check Complete'
 };

@@ -14,6 +14,7 @@ import {
 import { api } from '@/lib/api';
 import type { Fixture } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
 
 interface FeedTableProps {
   fixtures: Fixture[];
@@ -26,34 +27,32 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const queries = fixtures.map(fixture => {
+    const isActive = activeFeeds.has(fixture.fixtureId);
+    return useQuery({
+      queryKey: ['lastAction', fixture.fixtureId],
+      queryFn: async () => {
+        try {
+          const result = await api.getLastAction(fixture.fixtureId);
+          return result;
+        } catch (error) {
+          console.error(`Feed error for fixture ${fixture.fixtureId}:`, error);
+          // Return previous data if available to prevent feed interruption
+          const previousData = queryClient.getQueryData(['lastAction', fixture.fixtureId]);
+          if (previousData) return previousData;
+          return null;
+        }
+      },
+      enabled: isActive,
+      refetchInterval: isActive ? 5000 : false,
+    });
+  });
+
   const lastActions = Object.fromEntries(
-    fixtures.map(fixture => {
-      const isActive = activeFeeds.has(fixture.fixtureId);
-      return [
-        fixture.fixtureId,
-        useQuery({
-          queryKey: ['lastAction', fixture.fixtureId],
-          queryFn: async () => {
-            try {
-              const result = await api.getLastAction(fixture.fixtureId);
-              return result;
-            } catch (error) {
-              console.error(`Feed error for fixture ${fixture.fixtureId}:`, error);
-              // Return previous data if available to prevent feed interruption
-              const previousData = queryClient.getQueryData(['lastAction', fixture.fixtureId]);
-              if (previousData) return previousData;
-              return null;
-            }
-          },
-          enabled: isActive,
-          refetchInterval: isActive ? 5000 : false,
-          staleTime: Infinity,
-          gcTime: Infinity,
-          retry: 3,
-          retryDelay: 1000
-        })
-      ];
-    })
+    fixtures.map((fixture, index) => [
+      fixture.fixtureId,
+      queries[index]
+    ])
   );
 
   const getStatusColor = (status: string) => {
@@ -167,7 +166,7 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
                           variant="outline"
                           size="sm"
                           onClick={() => onStart(fixture.fixtureId)}
-                          className="bg-blue-950 group/btn hover:bg-green-50 hover:text-green-600 hover:border-green-200 dark:hover:bg-green-950 dark:hover:text-green-400 transition-colors"
+                          className="bg-white dark:bg-blue-950 group/btn hover:bg-green-50 hover:text-green-600 hover:border-green-200 dark:hover:bg-green-950 dark:hover:text-green-400 transition-colors"
                         >
                           <Play className="w-4 h-4 mr-2 group-hover/btn:animate-pulse" />
                           Start Feed
@@ -178,20 +177,21 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
                             variant="outline"
                             size="sm"
                             onClick={() => onStop(fixture.fixtureId)}
-                            className="bg-red-950 group/btn hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950 dark:hover:text-red-400 transition-colors"
+                            className="bg-white dark:bg-red-950 group/btn hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950 dark:hover:text-red-400 transition-colors"
                           >
                             <StopCircle className="w-4 h-4 mr-2 group-hover/btn:animate-pulse" />
                             Stop Feed
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => router.push(`/${fixture.fixtureId}`)}
-                            className="bg-slate-700 group/btn hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 dark:hover:bg-blue-950 dark:hover:text-blue-400 transition-colors"
-                          >
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            View Details
-                          </Button>
+                          <Link href={`/${fixture.fixtureId}`} target="_blank" rel="noopener noreferrer">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="bg-white dark:bg-slate-700 group/btn hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 dark:hover:bg-blue-950 dark:hover:text-blue-400 transition-colors"
+                            >
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              View Details
+                            </Button>
+                          </Link>
                         </>
                       )}
                     </div>

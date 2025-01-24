@@ -119,6 +119,8 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                       ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
                       : event.type === 'dangerStateChanges'
                       ? event.dangerStateDisplay
+                      : event.type === 'throwIns'
+                      ? `${event.typeDisplay} ${event.dangerStateDisplay}`
                       : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
                 </div>
@@ -159,6 +161,8 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                       ? `VAR ${event.varReason} Check - ${event.varStateDisplay || event.varState}`
                       : event.type === 'dangerStateChanges'
                       ? event.dangerStateDisplay
+                      : event.type === 'throwIns'
+                      ? `${event.typeDisplay} ${event.dangerStateDisplay}`
                       : event.typeDisplay || event.message || event.dangerStateDisplay || event.dangerState || event.type}
                   </span>
                 </div>

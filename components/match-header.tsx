@@ -7,7 +7,7 @@ import { Activity, ArrowLeft, Clock, Flag } from 'lucide-react';
 import { MatchConditions } from './match/match-conditions';
 import { MatchStats } from './match/match-stats';
 import { TeamJersey } from './match/jerseys/team-jersey';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 
 interface LastAction {
@@ -59,6 +59,8 @@ export function MatchHeader({
   awayTeam = 'Away Team',
   goals 
 }: MatchHeaderProps) {
+  const router = useRouter();
+  
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0">
@@ -97,38 +99,12 @@ export function MatchHeader({
             {/* Match Info */}
             <div className="flex flex-col items-center justify-center space-y-3">
               <div className="flex flex-col items-center text-center">
-                <Badge variant="secondary" className="text-sm px-3 py-1 mb-1">
-                  {lastAction?.data?.matchStatus || fixture.matchStatus}
-                </Badge>
-                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  <time>{format(new Date(fixture.timestamp), 'HH:mm')}</time>
+                <div className="items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="w-12 h-12 pb-2" />
+                  <time className='text-2xl font-bold'>{format(new Date(fixture.timestamp), 'HH:mm')}</time>
                 </div>
               </div>
             
-              <Badge variant="outline" className="text-xs">
-                {lastAction?.data?.lastAction?.phase || fixture.phase}
-              </Badge>
-
-              {lastAction?.data?.lastAction && (
-                <div className="mt-3 space-y-2 flex flex-col items-center">
-                  <div className="flex items-center justify-center gap-2 text-sm">
-                    <div className="px-3 py-1.5 rounded-md bg-primary/10 flex items-center gap-2">
-                      <Activity className="w-4 h-4" />
-                      <span className="font-medium">
-                        {lastAction.data.lastAction.type === 'dangerStateChanges'
-                          ? lastAction.data.lastAction.dangerState
-                          : lastAction.data.lastAction.type}
-                      </span>
-                    </div>
-                  </div>
-                  {lastAction.data.lastAction.team && (
-                    <Badge variant="outline" className="text-xs flex items-center gap-1">
-                      <Flag className="w-3 h-3" /> {lastAction.data.lastAction.team} Team
-                    </Badge>
-                  )}
-                </div>
-              )}
             </div>
 
             {/* Away Team */}
@@ -149,9 +125,6 @@ export function MatchHeader({
             </div>
           </div>
           <br/>
-
-          {/* Stats Section */}
-          <MatchStats matchData={fixture} />
         </div>
       </CardContent>
     </Card>

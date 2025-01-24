@@ -10,6 +10,8 @@ import { MatchActionTimeline } from './match/match-action-timeline';
 import { useMatchData } from '@/hooks/use-match-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MatchUnavailable } from '@/components/match-unavailable';
+import { MatchStats } from './match/match-stats';
+import { LineupsView } from './match/lineups-view';
 
 function FixturePage() {
   const router = useRouter();
@@ -67,23 +69,30 @@ function FixturePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Full width MatchHeader */}
-      <div className="w-full">
-        <MatchHeader 
-          fixture={matchData}
-          lastAction={lastAction}
-          homeTeam={matchData.teams.home.sourceName}
-          awayTeam={matchData.teams.away.sourceName}
-          goals={goals}
-        />
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4">
+        {/* Sol sütun - 3/4 genişlik */}
+        <div className="lg:col-span-3">
+          <MatchHeader 
+            fixture={matchData}
+            lastAction={lastAction}
+            homeTeam={matchData.teams.home.sourceName}
+            awayTeam={matchData.teams.away.sourceName}
+            goals={goals}
+          />
 
-      {/* Full width MatchActionTimeline */}
-      <div className="w-full">
-        <MatchActionTimeline 
-          fixtureId={fixtureId} 
-          matchData={matchData}
-        />
+          <MatchActionTimeline 
+            fixtureId={fixtureId} 
+            matchData={matchData}
+          />
+        </div>
+
+        {/* Sağ sütun - 1/4 genişlik */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-0">
+            <MatchStats matchData={matchData} />
+            <LineupsView lineupUpdates={matchData.actions.lineupUpdates} />
+          </div>
+        </div>
       </div>
     </main>
   );
