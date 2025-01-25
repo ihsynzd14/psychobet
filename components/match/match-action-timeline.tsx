@@ -60,7 +60,7 @@ export function MatchActionTimeline({ fixtureId, matchData }: MatchActionTimelin
             case 'RedCardDanger':
               return 'Red Card Warning';
             case 'Safe':
-              return 'Booking Check Complete';
+              return 'Risk Ended';
             default:
               return 'Booking State Change';
           }

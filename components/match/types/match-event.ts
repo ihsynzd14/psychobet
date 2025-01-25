@@ -37,6 +37,7 @@ export interface ProcessedMatchEvent {
   varState?: string;
   varStateDisplay?: string;
   varReason?: string;
+  varOutcome?: string;
   isConfirmed: boolean;
   category?: 'attack' | 'defense' | 'setpiece' | 'disciplinary' | 'system' | 'other';
   addedMinutes?: number;

@@ -69,9 +69,9 @@ function FixturePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="grid grid-cols-1 lg:grid-cols-4">
-        {/* Sol sütun - 3/4 genişlik */}
-        <div className="lg:col-span-3">
+      <div className="flex flex-row">
+        {/* Sol sütun */}
+        <div className="flex-grow">
           <MatchHeader 
             fixture={matchData}
             lastAction={lastAction}
@@ -86,8 +86,8 @@ function FixturePage() {
           />
         </div>
 
-        {/* Sağ sütun - 1/4 genişlik */}
-        <div className="lg:col-span-1">
+        {/* Sağ sütun - Sabit genişlik */}
+        <div className="w-[300px] min-w-[300px] hidden md:block">
           <div className="sticky top-0">
             <MatchStats matchData={matchData} />
             <LineupsView lineupUpdates={matchData.actions.lineupUpdates} />

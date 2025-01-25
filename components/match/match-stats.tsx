@@ -204,6 +204,7 @@ export function MatchStats({ matchData }: MatchStatsProps) {
 
   return (
     <div className="border-t border-border dark:border-gray-800">
+      <h2 className="p-3 text-sm font-normal">STATISTICS</h2>
       <div className="divide-y divide-gray-100 dark:divide-gray-800">
         <StatRow 
           icon={Percent} 
