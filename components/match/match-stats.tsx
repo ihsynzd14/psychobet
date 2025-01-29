@@ -99,9 +99,9 @@ export function MatchStats({ matchData }: MatchStatsProps) {
           break;
       }
 
-      if (state.dangerStateDisplay === 'HomeDangerousFreeKick') {
+      if (state.dangerState === 'HomeDangerousFreeKick') {
         dangerStats.home.dangerousFreekicks++;
-      } else if (state.dangerStateDisplay === 'AwayDangerousFreeKick') {
+      } else if (state.dangerState === 'AwayDangerousFreeKick') {
         dangerStats.away.dangerousFreekicks++;
       }
     });
@@ -122,7 +122,7 @@ export function MatchStats({ matchData }: MatchStatsProps) {
       else otherStats.away.offsides++;
     });
 
-    (actions.goalkicks || []).forEach((item: { team: string }) => {
+    (actions.goalKicks || []).forEach((item: { team: string }) => {
       if (item.team === 'Home') otherStats.home.goalkicks++;
       else otherStats.away.goalkicks++;
     });

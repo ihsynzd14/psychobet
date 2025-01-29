@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Activity, AlertCircle, StopCircle, LayoutGrid, Table as TableIcon } from 'lucide-react';
+import { Activity, AlertCircle, StopCircle, LayoutGrid, Table as TableIcon, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -105,16 +105,42 @@ export function FeedManagement() {
 
   if (!fixtures?.length) {
     return (
-      <Card className="p-8 text-center bg-gradient-to-br from-background to-muted/50">
-        <div className="flex flex-col items-center gap-4">
-          <div className="p-4 rounded-full bg-yellow-500/10">
-            <AlertCircle className="w-10 h-10 text-yellow-500" />
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold tracking-tight">No Live Fixtures</h2>
-            <p className="text-muted-foreground max-w-sm mx-auto">
-              There are no live fixtures available at the moment. Please check back later.
-            </p>
+      <Card className="relative overflow-hidden bg-white dark:bg-zinc-950">
+        <div className="p-12 flex flex-col items-center justify-center min-h-[600px] text-center">
+          {/* Main Content Container */}
+          <div className="space-y-12">
+            {/* Animated Icon */}
+            <div className="relative inline-flex">
+              <div className="animate-ping absolute inline-flex h-24 w-24 rounded-full bg-blue-400 opacity-20"></div>
+              <div className="relative rounded-full bg-blue-500 p-6 shadow-lg transform hover:scale-105 transition-transform duration-200 cursor-pointer">
+                <AlertCircle className="w-12 h-12 text-white" />
+              </div>
+            </div>
+
+            {/* Text Section */}
+            <div className="space-y-6">
+              <h2 className="text-4xl font-bold tracking-tight">
+                No Live Matches Right Now
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-md mx-auto">
+                We're keeping an eye out for upcoming matches. They'll appear here as soon as they begin.
+              </p>
+            </div>
+
+            {/* Interactive Elements */}
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 p-2 rounded-lg bg-muted">
+                <Activity className="w-5 h-5 text-blue-500 animate-[spin_3s_linear_infinite]" />
+                <span className="text-sm font-medium">Auto-refreshing feed status...</span>
+              </div>
+
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="w-4 h-4" />
+                  <span>Next automatic check in 3 seconds</span>
+                </div>
+              </div>
+            </div>           
           </div>
         </div>
       </Card>

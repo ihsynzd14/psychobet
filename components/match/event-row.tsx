@@ -200,7 +200,7 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                 <div className="flex flex-col gap-0.5 min-w-0 flex-grow">
                   <span className="text-xs md:text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
-                      ? <span className="text-xs">{event.varStateDisplay}</span>
+                      ? <span className="text-xs whitespace-normal break-words">{event.varStateDisplay}</span>
                       : event.type === 'dangerStateChanges'
                       ? event.dangerStateDisplay
                       : event.type === 'throwIns'
@@ -210,8 +210,8 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
-                <span className="text-xs md:text-sm font-medium">{formattedTime}</span>
-                <span className="text-[10px] md:text-xs text-muted-foreground/80">{event.phaseDisplay || event.phase}</span>
+                <span className="text-xs font-medium">{formattedTime}</span>
+                <span className="text-[9px] text-muted-foreground/80">{event.phaseDisplay || event.phase}</span>
               </div>
             </div>
           </div>
@@ -242,7 +242,7 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                 <div className="flex flex-col gap-0.5 min-w-0 flex-grow">
                   <span className="text-xs md:text-sm font-medium leading-tight truncate">
                     {event.type === 'varStateChanges' 
-                      ? ` ${event.varStateDisplay || event.varState}`
+                      ? <span className="text-xs whitespace-normal break-words">{event.varStateDisplay}</span>
                       : event.type === 'dangerStateChanges'
                       ? event.dangerStateDisplay
                       : event.type === 'throwIns'
@@ -252,8 +252,8 @@ export const EventRow = memo(function EventRow({ event, centerEventDetails }: Ev
                 </div>
               </div>
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
-                <span className="text-xs md:text-sm font-medium">{formattedTime}</span>
-                <span className="text-[10px] md:text-xs text-muted-foreground/80">{event.phaseDisplay || event.phase}</span>
+                <span className="text-xs font-medium">{formattedTime}</span>
+                <span className="text-[9px] text-muted-foreground/80">{event.phaseDisplay || event.phase}</span>
               </div>
             </div>
           </div>

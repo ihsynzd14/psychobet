@@ -6,7 +6,7 @@ const RELEVANT_EVENT_TYPES = [
   'systemMessages', 'phaseChanges', 'shotsOnTarget', 'shotsOffTarget',
   'blockedShots', 'throwIns', 'substitutions', 'goalKicks',
   'varStateChanges', 'offsides', 'stoppageTimeAnnouncements', 'kickOffs',
-  'bookingStateChanges' // Add this line
+  'bookingStateChanges'
 ] as const;
 
 export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['category'] {
@@ -15,7 +15,7 @@ export function determineEventCategory(event: MatchEvent): ProcessedMatchEvent['
   if (event.type === 'dangerStateChanges') return 'attack';
   if (event.type === 'varStateChanges') return 'system';
   if (event.type === 'stoppageTimeAnnouncements') return 'system';
-  if (event.type === 'bookingStateChanges') return 'disciplinary'; // Add this line
+  if (event.type === 'bookingStateChanges') return 'disciplinary';
   if (event.type === 'offsides') return 'attack';
   if (['yellowCards', 'redCards'].includes(event.type)) return 'disciplinary';
   if (['corners', 'throwIns'].includes(event.type)) return 'setpiece';
@@ -55,18 +55,39 @@ export function processMatchEvents(matchData: any): ProcessedMatchEvent[] {
   const allEvents: ProcessedMatchEvent[] = [];
   const actions = matchData?.actions || {};
 
+  const throwInsEvents = new Set(
+    (actions.throwIns || [])
+      .filter((event: MatchEvent) => event.isConfirmed)
+      .map((event: MatchEvent) => event.timestamp)
+  );
+
   RELEVANT_EVENT_TYPES.forEach(type => {
     if (Array.isArray(actions[type])) {
-      actions[type].forEach((event: MatchEvent) => {
+      let lastDangerState: string | null = null;
+      let lastDangerStateTimestamp: string | null = null;
+
+      actions[type].forEach((event: MatchEvent, index: number) => {
         if (type === 'dangerStateChanges' && ['HalfTime', 'FullTimeNormalTime'].includes(event.phase)) {
           return;
+        }
+
+        if (type === 'dangerStateChanges') {
+          const prevEvent = index > 0 ? actions[type][index - 1] : null;
+          
+          const isAfterThrowIn = prevEvent && throwInsEvents.has(prevEvent.timestamp);
+          
+          if (event.dangerState === lastDangerState && !isAfterThrowIn) {
+            return;
+          }
+
+          lastDangerState = event.dangerState || null;
+          lastDangerStateTimestamp = event.timestamp;
         }
 
         const addedMinutes = type === 'stoppageTimeAnnouncements' 
           ? (event as any).addedMinutes 
           : undefined;
 
-        // Add description for kickoffs
         const message = type === 'kickOffs' 
           ? getKickoffDescription(event.team || '', event.phase)
           : event.message;
