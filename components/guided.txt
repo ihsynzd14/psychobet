@@ -1,0 +1,2438 @@
+The rules of football can be found here:
+
+
+
+The Football Association: http://www.thefa.com/football-rules-governance
+
+
+Note: not all data elements are available for all matches due to differing information availability and coverage methods.
+This document describes the V3 football match state contract.
+Match Summary Message
+The summary message summarises the major match events into a single, easily digested message. 
+
+{
+"CustomerId": 7281,
+"FixtureId": "4902256",
+"CurrentPhase": "SecondHalf",
+"Clock": {},
+"CurrentDangerState": "AwaySafe",
+"CurrentBookingState": "Safe",
+"CurrentVarState": Safe,
+"CurrentPenaltyRiskState": "Safe",
+"VarReason": "NotSet",
+"VarOutcome": "NotSet",
+"VarReasonV2": null,
+"VarOutcomeV2": null,
+"StartTimes": {},
+"StoppageTimes": {},
+"Goals": {},
+"YellowCards": {},
+"SecondYellowCards": {},
+"StraightRedCards": {},
+"Substitutions": {},
+"ShotsOnTarget": {},
+"ShotsOffTarget": {},
+"ShotsOffWoodwork": {},
+"BlockedShots": {},
+"Corners": {},
+"PenaltiesAwarded": {},
+"Fouls": {},
+"Offsides": {},
+"GoalKicks": {},
+"MissedPenalties": {},
+"SavedPenalties": {},
+"ThrowIns": {},
+"KickOffs": {},
+"IsSecondLeg": false,
+"FirstLegScore": null,
+"NormalTimeHalfDuration": "00:45:00",
+"ExtraTimeHalfDuration": "00:15:00",
+"CanGoToExtraTime": false,
+"CanGoStraightToPenaltiesAfterNormalTime": false,
+"CanGoToPenalties": false,
+"MessageTimestampUtc": "2017-10-18T13:08:57.91Z"
+"BetAcceptOk": null
+}
+
+
+
+CustomerId
+
+Integer
+
+An immutable identifier for the customer
+
+FixtureId
+
+String
+
+An immutable identifier for the event
+
+CurrentPhase
+
+Phase
+
+An Enum that describes the current phase of the match. Possible values:
+PreMatch,
+FirstHalf,
+HalfTime,
+SecondHalf,
+FullTimeNormalTime,
+ExtraTimeFirstHalf,
+ExtraTimeHalfTime,
+ExtraTimeSecondHalf,
+FullTimeExtraTime,
+Penalties,
+PostMatch,
+MatchAbandoned
+
+Clock	Clock	Describes the current state of the game clock and the phase time
+CurrentDangerState
+
+DangerState
+
+An Enum that describes the current danger state. Possible values:
+AwayGoal,
+AwayPenalty,
+AwayDangerousFreeKick,
+AwayCorner,
+AwayAttackingFreeKick,
+AwayDangerousAttack,
+AwayCornerDanger,
+AwayAttack,
+AwayFreeKick,
+AwaySafe,
+Safe,
+HomeSafe,
+HomeFreeKick,
+HomeAttack,
+HomeCornerDanger,
+HomeDangerousAttack,
+HomeAttackingFreeKick,
+HomeCorner,
+HomeDangerousFreeKick,
+HomePenalty,
+HomeGoal
+Note: availability of this element is subject to contract.
+
+CurrentBookingState
+
+BookingState
+
+An Enum that describes the current booking state. Possible values:
+Safe,
+YellowCardDanger,
+RedCardDanger
+
+CurrentVarState	VarState	An Enum that describes the current Video Assistant Referee state. Possible values:
+Safe,
+InProgress,
+Danger
+CurrentPenaltyRiskState	PenaltyRiskState	An Enum that describes the current penalty risk state.
+VarReason	VarReason	
+An Enum that describes the current Video Assistant Referee reason. Possible values:
+
+NotSet (Default)
+
+HomeGoal
+
+HomePenalty
+
+HomeRedCard
+
+HomeMistakenIdentity
+
+AwayGoal
+
+AwayPenalty
+
+AwayRedCard
+
+AwayMistakenIdentity
+
+Goal
+
+Penalty
+
+RedCard
+
+MistakenIdentity
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+VarReasonV2	VarReasonV2	
+An Enum that describes the current Video Assistant Referee outcome. Possible values:
+
+null
+
+NotSet
+
+HomeGoal
+
+HomePenalty
+
+HomeRedCard
+
+HomeMistakenIdentity
+
+AwayGoal
+
+AwayPenalty
+
+AwayRedCard
+
+AwayMistakenIdentity
+
+Goal
+
+Penalty
+
+RedCard
+
+MistakenIdentity
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+PenaltyRetake
+
+HomePenaltyRetake
+
+AwayPenaltyRetake
+
+VarOutcome	VarOutcome	
+An Enum that describes the current Video Assistant Referee outcome. Possible values:
+
+NotSet (Default)
+
+HomeNoGoal
+
+AwayNoGoal
+
+NoGoal
+
+HomeGoalAwarded
+
+AwayGoalAwarded
+
+GoalAwarded
+
+HomeNoPenalty
+
+AwayNoPenalty
+
+NoPenalty
+
+HomePenaltyAwarded
+
+AwayPenaltyAwarded
+
+PenaltyAwarded
+
+HomeNoRedCard
+
+AwayNoRedCard
+
+NoRedCard
+
+HomeRedCardGiven
+
+AwayRedCardGiven
+
+RedCardGiven
+
+HomePlayerNotChanged
+
+AwayPlayerNotChanged
+
+PlayerNotChanged
+
+HomePlayerChanged
+
+AwayPlayerChanged
+
+PlayerChanged
+
+HomeNoAction
+
+AwayNoAction
+
+NoAction
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+VarOutcomeV2	VarOutcomeV2	
+An Enum that describes the current Video Assistant Referee outcome. Possible values:
+
+null (Default)
+
+NotSet
+
+HomeNoGoal
+
+AwayNoGoal
+
+NoGoal
+
+HomeGoalAwarded
+
+AwayGoalAwarded
+
+GoalAwarded
+
+HomeNoPenalty
+
+AwayNoPenalty
+
+NoPenalty
+
+HomePenaltyAwarded
+
+AwayPenaltyAwarded
+
+PenaltyAwarded
+
+HomeNoRedCard
+
+AwayNoRedCard
+
+NoRedCard
+
+HomeRedCardGiven
+
+AwayRedCardGiven
+
+RedCardGiven
+
+HomePlayerNotChanged
+
+AwayPlayerNotChanged
+
+PlayerNotChanged
+
+HomePlayerChanged
+
+AwayPlayerChanged
+
+PlayerChanged
+
+HomeNoAction
+
+AwayNoAction
+
+NoAction
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+HomePenaltyWillBeRetaken
+
+AwayPenaltyWillBeRetaken
+
+HomeNoPenaltyRetake
+
+AwayNoPenaltyRetake
+
+PenaltyWillBeRetaken
+
+NoPenaltyRetake
+
+StartTimes
+
+StartTimes
+
+The start time of each phase of play in UTC
+
+StoppageTimes
+
+StoppageTimes
+
+The amount of stoppage time to be played in each phase of the match
+
+Goals
+
+ScoreSummary
+
+The number of goals awarded to each team
+
+YellowCards
+
+ScoreSummary
+
+The number of yellow cards awarded to each team
+
+SecondYellowCards
+
+ScoreSummary
+
+The number of second yellow cards awarded to each team
+
+StraightRedCards
+
+ScoreSummary
+
+The number of straight red cards awarded to each team
+
+Substitutions
+
+ScoreSummary
+
+The number of substitutions made by each team
+
+ShotsOnTarget
+
+ScoreSummary
+
+The number of on-target shots by each team
+
+ShotsOffTarget
+
+ScoreSummary
+
+The number of off-target shots by each team
+
+ShotsOffWoodwork
+
+ScoreSummary
+
+The number of times each team has hit the woodwork
+
+BlockedShots
+
+ScoreSummary
+
+The number of times each team has had an on-target shot blocked
+
+Corners
+
+ScoreSummary
+
+The number of corners awarded to each team
+
+PenaltiesAwarded
+
+ScoreSummary
+
+The number of penalties awarded to each team
+
+Fouls
+
+ScoreSummary
+
+The number of fouls committed by each team
+
+Offsides
+
+ScoreSummary
+
+The number of offsides committed by each team
+
+GoalKicks
+
+ScoreSummary
+
+The number of goal kicks taken by each team
+
+MissedPenalties
+
+ScoreSummary
+
+The number of penalties missed by each team
+
+SavedPenalties
+
+ScoreSummary
+
+The number of penalties saved by each team  (Not used)
+
+ThrowIns
+
+ScoreSummary
+
+The number of throw-ins awarded to each team
+
+KickOffs	
+ScoreSummary
+
+The number of kick-offs awarded to each team
+IsSecondLeg
+
+Boolean
+
+Boolean: True if this is the second leg of a two match fixture
+
+FirstLegScore
+
+Score
+
+The score from the first leg of a two leg fixture. Populated only if IsSecondLeg is True
+
+NormalTimeHalfDuration
+
+TimeSpan
+
+The expected duration of the first and second halves
+
+ExtraTimeHalfDuration
+
+TimeSpan
+
+The expected duration of the first and second halves of extra time if match can go to extra time
+
+CanGoToExtraTime
+
+Boolean
+
+True if the match will go to extra time if normal time ends in a draw
+
+CanGoStraightToPenaltiesAfterNormalTime
+
+Boolean
+
+True if the match will go straight to penalties if normal time ends in a draw
+
+CanGoToPenalties
+
+Boolean
+
+True if the match will go to penalties if extra time ends in a draw
+
+MessageTimestampUtc
+
+DateTime
+
+The time that the message is sent, UTC
+
+
+Clock	Describes the current state of the game clock and the phase time
+BetAcceptOk	Boolean	Indicates whether accepting bets is safe at this point (this element is deprecated)
+
+
+StartTime
+Contains the start times of each phase of play. Values will be null if the phase has not yet started.
+
+{
+"FirstHalf": "2017-10-18T11:39:24.286Z",
+"SecondHalf": "2017-10-18T12:40:53.634Z",
+"ExtraTimeFirstHalf": null,
+"ExtraTimeSecondHalf": null,
+"Penalties": null
+}
+
+
+
+FirstHalf
+
+DateTime (optional)
+
+The start time in UTC of the first half
+
+SecondHalf
+
+DateTime (optional)
+
+The start time in UTC of the second half
+
+ExtraTimeFirstHalf
+
+DateTime (optional)
+
+The start time in UTC of the first half of extra time
+
+ExtraTimeSecondHalf
+
+DateTime (optional)
+
+The start time in UTC of the second half of extra time
+
+Penalties
+
+DateTime (optional)
+
+The start time in UTC of the penalty shootout
+
+
+
+StoppageTimes
+Contains the amount of stoppage time to be played after each phase of normal time.
+
+{
+"FirstHalf": "00:01:00",
+"SecondHalf": null,
+"ExtraTimeFirstHalf": null,
+"ExtraTimeSecondHalf": null
+},
+
+
+
+FirstHalf
+
+TimeSpan (optional)
+
+The amount of stoppage time to be played in the first half
+
+SecondHalf
+
+TimeSpan (optional)
+
+The amount of stoppage time to be played in the second half
+
+ExtraTimeFirstHalf
+
+TimeSpan (optional)
+
+The amount of stoppage time to be played in the first half of extra time
+
+ExtraTimeSecondHalf
+
+TimeSpan (optional)
+
+The amount of stoppage time to be played in the second half of extra time
+
+
+
+ScoreSummary
+An object that describes a piece of TeamA/TeamB information such as the current score in goals.
+
+{
+"Score":{},
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+Score
+
+Score
+
+A Score object
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+Score
+An object that holds a head-to-head score for a particular data type.
+
+{
+"Home":0,
+"Away":2
+}
+
+
+
+Home
+
+Integer
+
+The Home team's score
+
+Away
+
+Integer
+
+The Away team's score
+
+
+
+Clock
+An object that provides the current game clock state and time elapsed in the current phase.
+
+{
+"IsClockRunning":true,
+"TimeElapsedInPhase":PT0S,
+"TimestampUtc":2018-02-26T11:35:43.526Z
+}
+
+
+
+IsClockRunning
+
+boolean
+
+True if the clock is running, false otherwise
+
+TimeElapsedInPhase
+
+TimeSpan
+
+
+
+TimestampUtc	Timestamp	
+Example
+How is the Clock element used for fixture kick-off time corrections under FootballMatchSummary?
+
+The Clock element will be updated in case of a kick-off time change during gameplay. An accurate clock can be maintained by subtracting the TimestampUtc from the current time and adding on the TimeElapsedInPhase. Note that unless there have been any clock adjustments, the TimeElapsedInPhase will be zero throughout the phase, and the TimestampUtc will correspond to when the phase started.
+
+{
+"IsClockRunning":true,
+ 
+"TimeElapsedInPhase":PT0S,
+ 
+"TimestampUtc":2018-02-09T11:45:00.000Z
+}
+To explain the TimeElapsedInPhase even further, lets take an example of a match where the scout updated event start time by 30 seconds when the match has already been ongoing for 5 minutes. Let’s say the event start time is 2018-02-09T11:45:00.000Z as on the example above.
+
+For the kick-off and immediately following before the start time change: TimeElapsedInPhase will be 00:00 and TimestampUtc 2018-02-09T11:45:00.000Z
+After the +30 seconds change to the First Half start time: TimeElapsedInPhase will be 5:30 and TimestampUtc will be 2018-02-09T11:50:00.000Z
+BetAcceptOk
+An object that describes whether it is safe to accept bets considering the current state of play. This element has been deprecated.
+
+"BetAcceptOk": True
+
+
+
+BetAcceptOk
+
+Boolean
+
+True if the current state of play allows to safely accept bets
+
+CurrentVarState
+An object that describes the current var state.
+
+"CurrentVarState": Safe
+Match Details Message
+The detail message lists every action that has happened in a football match. This allows a complete timeline of the match to be constructed at any point.
+
+{
+"CustomerId":6444,
+"FixtureId":"3415011",
+"MatchActions":{},
+"CurrentVarState": Safe
+"AwayTeam":{},
+"HomeTeam":{},
+"IsSecondLeg":false,
+"FirstLegScore":null,
+"NormalTimeHalfDuration":"00:40:00",
+"ExtraTimeHalfDuration":"00:10:00",
+"CanGoToExtraTime":false,
+"CanGoStraightToPenaltiesAfterNormalTime":false,
+"CanGoToPenalties":false,
+"BetAcceptOk":True
+"MessageTimestampUtc":"2015-10-01T15:15:44.9551641Z"
+"CurrentVarState": "Safe",
+"VarReason": "NotSet",
+"VarOutcome": "NotSet",
+"VarReasonV2": null,
+"VarOutcomeV2": null,
+}
+
+
+
+CustomerId
+
+Integer
+
+An immutable identifier for the customer
+
+FixtureId
+
+String
+
+An immutable identifier for the event
+
+MatchActions
+
+MatchActions
+
+A collection of actions that has occurred so far
+
+CurrentVarState	VarState	
+An Enum that describes the current Video Assistant Referee state. Possible values:
+
+Safe,
+
+InProgress,
+
+Danger
+
+AwayTeam
+
+Team
+
+An object that describes the away team
+
+HomeTeam
+
+Team
+
+An object that describes the home team
+
+IsSecondLeg
+
+Boolean
+
+Boolean: True if this is the second leg of a two match fixture
+
+FirstLegScore
+
+Score
+
+The score from the first leg of a two-leg fixture. Populated only if IsSecondLeg is True
+
+NormalTimeHalfDuration
+
+TimeSpan
+
+The expected duration of the first and second halves
+
+ExtraTimeHalfDuration
+
+TimeSpan
+
+The expected duration of the first and second halves of extra time if match can go to extra time
+
+CanGoToExtraTime
+
+Boolean
+
+True if the match will go to extra time if normal time ends in a draw
+
+CanGoStraightToPenaltiesAfterNormalTime
+
+Boolean
+
+True if the match will go straight to penalties if normal time ends in a draw
+
+CanGoToPenalties
+
+Boolean
+
+True if the match will go to penalties if extra time ends in a draw
+
+BetAcceptOk	Boolean	Indicates whether taking bets is safe at this point (This element is deprecated)
+MessageTimestampUtc
+
+DateTime
+
+The time that the message is sent, UTC
+
+VarReason	VarReason	
+VarOutcome	VarOutcome	
+VarReasonV2	VarReasonV2	
+VarOutcomeV2	VarOutcomeV2	
+
+
+AwayTeam
+{
+"Id":890708,
+"Name":"Adelaide University SC Women",
+"Strip":{}
+}
+
+
+
+Id
+
+String
+
+Away team Id
+
+Name	
+String
+
+Away team name
+
+Strip
+
+Strip
+
+Away team strip details
+
+HomeTeam
+{
+"Id":834133,
+"Name":"Adelaide City Women",
+"Strip":{}
+}
+
+
+
+Id
+
+String
+
+Home team Id
+
+Name	
+String
+
+Home team name
+
+Strip
+
+Strip
+
+Home team strip details
+
+Strip
+{
+"Color1": {},
+"Color2": {},
+"PantsColor": null,
+"SocksColor": null,
+"JerseyDesign": "Unknown"
+}
+
+
+
+Color1
+
+Color	Describes the teams primary color
+Color2	Color	Describes the teams secondary color
+PantsColor
+
+Color	Describes the teams pants color
+SocksColor	Color	Describes the teams socks color
+JerseyDesign	String	
+Describes the jersey design, possible values are:
+
+Unknown
+
+Plain
+
+StripedHorizontal
+
+StripedVertical
+
+BarHorizontal
+
+BarVertical
+
+Color
+{
+"R": 255,
+"G": 255,
+"B": 0
+}
+
+
+
+R
+
+Integer	Describes the color
+G	Integer	Describes the color
+B	Integer	Describes the color
+MatchActions
+A collection of objects detailing every action that has happened so far in a match.
+
+{
+"Goals":{},
+"YellowCards":{},
+"SecondYellowCards":{},
+"StraightRedCards":{},
+"Substitutions":{},
+"ShotsOnTarget":{},
+"ShotsOffTarget":{},
+"ShotsOffWoodwork":{},
+"BlockedShots":{},
+"Corners":{},
+"PenaltyRiskStateChanges": {},
+"PenaltiesAwarded":{},
+"Penalties": {},
+"Fouls":{},
+"Offsides":{},
+"GoalKicks":{},
+"MissedPenalties":{},
+"ThrowIns":{},
+"StoppageTimeAnnouncements":{},
+"PhaseChanges":{},
+"DangerStateChanges":{},
+"LineupUpdates":{},
+"ClockActions":{},
+"BookingStateChanges":{},
+"SystemMessages":{},
+"KickOffs": {},
+"VarStateChanges": {}
+}
+
+
+
+Goals
+
+GoalCollection
+
+Goals scored
+
+YellowCards
+
+MatchActionCollection
+
+Yellow cards awarded
+
+SecondYellowCards
+
+MatchActionCollection
+
+Second yellow cards awarded
+
+StraightRedCards
+
+MatchActionCollection
+
+Straight red cards awarded
+
+Substitutions
+
+SubstitutionCollection
+
+Substitutions made
+
+ShotsOnTarget
+
+MatchActionCollection
+
+Shots on target
+
+ShotsOffTarget
+
+MatchActionCollection
+
+Shots off target
+
+ShotsOffWoodwork
+
+MatchActionCollection
+
+Shots that hit the woodwork
+
+BlockedShots
+
+MatchActionCollection
+
+Shots that are blocked
+
+Corners
+
+MatchActionCollection
+
+Corners awarded
+
+PenaltyRiskStateChanges	PenaltyRiskChangesCollection	Changes of the Penalty Risk
+PenaltiesAwarded
+
+PenaltiesCollection
+
+Penalties awarded
+
+Penalties	MatchActionCollection	Penalties taken in the game
+Fouls
+
+MatchActionCollection
+
+Fouls conceded
+
+Offsides
+
+MatchActionCollection
+
+Offsides committed
+
+GoalKicks
+
+MatchActionCollection
+
+Goal kicks awarded
+
+MissedPenalties
+
+MatchActionCollection
+
+Penalties missed by each team
+
+ThrowIns
+
+MatchActionCollection
+
+Throw-ins taken
+
+StoppageTimeAnnouncements
+
+StoppageTimeAnnouncementCollection
+
+Announcements of stoppage time
+
+PhaseChanges
+
+PhaseChangeCollection
+
+Changes to match phase
+
+DangerStateChanges
+
+DangerStateChangeCollection
+
+Changes to danger state
+
+LineupUpdates
+
+LineupUpdatedCollection
+
+Changes to lineup
+
+ClockActions	ClockActionCollection	Clock actions or corrections
+BookingStateChanges	BookingStateChangeCollection	Changes to booking state
+SystemMessages
+
+SystemMessageCollection
+
+System messages
+
+KickOffs	MatchActionCollection	Kick-offs taken
+VarStateChanges	VarStateChangeCollection	Changes to VAR state
+
+
+GoalsCollection
+Details of all goals scored in a match.
+
+{
+"Goals":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+Goals
+
+Goal
+
+An array of goals scored
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+Goals
+A goal scored in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:06:57",
+"Team":"Away",
+"ScoredByPlayerId":null,
+"IsOwnGoal":null,
+"WasScoredFromPenalty":null,
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+Team
+
+TeamSide
+
+Attributes an action to a team
+
+ScoredByPlayerId
+
+Int, nullable
+
+Attributes an action to a player. The value will correspond to the team details in the Fixture message. Null if the scoring player is not known.
+
+IsOwnGoal
+
+Boolean, nullable
+
+True if this was an own goal, False otherwise. Will be null if it is not known whether goal was an own goal.
+
+WasScoredFromPenalty
+
+Boolean, nullable
+
+True if this goal was scored from a penalty, False otherwise. Will be null if it is not known whether goal was scored from a penalty.
+
+IsConfirmed
+
+Boolean
+
+True if this goal has been confirmed, False otherwise
+
+
+
+TeamSide
+Some actions or scores are attributed to an individual team. TeamSide is an Enum that details the team to which its parent element applies. It can take the following values:
+
+Value
+
+Name
+
+Description
+
+0
+
+Home
+
+The home team
+
+1
+
+Away
+
+The away team
+
+
+
+MatchActionCollection
+MatchActionCollection lists all the match actions of a particular type that occur in a match.
+
+{
+"MatchActions":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+MatchActions
+
+MatchAction
+
+An array of match actions
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+MatchAction
+An action in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:07:59",
+"AwardedTimeElapsedInPhase":"00:07:59",
+"Team":"Away",
+"PlayerId":123456,
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+AwardedTimeElapsedInPhase	TimeSpan (nullable)	NB! Only available for Corners collection, for all other collections it is NULL
+Team
+
+TeamSide
+
+Attributes an action to a team
+
+PlayerId
+
+Int, nullable
+
+Attributes an action to a player. The value will correspond to the team details in the Fixture message. Null if the player details are not known.
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+SubstitutionCollection
+SubstitutionColleciton lists all the player substitutions that occur in a match.
+
+{
+"Substitutions":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+Substitutions
+
+Substitution
+
+An array of player substitutions
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+Substitution
+A player substitution in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:10:09",
+"Team":"Away",
+"OnPlayerId":123456,
+"OffPlayerId":435827,
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+Team
+
+TeamSide
+
+Attributes an action to a team
+
+OnPlayerId
+
+Int, nullable
+
+The player coming onto the pitch. Null if the player is not known.
+
+OffPlayerId
+
+Int, nullable
+
+The player coming off the pitch. Null if the player is not known.
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+FoulCollection
+FoulCollection lists all the fouls that occur in a match.
+
+{
+"Fouls":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+Fouls
+
+Foul
+
+An array of fouls
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+Foul
+A foul in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:11:10",
+"FoulingTeam":"Away",
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+FoulingTeam
+
+TeamSide
+
+Attributes an action to a team
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+StoppageTimeAnnouncementCollection
+StoppageTimeAnnouncementCollection lists all the stoppage time announcements that occur in a match.
+
+{
+"StoppageTimeAnnouncements":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+StoppageTimeAnnouncements
+
+StoppageTimeAnnouncement
+
+An array of stoppage time announcements
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+StoppageTimeAnnouncement
+An announcement of stoppage time in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:13:12",
+"AddedMinutes":3,
+"IsConfirmed":true
+}
+
+
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+AddedMinutes
+
+Integer
+
+The number of minutes added to the current phase for stoppage time
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+PhaseChangeCollection
+PhaseChangeCollection lists all the changes of phase that occur in a match.
+
+{
+"PhaseChanges":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+PhaseChanges
+
+PhaseChange
+
+An array of phase changes
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+PhaseChange
+A phase change in a football match.
+
+{
+"PreviousPhase": "PreMatch",
+"CurrentPhase":"FirstHalf",
+"CurrentPhaseStartTime": "2016-11-22T16:13:33.544Z",
+"IsConfirmed": true,
+"MessageId": null,
+"Message": null
+}
+
+
+
+PreviousPhase
+
+Phase
+
+An Enum that describes the previous phase of the match (see Match Summary Message above).
+
+CurrentPhase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+CurrentPhaseStartTime
+
+DateTime
+
+ 
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+MessageId
+
+Int
+
+This field is currently not in use
+
+Message
+
+String
+
+This field is currently not in use
+
+
+
+Football Match Phase
+At the end of a football match the phase will change to PostMatch to indicate that the match has ended. The phase may change first to FullTimeNormalTime before moving to PostMatch. 
+
+DangerStateChangeCollection
+DangerStateChangeCollection lists all the changes of phase that occur in a match.
+
+{
+"DanverStateChanges":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+DangerStateChanges
+
+DangerStateChange
+
+An array of danger state changes
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+DangerStateChange
+A change of danger state in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:15:14",
+"DangerState":,
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+DangerState
+
+DangerState
+
+The danger state of the match.
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+DangerState
+DangerState is an Enum that descibes the danger state in a football match. Values are:
+
+AwayGoal,
+AwayPenalty,
+AwayDangerousFreeKick,
+AwayCorner,
+AwayAttackingFreeKick,
+AwayDangerousAttack,
+AwayCornerDanger,
+AwayAttack,
+AwayFreeKick,
+AwaySafe,
+Safe,
+HomeSafe,
+HomeFreeKick,
+HomeAttack,
+HomeCornerDanger,
+HomeDangerousAttack,
+HomeAttackingFreeKick,
+HomeCorner,
+HomeDangerousFreeKick,
+HomePenalty,
+HomeGoal
+LineupUpdatedCollection
+LineupUpdatedCollection lists all the changes in lineups for an event.
+
+{
+"Updates":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+Updates
+
+LineupUpdated
+
+An array of changes to the lineups
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+LineupUpdated
+A change of lineup in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:16:15",
+"NewLineup":{},
+"Team":"Home"
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+NewLineup
+
+Lineup
+
+A lineup
+
+Team
+
+TeamSide
+
+Attributes a lineup to a team
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+Lineup
+An object listing the players who will start on the pitch and those who will start on the bench.
+
+{
+"StartingOnPitch":[],
+"StartingOnBench":[]
+}
+
+
+
+StartingOnPitch
+
+Player
+
+An array of Player objects listing players who will start the match on the pitch
+
+StartingOnBench
+
+Player
+
+An array of Player objects listing players who will start the match on the bench
+
+
+
+Player
+An object describing a player taking part in a football match.
+
+{
+"Id":38753,
+"Name":"Rooney, W",
+"ShirtNumber":8
+}
+
+
+
+Id
+
+Int (nullable)
+
+A unique identifier for the player
+
+Name
+
+String
+
+The player's name
+
+ShirtNumber
+
+Integer
+
+The player's shirt number
+
+
+
+SystemMessageCollection
+SystemMessageCollection lists any system messages sent regarding the match.
+
+{
+"SystemMessages":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+SystemMessages
+
+SystemMessage
+
+An array of system messages
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+SystemMessage
+A system message describing something that affects a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:17:16",
+"Message":"A message about a football match",
+"MessageId":1234,
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+Message
+
+String
+
+A message
+
+MessageId	Integer	Message identifier (see the link for values)
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+KickOffsCollection
+KickOffsCollection list contains all the kick-offs that have been taken during the game.
+
+"KickOffs": {
+"MatchActions": [],
+"IsCollected": true,
+"IsReliable": true
+}
+
+
+
+MatchActions
+
+SystemMessage
+
+An array of kick-offs taken in the game
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+MatchActions (KickOffs)
+A match action that describes the kick-offs that have been taken.
+
+{
+"Phase": "FirstHalf",
+"TimeElapsedInPhase": "00:00:00",
+"AwardedTimeElapsedInPhase": null,
+"Team": "Home",
+"PlayerId": null,
+"IsConfirmed": true,
+"TimestampUtc": "2023-06-15T12:31:46.359Z"
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+
+
+AwardedTimeElapsedInPhase
+
+String
+
+Attributes an action to a team
+
+Team	TeamSide	Attributes an action to a team
+PlayerId
+
+Int, nullable
+
+Id of the player who took the kick-off - currently not collected, will always be null
+
+IsConfirmed	Boolean	
+True if this goal has been confirmed, False otherwise
+
+TimestampUtc	DateTime	The timestamp of the kick-off.
+ClockActionCollection
+ClockActionCollection lists all the changes made to the clock during a match.
+
+{
+"ClockActions":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+ClockActions
+
+ArrayOfClockActivity
+
+An array of changes to the clock
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+ArrayOfClockActivity
+A change to the clock in a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:18:17",
+"TimestampUtc":"2015-10-09T10:12:11.001Z",
+"ActivityType":"Start",
+"IsClockRunning":true,
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+ 
+
+TimestampUtc
+
+DateTime
+
+ 
+
+ActivityType
+
+ClockActivityTypeDto
+
+An Enum describing the clock activity. Possible values are:
+Start,
+Stop,
+Adjustment
+
+IsClockRunning
+
+Boolean
+
+True if the clock is running, False otherwise
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+BookingStateChangeCollection
+BookingStateChangeCollection lists any changes to the booking states that occur during the match.
+
+{
+"BookingStateChanges":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+BookingStateChanges
+
+BookingStateChange
+
+An array of changes to the booking state
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsReliable
+
+Boolean
+
+True if the data values are reliable, False otherwise
+
+
+
+BookingStateChanges
+A change to the booking state of a football match.
+
+{
+"Phase":"FirstHalf",
+"TimeElapsedInPhase":"00:19:18",
+"BookingState":"",
+"IsConfirmed":true
+}
+
+
+
+Phase
+
+Phase
+
+An Enum that describes the current phase of the match (see Match Summary Message above).
+
+TimeElapsedInPhase
+
+TimeSpan
+
+The time that has elapsed in the current phase.
+
+BookingState
+
+BookingState
+
+An Enum describing the booking state. Possible values are:
+Safe,
+YellowCardDanger,
+RedCardDanger
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+VarStateChangeCollection
+Details of all VAR state changes in a match.
+
+{
+"VarStateChanges":[],
+"IsCollected":true,
+"IsReliable":true
+}
+
+
+
+
+
+VarStateChanges
+
+ArrayOfVarStateChange	
+
+
+IsCollected
+
+Boolean
+
+True if this data type is being collected for this fixture, False otherwise
+
+IsConfirmed
+
+Boolean
+
+True if this action has been confirmed, False otherwise
+
+
+
+ArrayOfVarStateChange
+Details of all VAR state changes in a match.
+
+{
+"Id": 0,
+"SequenceId": 0,
+"Phase": "FirstHalf",
+"TimeElapsedInPhase": "00:20:27",
+"VarState": "Danger",
+"VarReason": "NotSet",
+"VarOutcome": "NotSet",
+"VarReasonV2": null,
+"VarOutcomeV2": null,
+"IsConfirmed": true,
+"TimestampUtc": "2019-07-31T00:50:42.583Z"
+}
+
+
+
+
+
+Id
+
+Integer	
+Unused Integer values, always 0
+
+IsConfirmed	Boolean	True if this action has been confirmed, False otherwise
+Phase	Phase	An Enum that describes the current phase of the match (see Match Summary Message above).
+SequenceId	Integer	Unused Integer values, always 0
+TimeElapsedInPhase	Duration	The time that has elapsed in the current phase.
+TimestampUtc	DateTime	The timestamp of the VAR action.
+VarState	VarState	An Enum that describes the current Video Assistant Referee state. Possible values:
+Safe,
+InProgress,
+Danger
+VarReason	VarReason	
+An Enum that describes the current Video Assistant Referee reason. Possible values:
+
+NotSet (Default)
+
+HomeGoal
+
+HomePenalty
+
+HomeRedCard
+
+HomeMistakenIdentity
+
+AwayGoal
+
+AwayPenalty
+
+AwayRedCard
+
+AwayMistakenIdentity
+
+Goal
+
+Penalty
+
+RedCard
+
+MistakenIdentity
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+VarReasonV2	VarReasonV2	
+An Enum that describes the current Video Assistant Referee reason. Possible values:
+
+null (Default)
+
+NotSet
+
+HomeGoal
+
+HomePenalty
+
+HomeRedCard
+
+HomeMistakenIdentity
+
+AwayGoal
+
+AwayPenalty
+
+AwayRedCard
+
+AwayMistakenIdentity
+
+Goal
+
+Penalty
+
+RedCard
+
+MistakenIdentity
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+PenaltyRetake
+
+HomePenaltyRetake
+
+AwayPenaltyRetake
+
+VarOutcome	VarOutcome	
+An Enum that describes the current Video Assistant Referee reason. Possible values:
+
+NotSet (Default)
+
+HomeNoGoal
+
+AwayNoGoal
+
+NoGoal
+
+HomeGoalAwarded
+
+AwayGoalAwarded
+
+GoalAwarded
+
+HomeNoPenalty
+
+AwayNoPenalty
+
+NoPenalty
+
+HomePenaltyAwarded
+
+AwayPenaltyAwarded
+
+PenaltyAwarded
+
+HomeNoRedCard
+
+AwayNoRedCard
+
+NoRedCard
+
+HomeRedCardGiven
+
+AwayRedCardGiven
+
+RedCardGiven
+
+HomePlayerNotChanged
+
+AwayPlayerNotChanged
+
+PlayerNotChanged
+
+HomePlayerChanged
+
+AwayPlayerChanged
+
+PlayerChanged
+
+HomeNoAction
+
+AwayNoAction
+
+NoAction
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+VarOutcomeV2	VarOutcomeV2	
+An Enum that describes the current Video Assistant Referee reason. Possible values:
+
+null (Default)
+
+NotSet
+
+HomeNoGoal
+
+AwayNoGoal
+
+NoGoal
+
+HomeGoalAwarded
+
+AwayGoalAwarded
+
+GoalAwarded
+
+HomeNoPenalty
+
+AwayNoPenalty
+
+NoPenalty
+
+HomePenaltyAwarded
+
+AwayPenaltyAwarded
+
+PenaltyAwarded
+
+HomeNoRedCard
+
+AwayNoRedCard
+
+NoRedCard
+
+HomeRedCardGiven
+
+AwayRedCardGiven
+
+RedCardGiven
+
+HomePlayerNotChanged
+
+AwayPlayerNotChanged
+
+PlayerNotChanged
+
+HomePlayerChanged
+
+AwayPlayerChanged
+
+PlayerChanged
+
+HomeNoAction
+
+AwayNoAction
+
+NoAction
+
+HomeUnknown
+
+AwayUnknown
+
+Unknown
+
+HomePenaltyWillBeRetaken
+
+AwayPenaltyWillBeRetaken
+
+HomeNoPenaltyRetake
+
+AwayNoPenaltyRetake
+
+PenaltyWillBeRetaken
+
+NoPenaltyRetake
+
+BetAcceptOk
+An object that describes whether it is safe to take bets considering the current state of play. This element is deprecated.
+
+"BetAcceptOk": True
+
+
+
+BetAcceptOk
+
+Boolean
+
+True if the current state of play allows to safely accept bets
+

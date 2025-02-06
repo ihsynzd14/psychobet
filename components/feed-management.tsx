@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Activity, AlertCircle, StopCircle, LayoutGrid, Table as TableIcon } from 'lucide-react';
+import { Activity, AlertCircle, StopCircle, LayoutGrid, Table as TableIcon, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';

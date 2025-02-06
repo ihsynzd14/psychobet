@@ -41,7 +41,10 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-orange-600 dark:text-orange-400';
     } else if (dangerState === 'CornerDanger') {
       return 'text-red-600 dark:text-red-400';
-    } else if (dangerState?.includes('Corner')) {
+    } else if (dangerState === 'Penalty') {
+      return 'text-red-600 dark:text-red-400';
+    }  
+    else if (dangerState?.includes('Corner')) {
       return 'text-green-600 dark:text-green-400';
     }
     return 'text-green-600 dark:text-green-400';
@@ -214,6 +217,7 @@ const getEventTitle = (event: MatchEvent): string => {
         'AttackingFreeKick': 'Free Kick - Attack',
         'DangerousFreeKick': 'Free Kick - Dangerous Attack',
         'CornerDanger': 'Corner Risk',
+        'Penalty': 'Penalty Risk',
         'Corner': 'Corner Awarded - Confirmed',
         'Goal': 'Goal',
       };

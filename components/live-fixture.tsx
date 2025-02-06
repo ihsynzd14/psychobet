@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { api } from '@/lib/api';
 import type { Fixture } from '@/lib/api';
+import Link from 'next/link';
 
 interface LiveFixtureProps {
   fixture: Fixture;
@@ -175,17 +176,18 @@ export function LiveFixture({ fixture, activeFeeds, onStart, onStop }: LiveFixtu
                 Stop Feed
               </span>
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="flex-1 bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 hover:text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 dark:hover:bg-blue-500/30 dark:hover:text-blue-300 transition-colors active:scale-[0.98]"
-              onClick={() => router.push(`/${fixture.fixtureId}`)}
-            >
-              <span className="flex items-center justify-center">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Details
-              </span>
-            </Button>
+            <Link href={`/${fixture.fixtureId}`} target="_blank" rel="noopener noreferrer" className="flex-1">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 hover:text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 dark:hover:bg-blue-500/30 dark:hover:text-blue-300 transition-colors active:scale-[0.98]"
+              >
+                <span className="flex items-center justify-center">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  View Details
+                </span>
+              </Button>
+            </Link>
           </div>
         )}
       </CardFooter>

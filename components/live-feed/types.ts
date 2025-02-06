@@ -8,6 +8,7 @@ export type DangerState =
   | 'AwayDangerousAttack'
   | 'AwayFreeKick'
   | 'Safe'
+  | 'Penalty'
   | 'CornerDanger'
   | 'HomeCornerDanger'
   | 'AwayCornerDanger'
