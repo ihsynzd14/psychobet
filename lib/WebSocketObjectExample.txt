@@ -1,0 +1,4410 @@
+{
+    "fixtureId": "11274393",
+    "timestamp": "2025-02-01T11:45:10.679Z",
+    "matchStatus": "InProgress",
+    "currentVarState": "Safe",
+    "statistics": {
+        "possession": {
+            "home": 68,
+            "away": 32
+        }
+    },
+    "sourceInfo": {},
+    "teams": {
+        "home": {
+            "sourceId": "173359",
+            "sourceName": "Keciörengücü",
+            "strip": {
+                "color1": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                },
+                "color2": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                },
+                "pantsColor": null,
+                "socksColor": null,
+                "jerseyDesign": "Unknown"
+            }
+        },
+        "away": {
+            "sourceId": "118446",
+            "sourceName": "Yeni Malatyaspor",
+            "strip": {
+                "color1": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                },
+                "color2": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                },
+                "pantsColor": null,
+                "socksColor": null,
+                "jerseyDesign": "Unknown"
+            }
+        }
+    },
+    "actions": {
+        "goals": [
+            {
+                "id": 91,
+                "timestamp": "2025-02-01T10:40:45.56Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:08:01",
+                "team": "Home",
+                "isConfirmed": true,
+                "scoredBy": null,
+                "assistBy": null,
+                "isOwnGoal": false,
+                "wasPenalty": false
+            },
+            {
+                "id": 192,
+                "timestamp": "2025-02-01T10:55:18.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:34",
+                "team": "Home",
+                "isConfirmed": true,
+                "scoredBy": null,
+                "assistBy": null,
+                "isOwnGoal": false,
+                "wasPenalty": false
+            },
+            {
+                "id": 414,
+                "timestamp": "2025-02-01T11:40:37.603Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:03:11",
+                "team": "Home",
+                "isConfirmed": true,
+                "scoredBy": null,
+                "assistBy": null,
+                "isOwnGoal": false,
+                "wasPenalty": false
+            }
+        ],
+        "yellowCards": [],
+        "secondYellowCards": [],
+        "straightRedCards": [],
+        "penalties": [],
+        "penaltyRiskChanges": [],
+        "substitutions": [],
+        "shotsOnTarget": [
+            {
+                "id": 112,
+                "timestamp": "2025-02-01T10:44:30.561Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:11:46",
+                "team": "Home",
+                "playerId": null,
+                "savedBy": null,
+                "ballReturned": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 383,
+                "timestamp": "2025-02-01T11:20:56.68Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:48:12",
+                "team": "Home",
+                "playerId": null,
+                "savedBy": null,
+                "ballReturned": null,
+                "isConfirmed": true
+            }
+        ],
+        "shotsOffTarget": [
+            {
+                "id": 179,
+                "timestamp": "2025-02-01T10:54:03.901Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:19",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 224,
+                "timestamp": "2025-02-01T10:58:52.9Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:26:08",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 333,
+                "timestamp": "2025-02-01T11:15:49.521Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:05",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 342,
+                "timestamp": "2025-02-01T11:16:50.463Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:06",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 424,
+                "timestamp": "2025-02-01T11:42:17.622Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:51",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            }
+        ],
+        "shotsOffWoodwork": [],
+        "blockedShots": [
+            {
+                "id": 162,
+                "timestamp": "2025-02-01T10:51:20.842Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:36",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 412,
+                "timestamp": "2025-02-01T11:40:13.503Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:02:47",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            }
+        ],
+        "corners": [
+            {
+                "id": 75,
+                "timestamp": "2025-02-01T10:38:58.682Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:06:14",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 238,
+                "timestamp": "2025-02-01T11:01:28.159Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:44",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 409,
+                "timestamp": "2025-02-01T11:40:08.363Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:02:42",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 411,
+                "timestamp": "2025-02-01T11:40:30.644Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:03:04",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 422,
+                "timestamp": "2025-02-01T11:42:14.742Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:48",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 443,
+                "timestamp": "2025-02-01T11:44:57.325Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:31",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            }
+        ],
+        "cornersV2": [
+            {
+                "id": 75,
+                "phase": "FirstHalf",
+                "team": "Home",
+                "awarded": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T10:38:35.681Z",
+                    "timeElapsed": "00:05:51"
+                },
+                "taken": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T10:38:58.682Z",
+                    "timeElapsed": "00:06:14"
+                }
+            },
+            {
+                "id": 238,
+                "phase": "FirstHalf",
+                "team": "Home",
+                "awarded": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:00:56.441Z",
+                    "timeElapsed": "00:28:12"
+                },
+                "taken": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:01:28.159Z",
+                    "timeElapsed": "00:28:44"
+                }
+            },
+            {
+                "id": 409,
+                "phase": "SecondHalf",
+                "team": "Home",
+                "awarded": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:39:38.606Z",
+                    "timeElapsed": "00:02:12"
+                },
+                "taken": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:40:08.363Z",
+                    "timeElapsed": "00:02:42"
+                }
+            },
+            {
+                "id": 411,
+                "phase": "SecondHalf",
+                "team": "Home",
+                "awarded": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:40:13.001Z",
+                    "timeElapsed": "00:02:46"
+                },
+                "taken": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:40:30.644Z",
+                    "timeElapsed": "00:03:04"
+                }
+            },
+            {
+                "id": 422,
+                "phase": "SecondHalf",
+                "team": "Home",
+                "awarded": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:41:47.282Z",
+                    "timeElapsed": "00:04:21"
+                },
+                "taken": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:42:14.742Z",
+                    "timeElapsed": "00:04:48"
+                }
+            },
+            {
+                "id": 443,
+                "phase": "SecondHalf",
+                "team": "Away",
+                "awarded": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:44:28.723Z",
+                    "timeElapsed": "00:07:02"
+                },
+                "taken": {
+                    "isConfirmed": true,
+                    "timestamp": "2025-02-01T11:44:57.325Z",
+                    "timeElapsed": "00:07:31"
+                }
+            }
+        ],
+        "penaltiesAwarded": [],
+        "fouls": [
+            {
+                "id": 44,
+                "timestamp": "2025-02-01T10:35:33.58Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:49",
+                "foulingTeam": "Home",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 109,
+                "timestamp": "2025-02-01T10:43:34.221Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:10:50",
+                "foulingTeam": "Away",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 214,
+                "timestamp": "2025-02-01T10:57:29.661Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:45",
+                "foulingTeam": "Home",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 244,
+                "timestamp": "2025-02-01T11:01:58.182Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:29:14",
+                "foulingTeam": "Home",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 287,
+                "timestamp": "2025-02-01T11:07:18.58Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:34",
+                "foulingTeam": "Away",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 301,
+                "timestamp": "2025-02-01T11:08:44.581Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:36:00",
+                "foulingTeam": "Away",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 374,
+                "timestamp": "2025-02-01T11:20:00.342Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:16",
+                "foulingTeam": "Home",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 439,
+                "timestamp": "2025-02-01T11:44:02.813Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:36",
+                "foulingTeam": "Home",
+                "fouledPlayer": null,
+                "fouledBy": null,
+                "isConfirmed": true
+            }
+        ],
+        "offsides": [
+            {
+                "id": 172,
+                "timestamp": "2025-02-01T10:52:41.58Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:56",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            }
+        ],
+        "goalKicks": [
+            {
+                "id": 181,
+                "timestamp": "2025-02-01T10:54:06.6Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:22",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 226,
+                "timestamp": "2025-02-01T10:58:54.465Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:26:10",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 241,
+                "timestamp": "2025-02-01T11:01:36.907Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:52",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 255,
+                "timestamp": "2025-02-01T11:03:57.82Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:13",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 294,
+                "timestamp": "2025-02-01T11:07:50.784Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:06",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 318,
+                "timestamp": "2025-02-01T11:11:59.942Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:39:15",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 329,
+                "timestamp": "2025-02-01T11:14:56.322Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:12",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 335,
+                "timestamp": "2025-02-01T11:15:55.982Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:11",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 344,
+                "timestamp": "2025-02-01T11:16:51.64Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:07",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 403,
+                "timestamp": "2025-02-01T11:38:50.104Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:01:23",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 426,
+                "timestamp": "2025-02-01T11:42:19.702Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:53",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            }
+        ],
+        "missedPenalties": [],
+        "savedPenalties": [],
+        "throwIns": [
+            {
+                "id": 23,
+                "timestamp": "2025-02-01T10:32:56.421Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:12",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 26,
+                "timestamp": "2025-02-01T10:33:25.614Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:41",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 29,
+                "timestamp": "2025-02-01T10:33:50.181Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:06",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 35,
+                "timestamp": "2025-02-01T10:34:39.546Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:55",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 48,
+                "timestamp": "2025-02-01T10:35:51.024Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:06",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 52,
+                "timestamp": "2025-02-01T10:36:19.962Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:35",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 55,
+                "timestamp": "2025-02-01T10:36:47.722Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:03",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 63,
+                "timestamp": "2025-02-01T10:37:29.569Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:45",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 100,
+                "timestamp": "2025-02-01T10:42:21.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:37",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 123,
+                "timestamp": "2025-02-01T10:46:05.057Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:21",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 128,
+                "timestamp": "2025-02-01T10:46:29.021Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:44",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 139,
+                "timestamp": "2025-02-01T10:48:00.96Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:15:16",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 147,
+                "timestamp": "2025-02-01T10:49:16.421Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:32",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 163,
+                "timestamp": "2025-02-01T10:51:22.721Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:38",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 230,
+                "timestamp": "2025-02-01T10:59:55.021Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:27:10",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 252,
+                "timestamp": "2025-02-01T11:03:43.208Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:30:59",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 262,
+                "timestamp": "2025-02-01T11:04:38.98Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:54",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 278,
+                "timestamp": "2025-02-01T11:06:15.523Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:31",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 284,
+                "timestamp": "2025-02-01T11:06:59.081Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:15",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 308,
+                "timestamp": "2025-02-01T11:10:35.16Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:51",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 321,
+                "timestamp": "2025-02-01T11:13:57.181Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:13",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 324,
+                "timestamp": "2025-02-01T11:14:33.42Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:49",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 338,
+                "timestamp": "2025-02-01T11:16:18.808Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:34",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 349,
+                "timestamp": "2025-02-01T11:17:32.281Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:48",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 359,
+                "timestamp": "2025-02-01T11:18:24.681Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:40",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 363,
+                "timestamp": "2025-02-01T11:18:52.52Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:08",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 371,
+                "timestamp": "2025-02-01T11:19:44.96Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:00",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 399,
+                "timestamp": "2025-02-01T11:37:58.442Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:32",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 429,
+                "timestamp": "2025-02-01T11:42:46.124Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:19",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 436,
+                "timestamp": "2025-02-01T11:43:39.203Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:12",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 445,
+                "timestamp": "2025-02-01T11:45:03.082Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:36",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            }
+        ],
+        "possessionChanges": [],
+        "stoppageTimeAnnouncements": [
+            {
+                "id": 350,
+                "timestamp": "2025-02-01T11:17:35.743Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:51",
+                "isConfirmed": true,
+                "addedMinutes": 3
+            }
+        ],
+        "phaseChanges": [
+            {
+                "id": 18,
+                "previousPhase": "PreMatch",
+                "currentPhase": "FirstHalf",
+                "phaseStartTime": "2025-02-01T10:32:44.041Z",
+                "isConfirmed": true,
+                "timestamp": "2025-02-01T10:32:44.041Z"
+            },
+            {
+                "id": 386,
+                "previousPhase": "FirstHalf",
+                "currentPhase": "HalfTime",
+                "phaseStartTime": "2025-02-01T11:21:00.62Z",
+                "isConfirmed": true,
+                "timestamp": "2025-02-01T11:21:00.62Z"
+            },
+            {
+                "id": 390,
+                "previousPhase": "HalfTime",
+                "currentPhase": "SecondHalf",
+                "phaseStartTime": "2025-02-01T11:37:26.265Z",
+                "isConfirmed": true,
+                "timestamp": "2025-02-01T11:37:26.265Z"
+            }
+        ],
+        "clockActions": [
+            {
+                "id": 19,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:00",
+                "timestamp": "2025-02-01T10:32:44.041Z",
+                "activityType": "Start",
+                "isClockRunning": true,
+                "isConfirmed": true
+            },
+            {
+                "id": 385,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:48:16",
+                "timestamp": "2025-02-01T11:21:00.62Z",
+                "activityType": "Stop",
+                "isClockRunning": false,
+                "isConfirmed": true
+            },
+            {
+                "id": 391,
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:00",
+                "timestamp": "2025-02-01T11:37:26.265Z",
+                "activityType": "Start",
+                "isClockRunning": true,
+                "isConfirmed": true
+            }
+        ],
+        "dangerStateChanges": [
+            {
+                "id": 18,
+                "timestamp": "2025-02-01T10:32:44.041Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:00",
+                "isConfirmed": true,
+                "dangerState": "Safe"
+            },
+            {
+                "id": 21,
+                "timestamp": "2025-02-01T10:32:45.581Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:01",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 22,
+                "timestamp": "2025-02-01T10:32:54.602Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:10",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 23,
+                "timestamp": "2025-02-01T10:32:56.421Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:12",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 24,
+                "timestamp": "2025-02-01T10:33:07.46Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:23",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 25,
+                "timestamp": "2025-02-01T10:33:15.72Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:31",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 26,
+                "timestamp": "2025-02-01T10:33:25.614Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:41",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 27,
+                "timestamp": "2025-02-01T10:33:31.041Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:47",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 28,
+                "timestamp": "2025-02-01T10:33:38.34Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:54",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 29,
+                "timestamp": "2025-02-01T10:33:50.181Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:06",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 30,
+                "timestamp": "2025-02-01T10:33:56.622Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:12",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 31,
+                "timestamp": "2025-02-01T10:34:04.562Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:20",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 32,
+                "timestamp": "2025-02-01T10:34:09.179Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:25",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 33,
+                "timestamp": "2025-02-01T10:34:25.706Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:41",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 34,
+                "timestamp": "2025-02-01T10:34:33.72Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:49",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 35,
+                "timestamp": "2025-02-01T10:34:39.546Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:55",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 36,
+                "timestamp": "2025-02-01T10:34:41.887Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:01:57",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 37,
+                "timestamp": "2025-02-01T10:34:51.68Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:07",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 38,
+                "timestamp": "2025-02-01T10:34:57.663Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:13",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 39,
+                "timestamp": "2025-02-01T10:35:04.483Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:20",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 40,
+                "timestamp": "2025-02-01T10:35:10.301Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:26",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 41,
+                "timestamp": "2025-02-01T10:35:23.583Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:39",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 42,
+                "timestamp": "2025-02-01T10:35:31.842Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:47",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 44,
+                "timestamp": "2025-02-01T10:35:33.58Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:49",
+                "isConfirmed": true,
+                "dangerState": "AwayAttackingFreeKick"
+            },
+            {
+                "id": 45,
+                "timestamp": "2025-02-01T10:35:43.8Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:59",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 47,
+                "timestamp": "2025-02-01T10:35:47.82Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:03",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 48,
+                "timestamp": "2025-02-01T10:35:51.024Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:06",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 49,
+                "timestamp": "2025-02-01T10:35:53.921Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:09",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 50,
+                "timestamp": "2025-02-01T10:36:05.588Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:21",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 51,
+                "timestamp": "2025-02-01T10:36:09.7Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:25",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 52,
+                "timestamp": "2025-02-01T10:36:19.962Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:35",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 53,
+                "timestamp": "2025-02-01T10:36:30.842Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:46",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 54,
+                "timestamp": "2025-02-01T10:36:38.62Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:54",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 55,
+                "timestamp": "2025-02-01T10:36:47.722Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:03",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 56,
+                "timestamp": "2025-02-01T10:36:53.003Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:08",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 57,
+                "timestamp": "2025-02-01T10:36:55.52Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:11",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 58,
+                "timestamp": "2025-02-01T10:36:56.9Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:12",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 59,
+                "timestamp": "2025-02-01T10:37:05.94Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:21",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 60,
+                "timestamp": "2025-02-01T10:37:07.401Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:23",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 61,
+                "timestamp": "2025-02-01T10:37:09.92Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:25",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 62,
+                "timestamp": "2025-02-01T10:37:22.722Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:38",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 63,
+                "timestamp": "2025-02-01T10:37:29.569Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:45",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 64,
+                "timestamp": "2025-02-01T10:37:42.639Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:58",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 65,
+                "timestamp": "2025-02-01T10:37:43.563Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:04:59",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 66,
+                "timestamp": "2025-02-01T10:37:46.04Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:01",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 67,
+                "timestamp": "2025-02-01T10:37:51.747Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:07",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 68,
+                "timestamp": "2025-02-01T10:37:58.1Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:14",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 69,
+                "timestamp": "2025-02-01T10:38:00.322Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:16",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 70,
+                "timestamp": "2025-02-01T10:38:11.043Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:27",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 71,
+                "timestamp": "2025-02-01T10:38:15.602Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:31",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 72,
+                "timestamp": "2025-02-01T10:38:17.801Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:33",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 73,
+                "timestamp": "2025-02-01T10:38:23.88Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:39",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 74,
+                "timestamp": "2025-02-01T10:38:25.74Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:41",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 75,
+                "timestamp": "2025-02-01T10:38:35.681Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:05:51",
+                "isConfirmed": true,
+                "dangerState": "HomeCorner"
+            },
+            {
+                "id": 76,
+                "timestamp": "2025-02-01T10:38:58.682Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:06:14",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 78,
+                "timestamp": "2025-02-01T10:39:34.966Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:06:50",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 79,
+                "timestamp": "2025-02-01T10:39:36.521Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:06:52",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 80,
+                "timestamp": "2025-02-01T10:39:37.28Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:06:53",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 81,
+                "timestamp": "2025-02-01T10:39:47.46Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:03",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 82,
+                "timestamp": "2025-02-01T10:39:48.601Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:04",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 83,
+                "timestamp": "2025-02-01T10:39:52.299Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:08",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 84,
+                "timestamp": "2025-02-01T10:40:03.9Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:19",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 85,
+                "timestamp": "2025-02-01T10:40:05.4Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:21",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 86,
+                "timestamp": "2025-02-01T10:40:08.501Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:24",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 87,
+                "timestamp": "2025-02-01T10:40:19.901Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:35",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 88,
+                "timestamp": "2025-02-01T10:40:24.141Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:40",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 89,
+                "timestamp": "2025-02-01T10:40:27.181Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:43",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 90,
+                "timestamp": "2025-02-01T10:40:30.641Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:07:46",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 91,
+                "timestamp": "2025-02-01T10:40:45.56Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:08:01",
+                "isConfirmed": true,
+                "dangerState": "HomeGoal"
+            },
+            {
+                "id": 91,
+                "timestamp": "2025-02-01T10:40:45.56Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:08:01",
+                "isConfirmed": true,
+                "dangerState": "Safe"
+            },
+            {
+                "id": 96,
+                "timestamp": "2025-02-01T10:41:52.281Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:08",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 97,
+                "timestamp": "2025-02-01T10:42:00.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:16",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 98,
+                "timestamp": "2025-02-01T10:42:06.36Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:22",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 99,
+                "timestamp": "2025-02-01T10:42:07.882Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:23",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 100,
+                "timestamp": "2025-02-01T10:42:21.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:37",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 101,
+                "timestamp": "2025-02-01T10:42:30.52Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:46",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 102,
+                "timestamp": "2025-02-01T10:42:32.98Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:48",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 103,
+                "timestamp": "2025-02-01T10:42:40.421Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:56",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 104,
+                "timestamp": "2025-02-01T10:42:50.001Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:10:05",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 105,
+                "timestamp": "2025-02-01T10:42:52.5Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:10:08",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 106,
+                "timestamp": "2025-02-01T10:43:18.981Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:10:34",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 107,
+                "timestamp": "2025-02-01T10:43:29.161Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:10:45",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 109,
+                "timestamp": "2025-02-01T10:43:34.221Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:10:50",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousFreeKick"
+            },
+            {
+                "id": 111,
+                "timestamp": "2025-02-01T10:44:27.719Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:11:43",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 113,
+                "timestamp": "2025-02-01T10:44:32.28Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:11:48",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 114,
+                "timestamp": "2025-02-01T10:44:43.462Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:11:59",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 115,
+                "timestamp": "2025-02-01T10:44:47.041Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:12:03",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 116,
+                "timestamp": "2025-02-01T10:45:10.061Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:12:26",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 117,
+                "timestamp": "2025-02-01T10:45:14.101Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:12:30",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 118,
+                "timestamp": "2025-02-01T10:45:20.901Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:12:36",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 119,
+                "timestamp": "2025-02-01T10:45:36.141Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:12:52",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 120,
+                "timestamp": "2025-02-01T10:45:38.18Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:12:54",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 121,
+                "timestamp": "2025-02-01T10:45:53.6Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:09",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 122,
+                "timestamp": "2025-02-01T10:46:00.5Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:16",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 123,
+                "timestamp": "2025-02-01T10:46:05.057Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:21",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 124,
+                "timestamp": "2025-02-01T10:46:11.641Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:27",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 125,
+                "timestamp": "2025-02-01T10:46:12.06Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:28",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 126,
+                "timestamp": "2025-02-01T10:46:22.02Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:37",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 127,
+                "timestamp": "2025-02-01T10:46:23.062Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:39",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 128,
+                "timestamp": "2025-02-01T10:46:29.021Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:13:44",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 129,
+                "timestamp": "2025-02-01T10:46:58.202Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:14",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 130,
+                "timestamp": "2025-02-01T10:46:58.622Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:14",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 131,
+                "timestamp": "2025-02-01T10:47:03.741Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:19",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 132,
+                "timestamp": "2025-02-01T10:47:09.14Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:25",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 133,
+                "timestamp": "2025-02-01T10:47:10.002Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:25",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 134,
+                "timestamp": "2025-02-01T10:47:15.939Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:31",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 135,
+                "timestamp": "2025-02-01T10:47:32.44Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:48",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 136,
+                "timestamp": "2025-02-01T10:47:34.779Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:50",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 137,
+                "timestamp": "2025-02-01T10:47:38.8Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:14:54",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 138,
+                "timestamp": "2025-02-01T10:47:56.18Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:15:12",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 139,
+                "timestamp": "2025-02-01T10:48:00.96Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:15:16",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 140,
+                "timestamp": "2025-02-01T10:48:13.522Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:15:29",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 141,
+                "timestamp": "2025-02-01T10:48:16.7Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:15:32",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 142,
+                "timestamp": "2025-02-01T10:48:44.002Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:15:59",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 143,
+                "timestamp": "2025-02-01T10:48:55.701Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:11",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 144,
+                "timestamp": "2025-02-01T10:48:58.722Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:14",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 145,
+                "timestamp": "2025-02-01T10:49:05.44Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:21",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 146,
+                "timestamp": "2025-02-01T10:49:12.12Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:28",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 147,
+                "timestamp": "2025-02-01T10:49:16.421Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:32",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 148,
+                "timestamp": "2025-02-01T10:49:18.579Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:34",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 149,
+                "timestamp": "2025-02-01T10:49:40.362Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:16:56",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 150,
+                "timestamp": "2025-02-01T10:49:45.121Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:17:01",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 151,
+                "timestamp": "2025-02-01T10:49:46.281Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:17:02",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 152,
+                "timestamp": "2025-02-01T10:49:49.78Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:17:05",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 153,
+                "timestamp": "2025-02-01T10:49:58.963Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:17:14",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 154,
+                "timestamp": "2025-02-01T10:50:13.606Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:17:29",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 155,
+                "timestamp": "2025-02-01T10:50:24.901Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:17:40",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 156,
+                "timestamp": "2025-02-01T10:50:29.899Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:17:45",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 157,
+                "timestamp": "2025-02-01T10:51:02.761Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:18",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 158,
+                "timestamp": "2025-02-01T10:51:07.501Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:23",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 159,
+                "timestamp": "2025-02-01T10:51:12.982Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:28",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 160,
+                "timestamp": "2025-02-01T10:51:13.862Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:29",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 161,
+                "timestamp": "2025-02-01T10:51:18.881Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:34",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 163,
+                "timestamp": "2025-02-01T10:51:22.721Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:18:38",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 164,
+                "timestamp": "2025-02-01T10:51:44.6Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:00",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 165,
+                "timestamp": "2025-02-01T10:51:49.349Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:05",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 166,
+                "timestamp": "2025-02-01T10:51:55.881Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:11",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 167,
+                "timestamp": "2025-02-01T10:51:58.06Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:14",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 168,
+                "timestamp": "2025-02-01T10:51:59.98Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:15",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 169,
+                "timestamp": "2025-02-01T10:52:04.721Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:20",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 172,
+                "timestamp": "2025-02-01T10:52:41.58Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:19:56",
+                "isConfirmed": true,
+                "dangerState": "Safe"
+            },
+            {
+                "id": 173,
+                "timestamp": "2025-02-01T10:53:03.962Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:20:19",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 174,
+                "timestamp": "2025-02-01T10:53:04.881Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:20:20",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 175,
+                "timestamp": "2025-02-01T10:53:10.88Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:20:26",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 176,
+                "timestamp": "2025-02-01T10:53:14.459Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:20:30",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 177,
+                "timestamp": "2025-02-01T10:53:38.62Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:20:54",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 178,
+                "timestamp": "2025-02-01T10:53:48.54Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:04",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 180,
+                "timestamp": "2025-02-01T10:54:06.339Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:22",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 181,
+                "timestamp": "2025-02-01T10:54:06.6Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:22",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 182,
+                "timestamp": "2025-02-01T10:54:35.161Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:51",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 183,
+                "timestamp": "2025-02-01T10:54:36.92Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:52",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 184,
+                "timestamp": "2025-02-01T10:54:39.102Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:55",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 185,
+                "timestamp": "2025-02-01T10:54:41.74Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:21:57",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 189,
+                "timestamp": "2025-02-01T10:54:52.801Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:08",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 190,
+                "timestamp": "2025-02-01T10:55:08.46Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:24",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 191,
+                "timestamp": "2025-02-01T10:55:11.1Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:27",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 192,
+                "timestamp": "2025-02-01T10:55:18.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:34",
+                "isConfirmed": true,
+                "dangerState": "HomeGoal"
+            },
+            {
+                "id": 192,
+                "timestamp": "2025-02-01T10:55:18.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:34",
+                "isConfirmed": true,
+                "dangerState": "Safe"
+            },
+            {
+                "id": 197,
+                "timestamp": "2025-02-01T10:56:21.721Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:37",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 198,
+                "timestamp": "2025-02-01T10:56:27.348Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:43",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 199,
+                "timestamp": "2025-02-01T10:56:31.74Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:47",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 200,
+                "timestamp": "2025-02-01T10:56:32.019Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:47",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 201,
+                "timestamp": "2025-02-01T10:56:34.72Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:50",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 202,
+                "timestamp": "2025-02-01T10:56:42.34Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:58",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 203,
+                "timestamp": "2025-02-01T10:56:44.322Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:00",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 204,
+                "timestamp": "2025-02-01T10:56:48.22Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:04",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 205,
+                "timestamp": "2025-02-01T10:56:51.76Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:07",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 206,
+                "timestamp": "2025-02-01T10:56:56.78Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:12",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 207,
+                "timestamp": "2025-02-01T10:57:01.262Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:17",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 208,
+                "timestamp": "2025-02-01T10:57:05.908Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:21",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 209,
+                "timestamp": "2025-02-01T10:57:08.14Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:24",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 210,
+                "timestamp": "2025-02-01T10:57:16.44Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:32",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 212,
+                "timestamp": "2025-02-01T10:57:25.46Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:41",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 213,
+                "timestamp": "2025-02-01T10:57:25.861Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:41",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 214,
+                "timestamp": "2025-02-01T10:57:29.661Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:45",
+                "isConfirmed": true,
+                "dangerState": "AwayAttackingFreeKick"
+            },
+            {
+                "id": 217,
+                "timestamp": "2025-02-01T10:58:19.361Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:35",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 218,
+                "timestamp": "2025-02-01T10:58:20.221Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:36",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 219,
+                "timestamp": "2025-02-01T10:58:25.661Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:41",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 220,
+                "timestamp": "2025-02-01T10:58:27.381Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:43",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 221,
+                "timestamp": "2025-02-01T10:58:33.248Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:49",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 222,
+                "timestamp": "2025-02-01T10:58:36.301Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:52",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 223,
+                "timestamp": "2025-02-01T10:58:38.721Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:54",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 225,
+                "timestamp": "2025-02-01T10:58:54.222Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:26:10",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 226,
+                "timestamp": "2025-02-01T10:58:54.465Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:26:10",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 227,
+                "timestamp": "2025-02-01T10:59:14.68Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:26:30",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 228,
+                "timestamp": "2025-02-01T10:59:19.101Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:26:35",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 229,
+                "timestamp": "2025-02-01T10:59:24.701Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:26:40",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 230,
+                "timestamp": "2025-02-01T10:59:55.021Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:27:10",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 231,
+                "timestamp": "2025-02-01T11:00:01.142Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:27:17",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 232,
+                "timestamp": "2025-02-01T11:00:05.761Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:27:21",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 233,
+                "timestamp": "2025-02-01T11:00:10.561Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:27:26",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 234,
+                "timestamp": "2025-02-01T11:00:29.023Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:27:44",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 235,
+                "timestamp": "2025-02-01T11:00:49.381Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:05",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 236,
+                "timestamp": "2025-02-01T11:00:51.402Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:07",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 237,
+                "timestamp": "2025-02-01T11:00:51.801Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:07",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 238,
+                "timestamp": "2025-02-01T11:00:56.441Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:12",
+                "isConfirmed": true,
+                "dangerState": "HomeCorner"
+            },
+            {
+                "id": 239,
+                "timestamp": "2025-02-01T11:01:28.159Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:44",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 240,
+                "timestamp": "2025-02-01T11:01:36.599Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:52",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 241,
+                "timestamp": "2025-02-01T11:01:36.907Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:28:52",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 242,
+                "timestamp": "2025-02-01T11:01:45.808Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:29:01",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 244,
+                "timestamp": "2025-02-01T11:01:58.182Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:29:14",
+                "isConfirmed": true,
+                "dangerState": "AwayFreeKick"
+            },
+            {
+                "id": 249,
+                "timestamp": "2025-02-01T11:03:34.299Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:30:50",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 250,
+                "timestamp": "2025-02-01T11:03:34.981Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:30:50",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 251,
+                "timestamp": "2025-02-01T11:03:36.142Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:30:52",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 252,
+                "timestamp": "2025-02-01T11:03:43.208Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:30:59",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 253,
+                "timestamp": "2025-02-01T11:03:48.76Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:04",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 254,
+                "timestamp": "2025-02-01T11:03:57.601Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:13",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 255,
+                "timestamp": "2025-02-01T11:03:57.82Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:13",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 256,
+                "timestamp": "2025-02-01T11:04:00.78Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:16",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 257,
+                "timestamp": "2025-02-01T11:04:09.681Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:25",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 258,
+                "timestamp": "2025-02-01T11:04:15.184Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:31",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 259,
+                "timestamp": "2025-02-01T11:04:16.442Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:32",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 260,
+                "timestamp": "2025-02-01T11:04:28.441Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:44",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 261,
+                "timestamp": "2025-02-01T11:04:34.981Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:50",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 262,
+                "timestamp": "2025-02-01T11:04:38.98Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:31:54",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 263,
+                "timestamp": "2025-02-01T11:04:51.824Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:32:07",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 264,
+                "timestamp": "2025-02-01T11:04:55.609Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:32:11",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 265,
+                "timestamp": "2025-02-01T11:05:00.702Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:32:16",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 266,
+                "timestamp": "2025-02-01T11:05:04.262Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:32:20",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 267,
+                "timestamp": "2025-02-01T11:05:23.48Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:32:39",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 268,
+                "timestamp": "2025-02-01T11:05:31.84Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:32:47",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 269,
+                "timestamp": "2025-02-01T11:05:48.72Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:04",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 270,
+                "timestamp": "2025-02-01T11:05:52.12Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:08",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 272,
+                "timestamp": "2025-02-01T11:05:59.021Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:14",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 273,
+                "timestamp": "2025-02-01T11:05:59.74Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:15",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 274,
+                "timestamp": "2025-02-01T11:06:02.049Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:18",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 275,
+                "timestamp": "2025-02-01T11:06:06.461Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:22",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 276,
+                "timestamp": "2025-02-01T11:06:09.562Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:25",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 277,
+                "timestamp": "2025-02-01T11:06:12.76Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:28",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 278,
+                "timestamp": "2025-02-01T11:06:15.523Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:31",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 280,
+                "timestamp": "2025-02-01T11:06:44.465Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:00",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 281,
+                "timestamp": "2025-02-01T11:06:46.781Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:02",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 282,
+                "timestamp": "2025-02-01T11:06:48.54Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:04",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 283,
+                "timestamp": "2025-02-01T11:06:56.861Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:12",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 284,
+                "timestamp": "2025-02-01T11:06:59.081Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:15",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 285,
+                "timestamp": "2025-02-01T11:07:09.58Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:25",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 287,
+                "timestamp": "2025-02-01T11:07:18.58Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:34",
+                "isConfirmed": true,
+                "dangerState": "HomeAttackingFreeKick"
+            },
+            {
+                "id": 288,
+                "timestamp": "2025-02-01T11:07:34.142Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:50",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 290,
+                "timestamp": "2025-02-01T11:07:36.462Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:52",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 291,
+                "timestamp": "2025-02-01T11:07:42.532Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:58",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 292,
+                "timestamp": "2025-02-01T11:07:43.502Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:59",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 293,
+                "timestamp": "2025-02-01T11:07:50.521Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:06",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 294,
+                "timestamp": "2025-02-01T11:07:50.784Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:06",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 295,
+                "timestamp": "2025-02-01T11:08:08.04Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:23",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 296,
+                "timestamp": "2025-02-01T11:08:13.122Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:29",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 297,
+                "timestamp": "2025-02-01T11:08:18.42Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:34",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 298,
+                "timestamp": "2025-02-01T11:08:18.662Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:34",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 299,
+                "timestamp": "2025-02-01T11:08:39.62Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:55",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 301,
+                "timestamp": "2025-02-01T11:08:44.581Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:36:00",
+                "isConfirmed": true,
+                "dangerState": "HomeFreeKick"
+            },
+            {
+                "id": 303,
+                "timestamp": "2025-02-01T11:10:07.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:23",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 305,
+                "timestamp": "2025-02-01T11:10:12.122Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:28",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 306,
+                "timestamp": "2025-02-01T11:10:24.542Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:40",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 307,
+                "timestamp": "2025-02-01T11:10:28.925Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:44",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 308,
+                "timestamp": "2025-02-01T11:10:35.16Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:51",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 309,
+                "timestamp": "2025-02-01T11:10:42.78Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:58",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 310,
+                "timestamp": "2025-02-01T11:10:44.588Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:38:00",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 311,
+                "timestamp": "2025-02-01T11:10:57.462Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:38:13",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 312,
+                "timestamp": "2025-02-01T11:11:02.16Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:38:18",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 313,
+                "timestamp": "2025-02-01T11:11:18.922Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:38:34",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 314,
+                "timestamp": "2025-02-01T11:11:36.601Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:38:52",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 315,
+                "timestamp": "2025-02-01T11:11:48.101Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:39:04",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 316,
+                "timestamp": "2025-02-01T11:11:52.042Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:39:08",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 317,
+                "timestamp": "2025-02-01T11:11:59.541Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:39:15",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 318,
+                "timestamp": "2025-02-01T11:11:59.942Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:39:15",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 320,
+                "timestamp": "2025-02-01T11:13:55.04Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:10",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 321,
+                "timestamp": "2025-02-01T11:13:57.181Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:13",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 322,
+                "timestamp": "2025-02-01T11:14:02.941Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:18",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 323,
+                "timestamp": "2025-02-01T11:14:24.163Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:40",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 324,
+                "timestamp": "2025-02-01T11:14:33.42Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:49",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 325,
+                "timestamp": "2025-02-01T11:14:37.76Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:41:53",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 326,
+                "timestamp": "2025-02-01T11:14:45.701Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:01",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 327,
+                "timestamp": "2025-02-01T11:14:51.261Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:07",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 328,
+                "timestamp": "2025-02-01T11:14:56.001Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:11",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 329,
+                "timestamp": "2025-02-01T11:14:56.322Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:12",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 330,
+                "timestamp": "2025-02-01T11:15:22.94Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:38",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 331,
+                "timestamp": "2025-02-01T11:15:29.221Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:45",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 332,
+                "timestamp": "2025-02-01T11:15:37.921Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:42:53",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 334,
+                "timestamp": "2025-02-01T11:15:55.62Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:11",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 335,
+                "timestamp": "2025-02-01T11:15:55.982Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:11",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 336,
+                "timestamp": "2025-02-01T11:16:07.68Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:23",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 337,
+                "timestamp": "2025-02-01T11:16:14.298Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:30",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 338,
+                "timestamp": "2025-02-01T11:16:18.808Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:34",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 339,
+                "timestamp": "2025-02-01T11:16:25.801Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:41",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 340,
+                "timestamp": "2025-02-01T11:16:31.337Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:47",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 341,
+                "timestamp": "2025-02-01T11:16:42.32Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:43:58",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 343,
+                "timestamp": "2025-02-01T11:16:51.421Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:07",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 344,
+                "timestamp": "2025-02-01T11:16:51.64Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:07",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 345,
+                "timestamp": "2025-02-01T11:17:15.36Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:31",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 346,
+                "timestamp": "2025-02-01T11:17:19.542Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:35",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 347,
+                "timestamp": "2025-02-01T11:17:24.12Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:40",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 348,
+                "timestamp": "2025-02-01T11:17:26.881Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:42",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 349,
+                "timestamp": "2025-02-01T11:17:32.281Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:48",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 351,
+                "timestamp": "2025-02-01T11:17:38.7Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:54",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 352,
+                "timestamp": "2025-02-01T11:17:39.004Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:44:54",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 353,
+                "timestamp": "2025-02-01T11:17:58.34Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:14",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 354,
+                "timestamp": "2025-02-01T11:17:59.82Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:15",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 355,
+                "timestamp": "2025-02-01T11:18:03.421Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:19",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 356,
+                "timestamp": "2025-02-01T11:18:08.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:24",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 357,
+                "timestamp": "2025-02-01T11:18:16.687Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:32",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 358,
+                "timestamp": "2025-02-01T11:18:18.702Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:34",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 359,
+                "timestamp": "2025-02-01T11:18:24.681Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:40",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 360,
+                "timestamp": "2025-02-01T11:18:30.361Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:45:46",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 361,
+                "timestamp": "2025-02-01T11:18:45.661Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:01",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 362,
+                "timestamp": "2025-02-01T11:18:48.451Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:04",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 363,
+                "timestamp": "2025-02-01T11:18:52.52Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:08",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 364,
+                "timestamp": "2025-02-01T11:18:53.503Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:09",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 365,
+                "timestamp": "2025-02-01T11:18:56.121Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:12",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 366,
+                "timestamp": "2025-02-01T11:19:00.901Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:16",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 367,
+                "timestamp": "2025-02-01T11:19:05.084Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:21",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 368,
+                "timestamp": "2025-02-01T11:19:16.279Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:32",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 369,
+                "timestamp": "2025-02-01T11:19:18.681Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:34",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 370,
+                "timestamp": "2025-02-01T11:19:28.771Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:46:44",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 371,
+                "timestamp": "2025-02-01T11:19:44.96Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:00",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 372,
+                "timestamp": "2025-02-01T11:19:50.641Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:06",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 374,
+                "timestamp": "2025-02-01T11:20:00.342Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:16",
+                "isConfirmed": true,
+                "dangerState": "AwayFreeKick"
+            },
+            {
+                "id": 375,
+                "timestamp": "2025-02-01T11:20:13.301Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:29",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 376,
+                "timestamp": "2025-02-01T11:20:14.32Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:30",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 378,
+                "timestamp": "2025-02-01T11:20:19.662Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:35",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 379,
+                "timestamp": "2025-02-01T11:20:28.48Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:44",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 380,
+                "timestamp": "2025-02-01T11:20:31.409Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:47",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 381,
+                "timestamp": "2025-02-01T11:20:42.44Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:58",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 382,
+                "timestamp": "2025-02-01T11:20:48.081Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:48:04",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 384,
+                "timestamp": "2025-02-01T11:20:58.18Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:48:14",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 386,
+                "timestamp": "2025-02-01T11:21:00.62Z",
+                "phase": "HalfTime",
+                "timeElapsed": "00:00:00",
+                "isConfirmed": true,
+                "dangerState": "Safe"
+            },
+            {
+                "id": 390,
+                "timestamp": "2025-02-01T11:37:26.265Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:00",
+                "isConfirmed": true,
+                "dangerState": "Safe"
+            },
+            {
+                "id": 393,
+                "timestamp": "2025-02-01T11:37:27.622Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:01",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 394,
+                "timestamp": "2025-02-01T11:37:30.623Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:04",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 395,
+                "timestamp": "2025-02-01T11:37:31.803Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:05",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 396,
+                "timestamp": "2025-02-01T11:37:37.322Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:11",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 397,
+                "timestamp": "2025-02-01T11:37:42.362Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:16",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 398,
+                "timestamp": "2025-02-01T11:37:47.663Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:21",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 399,
+                "timestamp": "2025-02-01T11:37:58.442Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:32",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 401,
+                "timestamp": "2025-02-01T11:38:45.102Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:01:18",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 402,
+                "timestamp": "2025-02-01T11:38:49.803Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:01:23",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 403,
+                "timestamp": "2025-02-01T11:38:50.104Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:01:23",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 404,
+                "timestamp": "2025-02-01T11:38:54.763Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:01:28",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 405,
+                "timestamp": "2025-02-01T11:39:08.482Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:01:42",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 406,
+                "timestamp": "2025-02-01T11:39:20.442Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:01:54",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 407,
+                "timestamp": "2025-02-01T11:39:29.003Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:02:02",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 408,
+                "timestamp": "2025-02-01T11:39:32.863Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:02:06",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 409,
+                "timestamp": "2025-02-01T11:39:38.606Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:02:12",
+                "isConfirmed": true,
+                "dangerState": "HomeCorner"
+            },
+            {
+                "id": 410,
+                "timestamp": "2025-02-01T11:40:08.363Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:02:42",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 411,
+                "timestamp": "2025-02-01T11:40:13.001Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:02:46",
+                "isConfirmed": true,
+                "dangerState": "HomeCorner"
+            },
+            {
+                "id": 413,
+                "timestamp": "2025-02-01T11:40:30.644Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:03:04",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 414,
+                "timestamp": "2025-02-01T11:40:37.603Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:03:11",
+                "isConfirmed": true,
+                "dangerState": "HomeGoal"
+            },
+            {
+                "id": 414,
+                "timestamp": "2025-02-01T11:40:37.603Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:03:11",
+                "isConfirmed": true,
+                "dangerState": "Safe"
+            },
+            {
+                "id": 419,
+                "timestamp": "2025-02-01T11:41:35.59Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:09",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 420,
+                "timestamp": "2025-02-01T11:41:42.151Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:15",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 421,
+                "timestamp": "2025-02-01T11:41:42.763Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:16",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 422,
+                "timestamp": "2025-02-01T11:41:47.282Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:21",
+                "isConfirmed": true,
+                "dangerState": "HomeCorner"
+            },
+            {
+                "id": 423,
+                "timestamp": "2025-02-01T11:42:14.742Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:48",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 425,
+                "timestamp": "2025-02-01T11:42:19.442Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:53",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 426,
+                "timestamp": "2025-02-01T11:42:19.702Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:53",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 427,
+                "timestamp": "2025-02-01T11:42:38.103Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:11",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 428,
+                "timestamp": "2025-02-01T11:42:41.902Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:15",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 429,
+                "timestamp": "2025-02-01T11:42:46.124Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:19",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 430,
+                "timestamp": "2025-02-01T11:42:54.791Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:28",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 431,
+                "timestamp": "2025-02-01T11:42:57.483Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:31",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 432,
+                "timestamp": "2025-02-01T11:43:02.863Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:36",
+                "isConfirmed": true,
+                "dangerState": "HomeSafe"
+            },
+            {
+                "id": 433,
+                "timestamp": "2025-02-01T11:43:08.531Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:42",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 434,
+                "timestamp": "2025-02-01T11:43:12.011Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:45",
+                "isConfirmed": true,
+                "dangerState": "HomeDangerousAttack"
+            },
+            {
+                "id": 435,
+                "timestamp": "2025-02-01T11:43:19.103Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:05:52",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 436,
+                "timestamp": "2025-02-01T11:43:39.203Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:12",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 437,
+                "timestamp": "2025-02-01T11:43:52.662Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:26",
+                "isConfirmed": true,
+                "dangerState": "HomeAttack"
+            },
+            {
+                "id": 438,
+                "timestamp": "2025-02-01T11:43:58.923Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:32",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 439,
+                "timestamp": "2025-02-01T11:44:02.813Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:36",
+                "isConfirmed": true,
+                "dangerState": "AwayFreeKick"
+            },
+            {
+                "id": 440,
+                "timestamp": "2025-02-01T11:44:13.423Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:47",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            },
+            {
+                "id": 441,
+                "timestamp": "2025-02-01T11:44:13.802Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:47",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 442,
+                "timestamp": "2025-02-01T11:44:14.742Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:06:48",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 443,
+                "timestamp": "2025-02-01T11:44:28.723Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:02",
+                "isConfirmed": true,
+                "dangerState": "AwayCorner"
+            },
+            {
+                "id": 444,
+                "timestamp": "2025-02-01T11:44:57.325Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:31",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 445,
+                "timestamp": "2025-02-01T11:45:03.082Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:36",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 446,
+                "timestamp": "2025-02-01T11:45:05.221Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:38",
+                "isConfirmed": true,
+                "dangerState": "AwayDangerousAttack"
+            },
+            {
+                "id": 447,
+                "timestamp": "2025-02-01T11:45:08.264Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:41",
+                "isConfirmed": true,
+                "dangerState": "AwayAttack"
+            },
+            {
+                "id": 448,
+                "timestamp": "2025-02-01T11:45:11.882Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:07:45",
+                "isConfirmed": true,
+                "dangerState": "AwaySafe"
+            }
+        ],
+        "bookingStateChanges": [
+            {
+                "id": 43,
+                "timestamp": "2025-02-01T10:35:32.861Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:02:48",
+                "isConfirmed": true,
+                "bookingState": "YellowCardDanger"
+            },
+            {
+                "id": 46,
+                "timestamp": "2025-02-01T10:35:44.322Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:03:00",
+                "isConfirmed": true,
+                "bookingState": "Safe"
+            },
+            {
+                "id": 108,
+                "timestamp": "2025-02-01T10:43:33.821Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:10:49",
+                "isConfirmed": true,
+                "bookingState": "YellowCardDanger"
+            },
+            {
+                "id": 110,
+                "timestamp": "2025-02-01T10:44:27.26Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:11:43",
+                "isConfirmed": true,
+                "bookingState": "Safe"
+            },
+            {
+                "id": 243,
+                "timestamp": "2025-02-01T11:01:57.5Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:29:13",
+                "isConfirmed": true,
+                "bookingState": "YellowCardDanger"
+            },
+            {
+                "id": 247,
+                "timestamp": "2025-02-01T11:02:40.1Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:29:56",
+                "isConfirmed": true,
+                "bookingState": "Safe"
+            },
+            {
+                "id": 271,
+                "timestamp": "2025-02-01T11:05:56.781Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:12",
+                "isConfirmed": true,
+                "bookingState": "YellowCardDanger"
+            },
+            {
+                "id": 279,
+                "timestamp": "2025-02-01T11:06:41.041Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:33:57",
+                "isConfirmed": true,
+                "bookingState": "Safe"
+            },
+            {
+                "id": 286,
+                "timestamp": "2025-02-01T11:07:13.761Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:29",
+                "isConfirmed": true,
+                "bookingState": "YellowCardDanger"
+            },
+            {
+                "id": 289,
+                "timestamp": "2025-02-01T11:07:34.501Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:34:50",
+                "isConfirmed": true,
+                "bookingState": "Safe"
+            },
+            {
+                "id": 300,
+                "timestamp": "2025-02-01T11:08:43.005Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:35:58",
+                "isConfirmed": true,
+                "bookingState": "YellowCardDanger"
+            },
+            {
+                "id": 304,
+                "timestamp": "2025-02-01T11:10:08.46Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:37:24",
+                "isConfirmed": true,
+                "bookingState": "Safe"
+            },
+            {
+                "id": 373,
+                "timestamp": "2025-02-01T11:20:00.022Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:15",
+                "isConfirmed": true,
+                "bookingState": "YellowCardDanger"
+            },
+            {
+                "id": 377,
+                "timestamp": "2025-02-01T11:20:15.095Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:47:31",
+                "isConfirmed": true,
+                "bookingState": "Safe"
+            }
+        ],
+        "lineupUpdates": [],
+        "systemMessages": [
+            {
+                "id": 1,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 0,
+                "message": "Wind: no wind",
+                "timestamp": "2025-02-01T09:44:11.242Z"
+            },
+            {
+                "id": 2,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 0,
+                "message": "Weather: sun",
+                "timestamp": "2025-02-01T09:44:14.699Z"
+            },
+            {
+                "id": 3,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 0,
+                "message": "Pitch is bad",
+                "timestamp": "2025-02-01T09:44:21.842Z"
+            },
+            {
+                "id": 9,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 2000,
+                "message": "Players NOT on the field",
+                "timestamp": "2025-02-01T10:10:09.181Z"
+            },
+            {
+                "id": 10,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 0,
+                "message": "Attendance is 10%",
+                "timestamp": "2025-02-01T10:10:13.928Z"
+            },
+            {
+                "id": 11,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 2001,
+                "message": "Players still NOT on the field",
+                "timestamp": "2025-02-01T10:25:22.148Z"
+            },
+            {
+                "id": 12,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 2002,
+                "message": "Players are coming out",
+                "timestamp": "2025-02-01T10:27:32.481Z"
+            },
+            {
+                "id": 13,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 2005,
+                "message": "National anthem singing",
+                "timestamp": "2025-02-01T10:29:31.759Z"
+            },
+            {
+                "id": 14,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 2007,
+                "message": "Coin Flip",
+                "timestamp": "2025-02-01T10:30:55.209Z"
+            },
+            {
+                "id": 15,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 2003,
+                "message": "Players ON the field",
+                "timestamp": "2025-02-01T10:31:22.801Z"
+            },
+            {
+                "id": 16,
+                "phase": "PreMatch",
+                "timeElapsed": "00:00:00",
+                "messageId": 0,
+                "message": "Standby",
+                "timestamp": "2025-02-01T10:32:12.66Z"
+            },
+            {
+                "id": 77,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:06:22",
+                "messageId": 0,
+                "message": "Please be advised that the game will be renewed with Home Dropped ball.",
+                "timestamp": "2025-02-01T10:39:06.67Z"
+            },
+            {
+                "id": 94,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:07",
+                "messageId": 0,
+                "message": "Standby",
+                "timestamp": "2025-02-01T10:41:51.162Z"
+            },
+            {
+                "id": 186,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:04",
+                "messageId": 0,
+                "message": "Team Better: Away MUCH Better",
+                "timestamp": "2025-02-01T10:54:48.101Z"
+            },
+            {
+                "id": 187,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:05",
+                "messageId": 0,
+                "message": "Team Better: Home MUCH Better",
+                "timestamp": "2025-02-01T10:54:49.619Z"
+            },
+            {
+                "id": 188,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:06",
+                "messageId": 0,
+                "message": "Game Speed is Moderate",
+                "timestamp": "2025-02-01T10:54:50.781Z"
+            },
+            {
+                "id": 195,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:36",
+                "messageId": 0,
+                "message": "Standby",
+                "timestamp": "2025-02-01T10:56:20.879Z"
+            },
+            {
+                "id": 215,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:59",
+                "messageId": 1013,
+                "message": "The game is suspended due to an injured Home player",
+                "timestamp": "2025-02-01T10:57:43.062Z"
+            },
+            {
+                "id": 245,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:29:25",
+                "messageId": 1017,
+                "message": "The game is suspended due to an injured Away player",
+                "timestamp": "2025-02-01T11:02:09.421Z"
+            },
+            {
+                "id": 302,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:36:12",
+                "messageId": 1017,
+                "message": "The game is suspended due to an injured Away player",
+                "timestamp": "2025-02-01T11:08:56.984Z"
+            },
+            {
+                "id": 319,
+                "phase": "FirstHalf",
+                "timeElapsed": "00:39:28",
+                "messageId": 1013,
+                "message": "The game is suspended due to an injured Home player",
+                "timestamp": "2025-02-01T11:12:12.081Z"
+            },
+            {
+                "id": 387,
+                "phase": "HalfTime",
+                "timeElapsed": "00:00:00",
+                "messageId": 2000,
+                "message": "Players NOT on the field",
+                "timestamp": "2025-02-01T11:21:58.844Z"
+            },
+            {
+                "id": 388,
+                "phase": "HalfTime",
+                "timeElapsed": "00:00:00",
+                "messageId": 0,
+                "message": "Standby",
+                "timestamp": "2025-02-01T11:36:55.464Z"
+            },
+            {
+                "id": 389,
+                "phase": "HalfTime",
+                "timeElapsed": "00:00:00",
+                "messageId": 2003,
+                "message": "Players ON the field",
+                "timestamp": "2025-02-01T11:37:14.148Z"
+            },
+            {
+                "id": 400,
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:35",
+                "messageId": 1013,
+                "message": "The game is suspended due to an injured Home player",
+                "timestamp": "2025-02-01T11:38:02.17Z"
+            },
+            {
+                "id": 417,
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:08",
+                "messageId": 0,
+                "message": "Standby",
+                "timestamp": "2025-02-01T11:41:34.625Z"
+            }
+        ],
+        "kickOffs": [
+            {
+                "id": 20,
+                "timestamp": "2025-02-01T10:32:44.042Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:00:00",
+                "team": "Home",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 95,
+                "timestamp": "2025-02-01T10:41:51.502Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:07",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 196,
+                "timestamp": "2025-02-01T10:56:21.181Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:37",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 392,
+                "timestamp": "2025-02-01T11:37:26.269Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:00:00",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            },
+            {
+                "id": 418,
+                "timestamp": "2025-02-01T11:41:34.894Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:08",
+                "team": "Away",
+                "playerId": null,
+                "isConfirmed": true
+            }
+        ],
+        "varStateChanges": [
+            {
+                "id": 92,
+                "timestamp": "2025-02-01T10:40:46.22Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:08:02",
+                "isConfirmed": true,
+                "varState": "Danger",
+                "varReason": "HomeGoal",
+                "varOutcome": "NotSet",
+                "varReasonV2": "HomeGoal",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 93,
+                "timestamp": "2025-02-01T10:41:50.601Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:09:06",
+                "isConfirmed": true,
+                "varState": "Safe",
+                "varReason": "NotSet",
+                "varOutcome": "NotSet",
+                "varReasonV2": "NotSet",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 193,
+                "timestamp": "2025-02-01T10:55:19.42Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:22:35",
+                "isConfirmed": true,
+                "varState": "Danger",
+                "varReason": "HomeGoal",
+                "varOutcome": "NotSet",
+                "varReasonV2": "HomeGoal",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 194,
+                "timestamp": "2025-02-01T10:56:20.383Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:23:36",
+                "isConfirmed": true,
+                "varState": "Safe",
+                "varReason": "NotSet",
+                "varOutcome": "NotSet",
+                "varReasonV2": "NotSet",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 211,
+                "timestamp": "2025-02-01T10:57:22.76Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:24:38",
+                "isConfirmed": true,
+                "varState": "Danger",
+                "varReason": "AwayRedCard",
+                "varOutcome": "NotSet",
+                "varReasonV2": "AwayRedCard",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 216,
+                "timestamp": "2025-02-01T10:58:16.522Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:25:32",
+                "isConfirmed": true,
+                "varState": "Safe",
+                "varReason": "NotSet",
+                "varOutcome": "NotSet",
+                "varReasonV2": "NotSet",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 246,
+                "timestamp": "2025-02-01T11:02:37.881Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:29:53",
+                "isConfirmed": true,
+                "varState": "Danger",
+                "varReason": "HomeRedCard",
+                "varOutcome": "NotSet",
+                "varReasonV2": "HomeRedCard",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 248,
+                "timestamp": "2025-02-01T11:03:33.72Z",
+                "phase": "FirstHalf",
+                "timeElapsed": "00:30:49",
+                "isConfirmed": true,
+                "varState": "Safe",
+                "varReason": "NotSet",
+                "varOutcome": "NotSet",
+                "varReasonV2": "NotSet",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 415,
+                "timestamp": "2025-02-01T11:40:38.243Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:03:11",
+                "isConfirmed": true,
+                "varState": "Danger",
+                "varReason": "HomeGoal",
+                "varOutcome": "NotSet",
+                "varReasonV2": "HomeGoal",
+                "varOutcomeV2": "NotSet"
+            },
+            {
+                "id": 416,
+                "timestamp": "2025-02-01T11:41:33.623Z",
+                "phase": "SecondHalf",
+                "timeElapsed": "00:04:07",
+                "isConfirmed": true,
+                "varState": "Safe",
+                "varReason": "NotSet",
+                "varOutcome": "NotSet",
+                "varReasonV2": "NotSet",
+                "varOutcomeV2": "NotSet"
+            }
+        ]
+    }
+}
