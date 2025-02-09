@@ -107,16 +107,14 @@ export function MatchStats({ events }: MatchStatsProps) {
           break;
         case 'dangerState':
           const state = event.details.dangerState;
-          if (state?.includes('Attack')) {
-            if (!state.includes('Dangerous') && !state.includes('Free')) {
-              stats.attacks++;
-            } else if (state.includes('DangerousAttack') && !state.includes('DangerousFreeKick')) {
-              stats.dangerousAttacks++;
-            } else if (state.includes('DangerousFreeKick')) {
-              stats.dangerousFreeKicks++;
-            } else if (state.includes('AttackingFreeKick')) {
-              stats.attackingFreeKicks++;
-            }
+          if (state?.includes('DangerousFreeKick')) {
+            stats.dangerousFreeKicks++;
+          } else if (state?.includes('AttackingFreeKick')) {
+            stats.attackingFreeKicks++;
+          } else if (state?.includes('DangerousAttack')) {
+            stats.dangerousAttacks++;
+          } else if (state?.includes('Attack') && !state.includes('Free')) {
+            stats.attacks++;
           }
           break;
         case 'cornerAwarded':
