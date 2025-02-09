@@ -140,6 +140,11 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       if(event?.details.dangerState?.includes('Corner')) {
         return <Award className="w-5 h-5" />;
       }
+      if (event?.details.dangerState === 'Safe' || 
+          event?.details.dangerState === 'Attack' ||
+          event?.details.dangerState === 'DangerousAttack') {
+        return null;
+      }
       return <Flame className="w-5 h-5" />;
     case 'throwIn':
       return <ArrowRight className="w-5 h-5" />;
@@ -265,15 +270,15 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
   if (type === 'dangerState') {
     const dangerState = event?.details.dangerState;
     if (dangerState?.includes('DangerousAttack')) {
-      return 'bg-red-200 dark:bg-red-900';
+      return 'bg-red-300 dark:bg-red-900';
     } else if (dangerState?.includes('Attack')) {
-      return 'bg-orange-200 dark:bg-orange-900';
+      return 'bg-orange-300 dark:bg-orange-900';
     } else if (dangerState === 'CornerDanger') {
       return 'bg-red-200 dark:bg-red-900';
     } else if (dangerState?.includes('Corner')) {
       return 'bg-green-200 dark:bg-green-900';
     }
-    return 'bg-green-200 dark:bg-green-900';
+    return 'bg-green-300 dark:bg-green-900';
   }
 
   // Other Events
@@ -351,15 +356,15 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   if (event.type === 'dangerState') {
     const dangerState = event.details.dangerState;
     if (dangerState?.includes('DangerousAttack')) {
-      return 'bg-red-100 dark:bg-red-950';
+      return 'bg-red-200 dark:bg-red-950';
     } else if (dangerState?.includes('Attack')) {
-      return 'bg-orange-100 dark:bg-orange-950';
+      return 'bg-orange-200 dark:bg-orange-950';
     } else if (dangerState === 'CornerDanger') {
       return 'bg-red-100 dark:from-gray-900 dark:to-red-950';
     } else if (dangerState?.includes('Corner')) {
       return 'bg-green-100';
     }
-    return 'bg-green-50 dark:bg-green-950';
+    return 'bg-green-100 dark:bg-green-950';
   }
 
   // Other Events
@@ -437,15 +442,15 @@ const getEventBorderColor = (event: MatchEvent): string => {
   if (event.type === 'dangerState') {
     const dangerState = event.details.dangerState;
     if (dangerState?.includes('DangerousAttack')) {
-      return 'border-red-200 dark:border-red-800';
+      return 'border-red-300 dark:border-red-800';
     } else if (dangerState?.includes('Attack')) {
-      return 'border-orange-200 dark:border-orange-800';
+      return 'border-orange-300 dark:border-orange-800';
     } else if (dangerState === 'CornerDanger') {
       return 'border-red-200 dark:border-red-800';
     } else if (dangerState?.includes('Corner')) {
       return 'border-green-200 dark:border-green-800';
     }
-    return 'border-green-200 dark:border-green-800';
+    return 'border-green-300 dark:border-green-800';
   }
 
   // Other Events
