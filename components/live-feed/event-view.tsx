@@ -10,6 +10,17 @@ interface EventViewProps {
 }
 
 const getEventIconColor = (type: string, event?: MatchEvent): string => {
+  // Booking States
+  if (type === 'bookingState') {
+    const state = event?.details.bookingState;
+    if (state === 'YellowCardDanger') {
+      return 'text-yellow-600 dark:text-yellow-400';
+    } else if (state === 'RedCardDanger') {
+      return 'text-red-600 dark:text-red-400';
+    }
+    return 'text-gray-600 dark:text-gray-400';
+  }
+
   // Free Kick Types
   if (type === 'freeKick') {
     const dangerState = event?.details.dangerState;
@@ -244,6 +255,17 @@ const getEventTitle = (event: MatchEvent): string => {
 };
 
 const getEventColor = (type: string, event?: MatchEvent): string => {
+  // Booking States
+  if (type === 'bookingState') {
+    const state = event?.details.bookingState;
+    if (state === 'YellowCardDanger') {
+      return 'bg-yellow-200 dark:bg-yellow-900';
+    } else if (state === 'RedCardDanger') {
+      return 'bg-red-200 dark:bg-red-900';
+    }
+    return 'bg-gray-200 dark:bg-gray-700';
+  }
+
   // Free Kick Types
   if (type === 'freeKick') {
     const dangerState = event?.details.dangerState;
@@ -330,6 +352,17 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
 };
 
 const getEventBackgroundColor = (event: MatchEvent): string => {
+  // Booking States
+  if (event.type === 'bookingState') {
+    const state = event.details.bookingState;
+    if (state === 'YellowCardDanger') {
+      return 'bg-yellow-100 dark:bg-yellow-950';
+    } else if (state === 'RedCardDanger') {
+      return 'bg-red-100 dark:bg-red-950';
+    }
+    return 'bg-gray-50 dark:bg-gray-900';
+  }
+
   // Free Kick Types
   if (event.type === 'freeKick') {
     const dangerState = event.details.dangerState;
@@ -416,6 +449,17 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
 };
 
 const getEventBorderColor = (event: MatchEvent): string => {
+  // Booking States
+  if (event.type === 'bookingState') {
+    const state = event.details.bookingState;
+    if (state === 'YellowCardDanger') {
+      return 'border-yellow-300 dark:border-yellow-800';
+    } else if (state === 'RedCardDanger') {
+      return 'border-red-300 dark:border-red-800';
+    }
+    return 'border-gray-200 dark:border-gray-700';
+  }
+
   // Free Kick Types
   if (event.type === 'freeKick') {
     const dangerState = event.details.dangerState;
@@ -503,6 +547,7 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
   const isHomeTeam = event.team === 'Home';
   const isAwayTeam = event.team === 'Away';
   const isSystemMessage = event.team === 'System';
+  const isBookingState = event.type === 'bookingState';
 
   // Memoize colors for better performance
   const colors = useMemo(() => ({
@@ -520,21 +565,21 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
 
   return (
     <div className={`flex w-full ${
-      isSystemMessage ? 'py-0.5 justify-center' : 'py-1.5'
+      isSystemMessage || isBookingState ? 'py-0.5 justify-center' : 'py-1.5'
     } ${
       isHomeTeam ? 'justify-start' : isAwayTeam ? 'justify-end' : ''
     }`}>
       <div className={`
         flex items-start gap-2 
-        ${isSystemMessage ? 'w-[60%] py-1' : 'w-[48%] p-2'}
-        ${isAwayTeam && !isSystemMessage ? 'flex-row text-right' : 'flex-row'}
-        ${isSystemMessage ? 'justify-center text-center' : ''}
+        ${isSystemMessage || isBookingState ? 'w-[60%] py-1' : 'w-[48%] p-2'}
+        ${isAwayTeam && !isSystemMessage && !isBookingState ? 'flex-row text-right' : 'flex-row'}
+        ${isSystemMessage || isBookingState ? 'justify-center text-center' : ''}
         ${colors.background}
         rounded-md border-2 ${colors.border}
-        ${isSystemMessage ? 'bg-opacity-80' : ''}
+        ${isSystemMessage || isBookingState ? 'bg-opacity-80' : ''}
       `}>
         <div className={`
-          ${isSystemMessage ? 'p-1' : 'p-1.5'} 
+          ${isSystemMessage || isBookingState ? 'p-1' : 'p-1.5'} 
           rounded-md shrink-0
           ${colors.iconBg}
           ${colors.icon}
@@ -542,11 +587,11 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
           {getEventIcon(event.type, event)}
         </div>
         
-        <div className={`flex-1 min-w-0 ${isSystemMessage ? 'flex items-center justify-center' : ''}`}>
-          <div className={`flex items-center gap-1 ${isSystemMessage ? 'mb-0 text-xs' : 'mb-0.5 text-sm'} font-medium text-gray-900 dark:text-white ${isSystemMessage ? 'justify-center' : isAwayTeam ? 'justify-start' : 'justify-start'}`}>
+        <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState ? 'flex items-center justify-center' : ''}`}>
+          <div className={`flex items-center gap-1 ${isSystemMessage || isBookingState ? 'mb-0 text-xs' : 'mb-0.5 text-sm'} font-medium text-gray-900 dark:text-white ${isSystemMessage || isBookingState ? 'justify-center' : isAwayTeam ? 'justify-start' : 'justify-start'}`}>
             {getEventTitle(event)}
           </div>
-          {!isSystemMessage && (
+          {!isSystemMessage && !isBookingState && (
             <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ${isAwayTeam ? 'text-right' : 'text-right'}`}>
               {event.phase} - {event.timeElapsed}
             </div>

@@ -1,0 +1,2845 @@
+{
+  "raw": {
+    "bookmakerId": -13,
+    "sourceFixtureData": {
+      "sourceScheduledStartTime": "2025-02-09T12:30:00",
+      "sourceCompetitionId": "75",
+      "sourceCompetitionName": "England FA Cup",
+      "sourceVenueId": null,
+      "sourceVenueName": null
+    },
+    "matchActions": {
+      "goals": {
+        "goals": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "yellowCards": {
+        "matchActions": [
+          {
+            "id": 130,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:55",
+            "team": "Home",
+            "playerInternalId": "1356839",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:21.782Z"
+          },
+          {
+            "id": 141,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:55",
+            "team": "Away",
+            "playerInternalId": "983055",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:21.314Z"
+          },
+          {
+            "id": 195,
+            "sequenceId": 2,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:22",
+            "team": "Home",
+            "playerInternalId": "1065233",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:49.655Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "secondYellowCards": {
+        "matchActions": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "straightRedCards": {
+        "matchActions": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "penalties": {
+        "penalties": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "penaltyRiskStateChanges": {
+        "penaltyRiskChanges": [
+          {
+            "id": 189,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:15",
+            "penaltyRiskState": "HomeDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:39.959Z"
+          },
+          {
+            "id": 191,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:15",
+            "penaltyRiskState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:40.71Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "substitutions": {
+        "substitutions": [],
+        "isCollected": true,
+        "isReliable": true,
+        "timestampUtc": "0001-01-01T00:00:00"
+      },
+      "shotsOnTarget": {
+        "shotsOnTarget": [
+          {
+            "id": 61,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:04:49",
+            "team": "Away",
+            "playerInternalId": null,
+            "savedByInternalId": null,
+            "ballReturnedToPlay": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:36:13.871Z"
+          },
+          {
+            "id": 225,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:30:05",
+            "team": "Away",
+            "playerInternalId": null,
+            "savedByInternalId": null,
+            "ballReturnedToPlay": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:30.81Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "shotsOffTarget": {
+        "matchActions": [
+          {
+            "id": 89,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:37",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:02.129Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "shotsOffWoodwork": {
+        "shotsOffWoodwork": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "blockedShots": {
+        "matchActions": [
+          {
+            "id": 77,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:07:47",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:39:12.306Z"
+          },
+          {
+            "id": 117,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:19",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:44.513Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "corners": {
+        "matchActions": [
+          {
+            "id": 169,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:07",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:32.062Z"
+          },
+          {
+            "id": 217,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:29:41",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:06.158Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "cornersV2": {
+        "corners": [
+          {
+            "id": 169,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "team": "Away",
+            "awarded": {
+              "isConfirmed": true,
+              "timestampUtc": "2025-02-09T12:53:54.685Z",
+              "timeElapsedInPhase": "00:22:29"
+            },
+            "taken": {
+              "isConfirmed": true,
+              "timestampUtc": "2025-02-09T12:54:32.062Z",
+              "timeElapsedInPhase": "00:23:07"
+            }
+          },
+          {
+            "id": 217,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "team": "Away",
+            "awarded": {
+              "isConfirmed": true,
+              "timestampUtc": "2025-02-09T13:00:24.706Z",
+              "timeElapsedInPhase": "00:28:59"
+            },
+            "taken": {
+              "isConfirmed": true,
+              "timestampUtc": "2025-02-09T13:01:06.158Z",
+              "timeElapsedInPhase": "00:29:41"
+            }
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "penaltiesAwarded": {
+        "matchActions": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "fouls": {
+        "fouls": [
+          {
+            "id": 50,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:02:43",
+            "foulingTeam": "Home",
+            "fouledPlayerInternalId": null,
+            "fouledByInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:08.354Z"
+          },
+          {
+            "id": 59,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:54",
+            "foulingTeam": "Home",
+            "fouledPlayerInternalId": null,
+            "fouledByInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:35:19.204Z"
+          },
+          {
+            "id": 102,
+            "sequenceId": 2,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:11:17",
+            "foulingTeam": "Away",
+            "fouledPlayerInternalId": null,
+            "fouledByInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:42:42.763Z"
+          },
+          {
+            "id": 111,
+            "sequenceId": 3,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:13:35",
+            "foulingTeam": "Home",
+            "fouledPlayerInternalId": null,
+            "fouledByInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:00.619Z"
+          },
+          {
+            "id": 129,
+            "sequenceId": 4,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:51",
+            "foulingTeam": "Home",
+            "fouledPlayerInternalId": null,
+            "fouledByInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:15.963Z"
+          },
+          {
+            "id": 143,
+            "sequenceId": 5,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:57",
+            "foulingTeam": "Away",
+            "fouledPlayerInternalId": null,
+            "fouledByInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:22.763Z"
+          },
+          {
+            "id": 197,
+            "sequenceId": 6,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:27",
+            "foulingTeam": "Home",
+            "fouledPlayerInternalId": null,
+            "fouledByInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:52.352Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "offsides": {
+        "matchActions": [
+          {
+            "id": 120,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:30",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:55.947Z"
+          },
+          {
+            "id": 149,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:18:20",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:49:45.717Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "goalKicks": {
+        "matchActions": [
+          {
+            "id": 91,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:40",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:04.859Z"
+          },
+          {
+            "id": 97,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:19",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:43.905Z"
+          },
+          {
+            "id": 221,
+            "sequenceId": 2,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:29:45",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:10.058Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "missedPenalties": {
+        "matchActions": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "savedPenalties": {
+        "matchActions": [],
+        "isCollected": false,
+        "isReliable": true
+      },
+      "throwIns": {
+        "matchActions": [
+          {
+            "id": 42,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:01:23",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:48.448Z"
+          },
+          {
+            "id": 46,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:01:44",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:33:09.144Z"
+          },
+          {
+            "id": 53,
+            "sequenceId": 2,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:08",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:33.547Z"
+          },
+          {
+            "id": 63,
+            "sequenceId": 3,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:15",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:36:40.667Z"
+          },
+          {
+            "id": 65,
+            "sequenceId": 4,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:39",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:04.115Z"
+          },
+          {
+            "id": 67,
+            "sequenceId": 5,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:50",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:15.286Z"
+          },
+          {
+            "id": 82,
+            "sequenceId": 6,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:08:58",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:23.771Z"
+          },
+          {
+            "id": 84,
+            "sequenceId": 7,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:16",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:41.167Z"
+          },
+          {
+            "id": 100,
+            "sequenceId": 8,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:42",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:42:07.508Z"
+          },
+          {
+            "id": 105,
+            "sequenceId": 9,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:12",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:43:37.145Z"
+          },
+          {
+            "id": 109,
+            "sequenceId": 10,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:57",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:44:22.656Z"
+          },
+          {
+            "id": 125,
+            "sequenceId": 11,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:26",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:46:51.724Z"
+          },
+          {
+            "id": 159,
+            "sequenceId": 12,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:20:42",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:52:07.757Z"
+          },
+          {
+            "id": 177,
+            "sequenceId": 13,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:28",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:53.299Z"
+          },
+          {
+            "id": 181,
+            "sequenceId": 14,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:24:07",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:55:32.385Z"
+          },
+          {
+            "id": 206,
+            "sequenceId": 15,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:00",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:24.927Z"
+          },
+          {
+            "id": 209,
+            "sequenceId": 16,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:28",
+            "team": "Home",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:53.657Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "possessionChanges": {
+        "possessionChanges": [],
+        "isCollected": false,
+        "isReliable": true
+      },
+      "stoppageTimeAnnouncements": {
+        "stoppageTimeAnnouncements": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "phaseChanges": {
+        "phaseChanges": [
+          {
+            "id": 31,
+            "sequenceId": 0,
+            "previousPhase": "PreMatch",
+            "currentPhase": "FirstHalf",
+            "currentPhaseStartTime": "2025-02-09T12:31:24.858Z",
+            "isConfirmed": true,
+            "messageId": null,
+            "message": null,
+            "timestampUtc": "2025-02-09T12:31:24.858Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "clockActions": {
+        "clockActions": [
+          {
+            "id": 32,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:00",
+            "timestampUtc": "2025-02-09T12:31:24.858Z",
+            "activityType": "Start",
+            "isClockRunning": true,
+            "isConfirmed": true
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "dangerStateChanges": {
+        "dangerStateChanges": [
+          {
+            "id": 31,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:00",
+            "dangerState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:31:24.858Z"
+          },
+          {
+            "id": 34,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:01",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:31:25.876Z"
+          },
+          {
+            "id": 37,
+            "sequenceId": 2,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:36",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:00.986Z"
+          },
+          {
+            "id": 38,
+            "sequenceId": 3,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:46",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:11.201Z"
+          },
+          {
+            "id": 39,
+            "sequenceId": 4,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:47",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:12.528Z"
+          },
+          {
+            "id": 40,
+            "sequenceId": 5,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:57",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:22.745Z"
+          },
+          {
+            "id": 41,
+            "sequenceId": 6,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:59",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:24.815Z"
+          },
+          {
+            "id": 42,
+            "sequenceId": 7,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:01:23",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:48.448Z"
+          },
+          {
+            "id": 43,
+            "sequenceId": 8,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:01:30",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:55.797Z"
+          },
+          {
+            "id": 44,
+            "sequenceId": 9,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:01:33",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:58.556Z"
+          },
+          {
+            "id": 45,
+            "sequenceId": 10,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:01:34",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:32:59.435Z"
+          },
+          {
+            "id": 46,
+            "sequenceId": 11,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:01:44",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:33:09.144Z"
+          },
+          {
+            "id": 47,
+            "sequenceId": 12,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:02:03",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:33:28.635Z"
+          },
+          {
+            "id": 48,
+            "sequenceId": 13,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:02:09",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:33:34.249Z"
+          },
+          {
+            "id": 49,
+            "sequenceId": 14,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:02:13",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:33:38.425Z"
+          },
+          {
+            "id": 50,
+            "sequenceId": 15,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:02:43",
+            "dangerState": "AwayFreeKick",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:08.354Z"
+          },
+          {
+            "id": 51,
+            "sequenceId": 16,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:02:54",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:19.26Z"
+          },
+          {
+            "id": 52,
+            "sequenceId": 17,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:05",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:30.267Z"
+          },
+          {
+            "id": 53,
+            "sequenceId": 18,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:08",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:33.547Z"
+          },
+          {
+            "id": 54,
+            "sequenceId": 19,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:17",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:42.432Z"
+          },
+          {
+            "id": 55,
+            "sequenceId": 20,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:21",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:46.304Z"
+          },
+          {
+            "id": 56,
+            "sequenceId": 21,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:28",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:53.388Z"
+          },
+          {
+            "id": 57,
+            "sequenceId": 22,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:29",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:34:54.575Z"
+          },
+          {
+            "id": 58,
+            "sequenceId": 23,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:50",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:35:15.469Z"
+          },
+          {
+            "id": 59,
+            "sequenceId": 24,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:03:54",
+            "dangerState": "AwayAttackingFreeKick",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:35:19.204Z"
+          },
+          {
+            "id": 60,
+            "sequenceId": 25,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:04:47",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:36:12.462Z"
+          },
+          {
+            "id": 62,
+            "sequenceId": 26,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:04:50",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:36:15.016Z"
+          },
+          {
+            "id": 63,
+            "sequenceId": 27,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:15",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:36:40.667Z"
+          },
+          {
+            "id": 64,
+            "sequenceId": 28,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:25",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:36:50.779Z"
+          },
+          {
+            "id": 65,
+            "sequenceId": 29,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:39",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:04.115Z"
+          },
+          {
+            "id": 66,
+            "sequenceId": 30,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:46",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:11.522Z"
+          },
+          {
+            "id": 67,
+            "sequenceId": 31,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:50",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:15.286Z"
+          },
+          {
+            "id": 68,
+            "sequenceId": 32,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:56",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:21.184Z"
+          },
+          {
+            "id": 69,
+            "sequenceId": 33,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:05:59",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:24.746Z"
+          },
+          {
+            "id": 70,
+            "sequenceId": 34,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:06:13",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:37.922Z"
+          },
+          {
+            "id": 71,
+            "sequenceId": 35,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:06:18",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:43.372Z"
+          },
+          {
+            "id": 72,
+            "sequenceId": 36,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:06:28",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:37:53.179Z"
+          },
+          {
+            "id": 73,
+            "sequenceId": 37,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:07:01",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:38:26.112Z"
+          },
+          {
+            "id": 74,
+            "sequenceId": 38,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:07:28",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:38:53.394Z"
+          },
+          {
+            "id": 75,
+            "sequenceId": 39,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:07:37",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:39:01.91Z"
+          },
+          {
+            "id": 76,
+            "sequenceId": 40,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:07:41",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:39:06.664Z"
+          },
+          {
+            "id": 78,
+            "sequenceId": 41,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:07:48",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:39:13.537Z"
+          },
+          {
+            "id": 79,
+            "sequenceId": 42,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:08:21",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:39:46.36Z"
+          },
+          {
+            "id": 80,
+            "sequenceId": 43,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:08:41",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:06.726Z"
+          },
+          {
+            "id": 81,
+            "sequenceId": 44,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:08:45",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:10.671Z"
+          },
+          {
+            "id": 82,
+            "sequenceId": 45,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:08:58",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:23.771Z"
+          },
+          {
+            "id": 83,
+            "sequenceId": 46,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:15",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:39.954Z"
+          },
+          {
+            "id": 84,
+            "sequenceId": 47,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:16",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:41.167Z"
+          },
+          {
+            "id": 85,
+            "sequenceId": 48,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:21",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:46.427Z"
+          },
+          {
+            "id": 86,
+            "sequenceId": 49,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:25",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:50.838Z"
+          },
+          {
+            "id": 87,
+            "sequenceId": 50,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:28",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:53.651Z"
+          },
+          {
+            "id": 88,
+            "sequenceId": 51,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:33",
+            "dangerState": "HomeCornerDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:40:58.844Z"
+          },
+          {
+            "id": 92,
+            "sequenceId": 52,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:09:40",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:04.859Z"
+          },
+          {
+            "id": 93,
+            "sequenceId": 53,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:06",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:31.833Z"
+          },
+          {
+            "id": 94,
+            "sequenceId": 54,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:14",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:39.427Z"
+          },
+          {
+            "id": 95,
+            "sequenceId": 55,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:15",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:40.094Z"
+          },
+          {
+            "id": 96,
+            "sequenceId": 56,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:18",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:43.55Z"
+          },
+          {
+            "id": 97,
+            "sequenceId": 57,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:19",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:43.905Z"
+          },
+          {
+            "id": 98,
+            "sequenceId": 58,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:27",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:41:52.282Z"
+          },
+          {
+            "id": 99,
+            "sequenceId": 59,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:35",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:42:00.222Z"
+          },
+          {
+            "id": 100,
+            "sequenceId": 60,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:10:42",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:42:07.508Z"
+          },
+          {
+            "id": 101,
+            "sequenceId": 61,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:11:12",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:42:37.257Z"
+          },
+          {
+            "id": 102,
+            "sequenceId": 62,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:11:17",
+            "dangerState": "HomeAttackingFreeKick",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:42:42.763Z"
+          },
+          {
+            "id": 103,
+            "sequenceId": 63,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:11:56",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:43:21.557Z"
+          },
+          {
+            "id": 104,
+            "sequenceId": 64,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:10",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:43:35.325Z"
+          },
+          {
+            "id": 105,
+            "sequenceId": 65,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:12",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:43:37.145Z"
+          },
+          {
+            "id": 106,
+            "sequenceId": 66,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:25",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:43:50.483Z"
+          },
+          {
+            "id": 107,
+            "sequenceId": 67,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:33",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:43:58.134Z"
+          },
+          {
+            "id": 108,
+            "sequenceId": 68,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:49",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:44:14.213Z"
+          },
+          {
+            "id": 109,
+            "sequenceId": 69,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:12:57",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:44:22.656Z"
+          },
+          {
+            "id": 110,
+            "sequenceId": 70,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:13:32",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:44:56.862Z"
+          },
+          {
+            "id": 111,
+            "sequenceId": 71,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:13:35",
+            "dangerState": "AwayFreeKick",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:00.619Z"
+          },
+          {
+            "id": 112,
+            "sequenceId": 72,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:13:53",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:18.596Z"
+          },
+          {
+            "id": 113,
+            "sequenceId": 73,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:07",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:32.023Z"
+          },
+          {
+            "id": 114,
+            "sequenceId": 74,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:09",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:34.375Z"
+          },
+          {
+            "id": 115,
+            "sequenceId": 75,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:12",
+            "dangerState": "AwayCornerDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:37.063Z"
+          },
+          {
+            "id": 116,
+            "sequenceId": 76,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:16",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:41.708Z"
+          },
+          {
+            "id": 118,
+            "sequenceId": 77,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:23",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:48.356Z"
+          },
+          {
+            "id": 120,
+            "sequenceId": 78,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:30",
+            "dangerState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:45:55.947Z"
+          },
+          {
+            "id": 121,
+            "sequenceId": 79,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:14:54",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:46:19.799Z"
+          },
+          {
+            "id": 122,
+            "sequenceId": 80,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:04",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:46:29.832Z"
+          },
+          {
+            "id": 123,
+            "sequenceId": 81,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:11",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:46:36.705Z"
+          },
+          {
+            "id": 124,
+            "sequenceId": 82,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:24",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:46:49.23Z"
+          },
+          {
+            "id": 125,
+            "sequenceId": 83,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:26",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:46:51.724Z"
+          },
+          {
+            "id": 126,
+            "sequenceId": 84,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:37",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:02.102Z"
+          },
+          {
+            "id": 127,
+            "sequenceId": 85,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:48",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:13.243Z"
+          },
+          {
+            "id": 129,
+            "sequenceId": 86,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:51",
+            "dangerState": "AwayAttackingFreeKick",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:15.963Z"
+          },
+          {
+            "id": 133,
+            "sequenceId": 87,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:27",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:52.406Z"
+          },
+          {
+            "id": 134,
+            "sequenceId": 88,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:29",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:54.079Z"
+          },
+          {
+            "id": 135,
+            "sequenceId": 89,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:32",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:57.569Z"
+          },
+          {
+            "id": 136,
+            "sequenceId": 90,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:40",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:05.386Z"
+          },
+          {
+            "id": 137,
+            "sequenceId": 91,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:46",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:10.881Z"
+          },
+          {
+            "id": 138,
+            "sequenceId": 92,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:49",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:14.759Z"
+          },
+          {
+            "id": 143,
+            "sequenceId": 93,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:57",
+            "dangerState": "HomeDangerousFreeKick",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:22.763Z"
+          },
+          {
+            "id": 145,
+            "sequenceId": 94,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:18:07",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:49:32.25Z"
+          },
+          {
+            "id": 149,
+            "sequenceId": 95,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:18:20",
+            "dangerState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:49:45.717Z"
+          },
+          {
+            "id": 150,
+            "sequenceId": 96,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:18:32",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:49:57.33Z"
+          },
+          {
+            "id": 151,
+            "sequenceId": 97,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:19:01",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:50:26.831Z"
+          },
+          {
+            "id": 152,
+            "sequenceId": 98,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:19:05",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:50:30.447Z"
+          },
+          {
+            "id": 154,
+            "sequenceId": 99,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:19:23",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:50:48.297Z"
+          },
+          {
+            "id": 155,
+            "sequenceId": 100,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:19:35",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:51:00.651Z"
+          },
+          {
+            "id": 156,
+            "sequenceId": 101,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:19:44",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:51:09.622Z"
+          },
+          {
+            "id": 157,
+            "sequenceId": 102,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:19:48",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:51:13.293Z"
+          },
+          {
+            "id": 158,
+            "sequenceId": 103,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:20:39",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:52:04.022Z"
+          },
+          {
+            "id": 159,
+            "sequenceId": 104,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:20:42",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:52:07.757Z"
+          },
+          {
+            "id": 160,
+            "sequenceId": 105,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:20:45",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:52:10.194Z"
+          },
+          {
+            "id": 161,
+            "sequenceId": 106,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:21:21",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:52:46.014Z"
+          },
+          {
+            "id": 162,
+            "sequenceId": 107,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:21:22",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:52:47.781Z"
+          },
+          {
+            "id": 163,
+            "sequenceId": 108,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:22:09",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:53:34.553Z"
+          },
+          {
+            "id": 164,
+            "sequenceId": 109,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:22:11",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:53:36.496Z"
+          },
+          {
+            "id": 165,
+            "sequenceId": 110,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:22:15",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:53:40.819Z"
+          },
+          {
+            "id": 166,
+            "sequenceId": 111,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:22:19",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:53:44.723Z"
+          },
+          {
+            "id": 167,
+            "sequenceId": 112,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:22:22",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:53:47.647Z"
+          },
+          {
+            "id": 168,
+            "sequenceId": 113,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:22:23",
+            "dangerState": "AwayCornerDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:53:48.62Z"
+          },
+          {
+            "id": 170,
+            "sequenceId": 114,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:22:29",
+            "dangerState": "AwayCorner",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:53:54.686Z"
+          },
+          {
+            "id": 171,
+            "sequenceId": 115,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:07",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:32.062Z"
+          },
+          {
+            "id": 172,
+            "sequenceId": 116,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:11",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:36.791Z"
+          },
+          {
+            "id": 173,
+            "sequenceId": 117,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:13",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:38.785Z"
+          },
+          {
+            "id": 174,
+            "sequenceId": 118,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:14",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:39.556Z"
+          },
+          {
+            "id": 175,
+            "sequenceId": 119,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:17",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:42.789Z"
+          },
+          {
+            "id": 176,
+            "sequenceId": 120,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:26",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:51.536Z"
+          },
+          {
+            "id": 177,
+            "sequenceId": 121,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:28",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:54:53.299Z"
+          },
+          {
+            "id": 178,
+            "sequenceId": 122,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:23:52",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:55:17.549Z"
+          },
+          {
+            "id": 179,
+            "sequenceId": 123,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:24:03",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:55:28.533Z"
+          },
+          {
+            "id": 180,
+            "sequenceId": 124,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:24:04",
+            "dangerState": "AwayCornerDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:55:29.036Z"
+          },
+          {
+            "id": 182,
+            "sequenceId": 125,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:24:07",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:55:32.386Z"
+          },
+          {
+            "id": 183,
+            "sequenceId": 126,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:24:36",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:01.198Z"
+          },
+          {
+            "id": 184,
+            "sequenceId": 127,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:24:49",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:14.202Z"
+          },
+          {
+            "id": 185,
+            "sequenceId": 128,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:24:58",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:23.741Z"
+          },
+          {
+            "id": 186,
+            "sequenceId": 129,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:02",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:27.791Z"
+          },
+          {
+            "id": 187,
+            "sequenceId": 130,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:06",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:31.797Z"
+          },
+          {
+            "id": 188,
+            "sequenceId": 131,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:10",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:35.577Z"
+          },
+          {
+            "id": 189,
+            "sequenceId": 132,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:15",
+            "dangerState": "HomePenalty",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:39.959Z"
+          },
+          {
+            "id": 191,
+            "sequenceId": 133,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:15",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:40.71Z"
+          },
+          {
+            "id": 197,
+            "sequenceId": 134,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:27",
+            "dangerState": "AwayFreeKick",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:52.352Z"
+          },
+          {
+            "id": 199,
+            "sequenceId": 135,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:26:02",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:57:27.607Z"
+          },
+          {
+            "id": 201,
+            "sequenceId": 136,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:26:13",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:57:38.404Z"
+          },
+          {
+            "id": 202,
+            "sequenceId": 137,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:26:15",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:57:40.169Z"
+          },
+          {
+            "id": 203,
+            "sequenceId": 138,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:26:44",
+            "dangerState": "HomeAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:09.841Z"
+          },
+          {
+            "id": 204,
+            "sequenceId": 139,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:26:49",
+            "dangerState": "HomeDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:14.275Z"
+          },
+          {
+            "id": 205,
+            "sequenceId": 140,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:26:52",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:17.826Z"
+          },
+          {
+            "id": 206,
+            "sequenceId": 141,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:00",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:24.927Z"
+          },
+          {
+            "id": 207,
+            "sequenceId": 142,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:16",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:40.888Z"
+          },
+          {
+            "id": 208,
+            "sequenceId": 143,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:25",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:50.281Z"
+          },
+          {
+            "id": 209,
+            "sequenceId": 144,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:28",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:58:53.657Z"
+          },
+          {
+            "id": 210,
+            "sequenceId": 145,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:48",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:59:13.597Z"
+          },
+          {
+            "id": 211,
+            "sequenceId": 146,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:27:51",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:59:16.071Z"
+          },
+          {
+            "id": 212,
+            "sequenceId": 147,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:28:24",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:59:49.581Z"
+          },
+          {
+            "id": 213,
+            "sequenceId": 148,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:28:29",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:59:54.605Z"
+          },
+          {
+            "id": 214,
+            "sequenceId": 149,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:28:50",
+            "dangerState": "AwaySafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:00:14.991Z"
+          },
+          {
+            "id": 215,
+            "sequenceId": 150,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:28:55",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:00:20.705Z"
+          },
+          {
+            "id": 216,
+            "sequenceId": 151,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:28:58",
+            "dangerState": "AwayCornerDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:00:23.43Z"
+          },
+          {
+            "id": 218,
+            "sequenceId": 152,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:28:59",
+            "dangerState": "AwayCorner",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:00:24.707Z"
+          },
+          {
+            "id": 219,
+            "sequenceId": 153,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:29:41",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:06.158Z"
+          },
+          {
+            "id": 220,
+            "sequenceId": 154,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:29:44",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:09.724Z"
+          },
+          {
+            "id": 221,
+            "sequenceId": 155,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:29:45",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:10.058Z"
+          },
+          {
+            "id": 222,
+            "sequenceId": 156,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:29:57",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:22.723Z"
+          },
+          {
+            "id": 223,
+            "sequenceId": 157,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:30:01",
+            "dangerState": "AwayAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:25.867Z"
+          },
+          {
+            "id": 224,
+            "sequenceId": 158,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:30:03",
+            "dangerState": "AwayDangerousAttack",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:27.984Z"
+          },
+          {
+            "id": 226,
+            "sequenceId": 159,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:30:06",
+            "dangerState": "HomeSafe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T13:01:31.767Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "bookingStateChanges": {
+        "bookingStateChanges": [
+          {
+            "id": 35,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:08",
+            "bookingState": "RedCardDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:31:32.982Z"
+          },
+          {
+            "id": 36,
+            "sequenceId": 1,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:10",
+            "bookingState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:31:35.117Z"
+          },
+          {
+            "id": 128,
+            "sequenceId": 2,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:50",
+            "bookingState": "YellowCardDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:15.503Z"
+          },
+          {
+            "id": 131,
+            "sequenceId": 3,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:01",
+            "bookingState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:26.661Z"
+          },
+          {
+            "id": 132,
+            "sequenceId": 4,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:15:55",
+            "bookingState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:47:48.977Z"
+          },
+          {
+            "id": 139,
+            "sequenceId": 5,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:53",
+            "bookingState": "YellowCardDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:18.057Z"
+          },
+          {
+            "id": 140,
+            "sequenceId": 6,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:55",
+            "bookingState": "YellowCardDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:20.659Z"
+          },
+          {
+            "id": 142,
+            "sequenceId": 7,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:16:55",
+            "bookingState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:21.795Z"
+          },
+          {
+            "id": 144,
+            "sequenceId": 8,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:17:04",
+            "bookingState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:48:28.909Z"
+          },
+          {
+            "id": 192,
+            "sequenceId": 9,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:20",
+            "bookingState": "YellowCardDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:45.506Z"
+          },
+          {
+            "id": 194,
+            "sequenceId": 10,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:22",
+            "bookingState": "YellowCardDanger",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:47.168Z"
+          },
+          {
+            "id": 196,
+            "sequenceId": 11,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:22",
+            "bookingState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:56:51.274Z"
+          },
+          {
+            "id": 198,
+            "sequenceId": 12,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:25:52",
+            "bookingState": "Safe",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:57:17.312Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "lineupUpdates": {
+        "updates": [
+          {
+            "id": 12,
+            "sequenceId": 0,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "newLineup": {
+              "startingOnPitch": [
+                {
+                  "internalId": "157250",
+                  "sourceId": "157250",
+                  "sourceName": "Toth, B",
+                  "position": null,
+                  "shirtNumber": 12,
+                  "playerPosition": "GoalKeeper"
+                },
+                {
+                  "internalId": "1267868",
+                  "sourceId": "1267868",
+                  "sourceName": "Rankin-Costello, Joe",
+                  "position": null,
+                  "shirtNumber": 11,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "883261",
+                  "sourceId": "883261",
+                  "sourceName": "Hyam, D",
+                  "position": null,
+                  "shirtNumber": 5,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "505998",
+                  "sourceId": "505998",
+                  "sourceName": "Batth, D",
+                  "position": null,
+                  "shirtNumber": 15,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "983040",
+                  "sourceId": "983040",
+                  "sourceName": "Ribeiro, Y",
+                  "position": null,
+                  "shirtNumber": 4,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "1303989",
+                  "sourceId": "1303989",
+                  "sourceName": "Cozier-Duberry, A",
+                  "position": null,
+                  "shirtNumber": 33,
+                  "playerPosition": "Forward"
+                },
+                {
+                  "internalId": "514908",
+                  "sourceId": "514908",
+                  "sourceName": "Forshaw, A",
+                  "position": null,
+                  "shirtNumber": 28,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1028751",
+                  "sourceId": "1028751",
+                  "sourceName": "Cantwell, T",
+                  "position": null,
+                  "shirtNumber": 8,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1356839",
+                  "sourceId": "1356839",
+                  "sourceName": "Buckley, John",
+                  "position": null,
+                  "shirtNumber": 21,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1065233",
+                  "sourceId": "1065233",
+                  "sourceName": "Kargbo, A",
+                  "position": null,
+                  "shirtNumber": 47,
+                  "playerPosition": "Forward"
+                },
+                {
+                  "internalId": "1577134",
+                  "sourceId": "1577134",
+                  "sourceName": "Dennis, Emmanuel",
+                  "position": null,
+                  "shirtNumber": 42,
+                  "playerPosition": "Forward"
+                }
+              ],
+              "startingBench": [
+                {
+                  "internalId": "1066559",
+                  "sourceId": "1066559",
+                  "sourceName": "Pears, A",
+                  "position": null,
+                  "shirtNumber": 1,
+                  "playerPosition": "GoalKeeper"
+                },
+                {
+                  "internalId": "933511",
+                  "sourceId": "933511",
+                  "sourceName": "Brittain, C",
+                  "position": null,
+                  "shirtNumber": 2,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "1068928",
+                  "sourceId": "1068928",
+                  "sourceName": "Gueye, Makhtar",
+                  "position": null,
+                  "shirtNumber": 9,
+                  "playerPosition": "Forward"
+                },
+                {
+                  "internalId": "1231591",
+                  "sourceId": "1231591",
+                  "sourceName": "Dolan, T",
+                  "position": null,
+                  "shirtNumber": 10,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "499183",
+                  "sourceId": "499183",
+                  "sourceName": "Weimann, A",
+                  "position": null,
+                  "shirtNumber": 14,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "809397",
+                  "sourceId": "809397",
+                  "sourceName": "Hedges, R",
+                  "position": null,
+                  "shirtNumber": 19,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1135007",
+                  "sourceId": "1135007",
+                  "sourceName": "Beck, O",
+                  "position": null,
+                  "shirtNumber": 24,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "964398",
+                  "sourceId": "964398",
+                  "sourceName": "Travis, L",
+                  "position": null,
+                  "shirtNumber": 27,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "549491",
+                  "sourceId": "549491",
+                  "sourceName": "Woodrow, C",
+                  "position": null,
+                  "shirtNumber": 45,
+                  "playerPosition": "Forward"
+                }
+              ],
+              "formation": null
+            },
+            "team": "Home",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:05:43.6328893Z"
+          },
+          {
+            "id": 13,
+            "sequenceId": 1,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "newLineup": {
+              "startingOnPitch": [
+                {
+                  "internalId": "567200",
+                  "sourceId": "567200",
+                  "sourceName": "Johnstone, Sam",
+                  "position": null,
+                  "shirtNumber": 31,
+                  "playerPosition": "GoalKeeper"
+                },
+                {
+                  "internalId": "1362609",
+                  "sourceId": "1362609",
+                  "sourceName": "Toti",
+                  "position": null,
+                  "shirtNumber": 24,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "983055",
+                  "sourceId": "983055",
+                  "sourceName": "Bueno, Santiago",
+                  "position": null,
+                  "shirtNumber": 4,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "1232088",
+                  "sourceId": "1232088",
+                  "sourceName": "Agbadou, E",
+                  "position": null,
+                  "shirtNumber": 12,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "829784",
+                  "sourceId": "829784",
+                  "sourceName": "Semedo, N",
+                  "position": null,
+                  "shirtNumber": 22,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "932076",
+                  "sourceId": "932076",
+                  "sourceName": "Bellegarde, J",
+                  "position": null,
+                  "shirtNumber": 27,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1241916",
+                  "sourceId": "1241916",
+                  "sourceName": "Gomes, João",
+                  "position": null,
+                  "shirtNumber": 8,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1239197",
+                  "sourceId": "1239197",
+                  "sourceName": "Gomes, Rodrigo Martins",
+                  "position": null,
+                  "shirtNumber": 19,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "733632",
+                  "sourceId": "733632",
+                  "sourceName": "Goncalo Guedes",
+                  "position": null,
+                  "shirtNumber": 29,
+                  "playerPosition": "Forward"
+                },
+                {
+                  "internalId": "870944",
+                  "sourceId": "870944",
+                  "sourceName": "Hwang, Hee-Chan",
+                  "position": null,
+                  "shirtNumber": 11,
+                  "playerPosition": "Forward"
+                },
+                {
+                  "internalId": "994456",
+                  "sourceId": "994456",
+                  "sourceName": "Cunha, M",
+                  "position": null,
+                  "shirtNumber": 10,
+                  "playerPosition": "Forward"
+                }
+              ],
+              "startingBench": [
+                {
+                  "internalId": "548909",
+                  "sourceId": "548909",
+                  "sourceName": "Doherty, Matt",
+                  "position": null,
+                  "shirtNumber": 2,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "1049943",
+                  "sourceId": "1049943",
+                  "sourceName": "Aït-Nouri, R",
+                  "position": null,
+                  "shirtNumber": 3,
+                  "playerPosition": "Defender"
+                },
+                {
+                  "internalId": "1121043",
+                  "sourceId": "1121043",
+                  "sourceName": "Munetsi, M",
+                  "position": null,
+                  "shirtNumber": 5,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1389446",
+                  "sourceId": "1389446",
+                  "sourceName": "André",
+                  "position": null,
+                  "shirtNumber": 7,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "1129199",
+                  "sourceId": "1129199",
+                  "sourceName": "Doyle, Tommy",
+                  "position": null,
+                  "shirtNumber": 20,
+                  "playerPosition": "Midfielder"
+                },
+                {
+                  "internalId": "549464",
+                  "sourceId": "549464",
+                  "sourceName": "Sarabia, Pablo",
+                  "position": null,
+                  "shirtNumber": 21,
+                  "playerPosition": "Forward"
+                },
+                {
+                  "internalId": "512359",
+                  "sourceId": "512359",
+                  "sourceName": "Bentley, Daniel",
+                  "position": null,
+                  "shirtNumber": 25,
+                  "playerPosition": "GoalKeeper"
+                },
+                {
+                  "internalId": "1238267",
+                  "sourceId": "1238267",
+                  "sourceName": "Forbs, C",
+                  "position": null,
+                  "shirtNumber": 26,
+                  "playerPosition": "Forward"
+                },
+                {
+                  "internalId": "1299176",
+                  "sourceId": "1299176",
+                  "sourceName": "Djiga, N",
+                  "position": null,
+                  "shirtNumber": 34,
+                  "playerPosition": "Defender"
+                }
+              ],
+              "formation": null
+            },
+            "team": "Away",
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:05:43.6373385Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true,
+        "timestampUtc": "2025-02-09T12:05:43.6373385Z"
+      },
+      "systemMessages": {
+        "systemMessages": [
+          {
+            "id": 2,
+            "sequenceId": 0,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 1",
+            "timestamp": "2025-02-09T12:04:40.979Z"
+          },
+          {
+            "id": 3,
+            "sequenceId": 1,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 0",
+            "timestamp": "2025-02-09T12:04:42.778Z"
+          },
+          {
+            "id": 4,
+            "sequenceId": 2,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 1",
+            "timestamp": "2025-02-09T12:04:43.145Z"
+          },
+          {
+            "id": 5,
+            "sequenceId": 3,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 0",
+            "timestamp": "2025-02-09T12:04:44.58Z"
+          },
+          {
+            "id": 6,
+            "sequenceId": 4,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 1",
+            "timestamp": "2025-02-09T12:04:45.091Z"
+          },
+          {
+            "id": 7,
+            "sequenceId": 5,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 0",
+            "timestamp": "2025-02-09T12:04:46.523Z"
+          },
+          {
+            "id": 8,
+            "sequenceId": 6,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 1",
+            "timestamp": "2025-02-09T12:04:46.851Z"
+          },
+          {
+            "id": 9,
+            "sequenceId": 7,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 0",
+            "timestamp": "2025-02-09T12:04:48.091Z"
+          },
+          {
+            "id": 10,
+            "sequenceId": 8,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 1",
+            "timestamp": "2025-02-09T12:04:48.404Z"
+          },
+          {
+            "id": 11,
+            "sequenceId": 9,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "callcenter control - 0",
+            "timestamp": "2025-02-09T12:04:49.483Z"
+          },
+          {
+            "id": 14,
+            "sequenceId": 10,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "Wind: windy",
+            "timestamp": "2025-02-09T12:10:47.609Z"
+          },
+          {
+            "id": 15,
+            "sequenceId": 11,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "Weather: clouds",
+            "timestamp": "2025-02-09T12:10:49.44Z"
+          },
+          {
+            "id": 16,
+            "sequenceId": 12,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "Pitch is regular",
+            "timestamp": "2025-02-09T12:10:52.615Z"
+          },
+          {
+            "id": 17,
+            "sequenceId": 13,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 2000,
+            "message": "Players NOT on the field",
+            "timestamp": "2025-02-09T12:11:02.635Z"
+          },
+          {
+            "id": 18,
+            "sequenceId": 14,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 2002,
+            "message": "Players are coming out",
+            "timestamp": "2025-02-09T12:28:38.412Z"
+          },
+          {
+            "id": 21,
+            "sequenceId": 15,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 2003,
+            "message": "Players ON the field",
+            "timestamp": "2025-02-09T12:28:56.049Z"
+          },
+          {
+            "id": 22,
+            "sequenceId": 16,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 2006,
+            "message": "Teams shake hands",
+            "timestamp": "2025-02-09T12:29:10.785Z"
+          },
+          {
+            "id": 23,
+            "sequenceId": 17,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "Attendance is 50%",
+            "timestamp": "2025-02-09T12:29:21.677Z"
+          },
+          {
+            "id": 26,
+            "sequenceId": 18,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 2010,
+            "message": "Photo taking",
+            "timestamp": "2025-02-09T12:30:09.77Z"
+          },
+          {
+            "id": 27,
+            "sequenceId": 19,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 2007,
+            "message": "Coin Flip",
+            "timestamp": "2025-02-09T12:30:28.018Z"
+          },
+          {
+            "id": 28,
+            "sequenceId": 20,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 2011,
+            "message": "Game about to start",
+            "timestamp": "2025-02-09T12:30:50.607Z"
+          },
+          {
+            "id": 29,
+            "sequenceId": 21,
+            "phase": "PreMatch",
+            "timeElapsedInPhase": "00:00:00",
+            "messageId": 0,
+            "message": "Standby",
+            "timestamp": "2025-02-09T12:31:15.735Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "kickOffs": {
+        "matchActions": [
+          {
+            "id": 33,
+            "sequenceId": 0,
+            "phase": "FirstHalf",
+            "timeElapsedInPhase": "00:00:00",
+            "team": "Away",
+            "playerInternalId": null,
+            "isConfirmed": true,
+            "timestampUtc": "2025-02-09T12:31:24.86Z"
+          }
+        ],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "varStateChanges": {
+        "varStateChanges": [],
+        "isCollected": true,
+        "isReliable": true
+      },
+      "cornerRisk": {
+        "cornerRiskState": "AwaySafe",
+        "isConfirmed": true,
+        "timestampUtc": "2025-02-09T13:00:24.707Z"
+      }
+    },
+    "matchStatus": "InProgress",
+    "statistics": {
+      "possession": {
+        "home": 41,
+        "away": 59
+      }
+    },
+    "awayTeam": {
+      "sourceId": "10187",
+      "sourceName": "Wolverhampton Wanderers",
+      "strip": {
+        "color1": {
+          "r": 255,
+          "g": 165,
+          "b": 0
+        },
+        "color2": {
+          "r": 255,
+          "g": 165,
+          "b": 0
+        },
+        "pantsColor": null,
+        "socksColor": null,
+        "jerseyDesign": "Unknown"
+      }
+    },
+    "homeTeam": {
+      "sourceId": "10140",
+      "sourceName": "Blackburn Rovers",
+      "strip": {
+        "color1": {
+          "r": 255,
+          "g": 255,
+          "b": 255
+        },
+        "color2": {
+          "r": 0,
+          "g": 0,
+          "b": 255
+        },
+        "pantsColor": null,
+        "socksColor": null,
+        "jerseyDesign": "Unknown"
+      }
+    },
+    "coverageCancelledAt": null,
+    "currentVarState": "Safe",
+    "varReason": "NotSet",
+    "varOutcome": "NotSet",
+    "varReasonV2": null,
+    "varOutcomeV2": null,
+    "isSecondLeg": null,
+    "firstLegScore": null,
+    "normalTimeHalfDuration": null,
+    "extraTimeHalfDuration": null,
+    "canGoToExtraTime": null,
+    "canGoStraightToPenaltiesAfterNormalTime": null,
+    "canGoToPenalties": null,
+    "source": "GeniusSportsInPlay",
+    "fixtureId": "11790610",
+    "sequence": 338,
+    "messageTimestampUtc": "2025-02-09T13:01:31.7723726Z",
+    "isReliable": true,
+    "isCoverageCancelled": false,
+    "reliabilityReasons": null
+  },
+  "_geniusTs": 1739106092347,
+  "_backendTs": 1739106095739
+}

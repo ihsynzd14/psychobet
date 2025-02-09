@@ -1,0 +1,2568 @@
+[
+  {
+    "id": 226,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:01:31.767Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:30:06",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 225,
+    "type": "shotOnTarget",
+    "timestamp": "2025-02-09T13:01:30.81Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:30:05",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "savedBy": null
+    }
+  },
+  {
+    "id": 224,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:01:27.984Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:30:03",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 223,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:01:25.867Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:30:01",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 222,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:01:22.723Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:29:57",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 221,
+    "type": "goalKick",
+    "timestamp": "2025-02-09T13:01:10.058Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:29:45",
+    "team": "Home",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 220,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:01:09.724Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:29:44",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 21702,
+    "type": "cornerTaken",
+    "timestamp": "2025-02-09T13:01:06.158Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:29:41",
+    "team": "Away",
+    "details": {
+      "status": "taken"
+    }
+  },
+  {
+    "id": 219,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:01:06.158Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:29:41",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 218,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:00:24.707Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:28:59",
+    "team": "Away",
+    "details": {
+      "dangerState": "Corner",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 21701,
+    "type": "cornerAwarded",
+    "timestamp": "2025-02-09T13:00:24.706Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:28:59",
+    "team": "Away",
+    "details": {
+      "status": "awarded"
+    }
+  },
+  {
+    "id": 216,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:00:23.43Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:28:58",
+    "team": "Away",
+    "details": {
+      "dangerState": "CornerDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 215,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:00:20.705Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:28:55",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 214,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T13:00:14.991Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:28:50",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 213,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:59:54.605Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:28:29",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 212,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:59:49.581Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:28:24",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 211,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:59:16.071Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:27:51",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 210,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:59:13.597Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:27:48",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 209,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:58:53.657Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:27:28",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 208,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:58:50.281Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:27:25",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 207,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:58:40.888Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:27:16",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 206,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:58:24.927Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:27:00",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Attack"
+    }
+  },
+  {
+    "id": 205,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:58:17.826Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:26:52",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 204,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:58:14.275Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:26:49",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 203,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:58:09.841Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:26:44",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 202,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:57:40.169Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:26:15",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 201,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:57:38.404Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:26:13",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 199,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:57:27.607Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:26:02",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 198,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:57:17.312Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:52",
+    "team": "Home",
+    "details": {
+      "bookingState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 197,
+    "type": "freeKick",
+    "timestamp": "2025-02-09T12:56:52.352Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:27",
+    "team": "Away",
+    "details": {
+      "dangerState": "FreeKick",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 196,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:56:51.274Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:22",
+    "team": "Home",
+    "details": {
+      "bookingState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 195,
+    "type": "yellowCard",
+    "timestamp": "2025-02-09T12:56:49.655Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:22",
+    "team": "Home",
+    "details": {
+      "playerId": "1065233"
+    }
+  },
+  {
+    "id": 194,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:56:47.168Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:22",
+    "team": "Home",
+    "details": {
+      "bookingState": "YellowCardDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 192,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:56:45.506Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:20",
+    "team": "Home",
+    "details": {
+      "bookingState": "YellowCardDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 191,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:40.71Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:15",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 189,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:39.959Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:15",
+    "team": "Home",
+    "details": {
+      "dangerState": "Penalty",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 188,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:35.577Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:10",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 187,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:31.797Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:06",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 186,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:27.791Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:25:02",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 185,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:23.741Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:24:58",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 184,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:14.202Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:24:49",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 183,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:56:01.198Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:24:36",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 182,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:55:32.386Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:24:07",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 181,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:55:32.385Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:24:07",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 180,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:55:29.036Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:24:04",
+    "team": "Away",
+    "details": {
+      "dangerState": "CornerDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 179,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:55:28.533Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:24:03",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 178,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:55:17.549Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:52",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 177,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:54:53.299Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:28",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 176,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:54:51.536Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:26",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 175,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:54:42.789Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:17",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 174,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:54:39.556Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:14",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 173,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:54:38.785Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:13",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 172,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:54:36.791Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:11",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 16902,
+    "type": "cornerTaken",
+    "timestamp": "2025-02-09T12:54:32.062Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:07",
+    "team": "Away",
+    "details": {
+      "status": "taken"
+    }
+  },
+  {
+    "id": 171,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:54:32.062Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:23:07",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 170,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:53:54.686Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:29",
+    "team": "Away",
+    "details": {
+      "dangerState": "Corner",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 16901,
+    "type": "cornerAwarded",
+    "timestamp": "2025-02-09T12:53:54.685Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:29",
+    "team": "Away",
+    "details": {
+      "status": "awarded"
+    }
+  },
+  {
+    "id": 168,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:53:48.62Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:23",
+    "team": "Away",
+    "details": {
+      "dangerState": "CornerDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 167,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:53:47.647Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:22",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 166,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:53:44.723Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:19",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 165,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:53:40.819Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:15",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 164,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:53:36.496Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:11",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 163,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:53:34.553Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:22:09",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 162,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:52:47.781Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:21:22",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 161,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:52:46.014Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:21:21",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 160,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:52:10.194Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:20:45",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 159,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:52:07.757Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:20:42",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 158,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:52:04.022Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:20:39",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 157,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:51:13.293Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:19:48",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 156,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:51:09.622Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:19:44",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 155,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:51:00.651Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:19:35",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 154,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:50:48.297Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:19:23",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 152,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:50:30.447Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:19:05",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 151,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:50:26.831Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:19:01",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 150,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:49:57.33Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:18:32",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 149,
+    "type": "offsides",
+    "timestamp": "2025-02-09T12:49:45.717Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:18:20",
+    "team": "Home",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 145,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:49:32.25Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:18:07",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 144,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:48:28.909Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:17:04",
+    "team": "Home",
+    "details": {
+      "bookingState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 143,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:48:22.763Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:57",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousFreeKick",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 142,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:48:21.795Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:55",
+    "team": "Home",
+    "details": {
+      "bookingState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 141,
+    "type": "yellowCard",
+    "timestamp": "2025-02-09T12:48:21.314Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:55",
+    "team": "Away",
+    "details": {
+      "playerId": "983055"
+    }
+  },
+  {
+    "id": 140,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:48:20.659Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:55",
+    "team": "Home",
+    "details": {
+      "bookingState": "YellowCardDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 139,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:48:18.057Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:53",
+    "team": "Home",
+    "details": {
+      "bookingState": "YellowCardDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 138,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:48:14.759Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:49",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 137,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:48:10.881Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:46",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 136,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:48:05.386Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:40",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 135,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:47:57.569Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:32",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 134,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:47:54.079Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:29",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 133,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:47:52.406Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:27",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 132,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:47:48.977Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:55",
+    "team": "Home",
+    "details": {
+      "bookingState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 131,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:47:26.661Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:16:01",
+    "team": "Home",
+    "details": {
+      "bookingState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 130,
+    "type": "yellowCard",
+    "timestamp": "2025-02-09T12:47:21.782Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:55",
+    "team": "Home",
+    "details": {
+      "playerId": "1356839"
+    }
+  },
+  {
+    "id": 129,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:47:15.963Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:51",
+    "team": "Away",
+    "details": {
+      "dangerState": "AttackingFreeKick",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 128,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:47:15.503Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:50",
+    "team": "Home",
+    "details": {
+      "bookingState": "YellowCardDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 127,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:47:13.243Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:48",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 126,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:47:02.102Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:37",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 125,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:46:51.724Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:26",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 124,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:46:49.23Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:24",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 123,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:46:36.705Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:11",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 122,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:46:29.832Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:15:04",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 121,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:46:19.799Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:54",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 120,
+    "type": "offsides",
+    "timestamp": "2025-02-09T12:45:55.947Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:30",
+    "team": "Away",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 118,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:45:48.356Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:23",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 117,
+    "type": "shotBlocked",
+    "timestamp": "2025-02-09T12:45:44.513Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:19",
+    "team": "Away",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 116,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:45:41.708Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:16",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 115,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:45:37.063Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:12",
+    "team": "Away",
+    "details": {
+      "dangerState": "CornerDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 114,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:45:34.375Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:09",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 113,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:45:32.023Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:14:07",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 112,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:45:18.596Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:13:53",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 111,
+    "type": "freeKick",
+    "timestamp": "2025-02-09T12:45:00.619Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:13:35",
+    "team": "Away",
+    "details": {
+      "dangerState": "FreeKick",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 110,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:44:56.862Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:13:32",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 109,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:44:22.656Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:12:57",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 108,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:44:14.213Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:12:49",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 107,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:43:58.134Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:12:33",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 106,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:43:50.483Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:12:25",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 105,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:43:37.145Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:12:12",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 104,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:43:35.325Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:12:10",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 103,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:43:21.557Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:11:56",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 102,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:42:42.763Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:11:17",
+    "team": "Home",
+    "details": {
+      "dangerState": "AttackingFreeKick",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 101,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:42:37.257Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:11:12",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 100,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:42:07.508Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:42",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 99,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:42:00.222Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:35",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 98,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:41:52.282Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:27",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 97,
+    "type": "goalKick",
+    "timestamp": "2025-02-09T12:41:43.905Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:19",
+    "team": "Home",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 96,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:41:43.55Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:18",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 95,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:41:40.094Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:15",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 94,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:41:39.427Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:14",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 93,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:41:31.833Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:10:06",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 92,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:41:04.859Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:40",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 91,
+    "type": "goalKick",
+    "timestamp": "2025-02-09T12:41:04.859Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:40",
+    "team": "Away",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 89,
+    "type": "shotOffTarget",
+    "timestamp": "2025-02-09T12:41:02.129Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:37",
+    "team": "Home",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 88,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:40:58.844Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:33",
+    "team": "Home",
+    "details": {
+      "dangerState": "CornerDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 87,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:40:53.651Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:28",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 86,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:40:50.838Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:25",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 85,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:40:46.427Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:21",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 84,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:40:41.167Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:16",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 83,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:40:39.954Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:09:15",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 82,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:40:23.771Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:08:58",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 81,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:40:10.671Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:08:45",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 80,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:40:06.726Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:08:41",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 79,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:39:46.36Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:08:21",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 78,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:39:13.537Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:07:48",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 77,
+    "type": "shotBlocked",
+    "timestamp": "2025-02-09T12:39:12.306Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:07:47",
+    "team": "Home",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 76,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:39:06.664Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:07:41",
+    "team": "Home",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 75,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:39:01.91Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:07:37",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 74,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:38:53.394Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:07:28",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 73,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:38:26.112Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:07:01",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 72,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:37:53.179Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:06:28",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 71,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:37:43.372Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:06:18",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 70,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:37:37.922Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:06:13",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 69,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:37:24.746Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:05:59",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 68,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:37:21.184Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:05:56",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 67,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:37:15.286Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:05:50",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Attack"
+    }
+  },
+  {
+    "id": 66,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:37:11.522Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:05:46",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 65,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:37:04.115Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:05:39",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Attack"
+    }
+  },
+  {
+    "id": 64,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:36:50.779Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:05:25",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 63,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:36:40.667Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:05:15",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 62,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:36:15.016Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:04:50",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 61,
+    "type": "shotOnTarget",
+    "timestamp": "2025-02-09T12:36:13.871Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:04:49",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "savedBy": null
+    }
+  },
+  {
+    "id": 60,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:36:12.462Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:04:47",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 59,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:35:19.204Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:54",
+    "team": "Away",
+    "details": {
+      "dangerState": "AttackingFreeKick",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 58,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:35:15.469Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:50",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 57,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:34:54.575Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:29",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 56,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:34:53.388Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:28",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 55,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:34:46.304Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:21",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 54,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:34:42.432Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:17",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 53,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:34:33.547Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:08",
+    "team": "Away",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Attack"
+    }
+  },
+  {
+    "id": 52,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:34:30.267Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:03:05",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 51,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:34:19.26Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:02:54",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 50,
+    "type": "freeKick",
+    "timestamp": "2025-02-09T12:34:08.354Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:02:43",
+    "team": "Away",
+    "details": {
+      "dangerState": "FreeKick",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 49,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:33:38.425Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:02:13",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 48,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:33:34.249Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:02:09",
+    "team": "Home",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 47,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:33:28.635Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:02:03",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 46,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:33:09.144Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:01:44",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 45,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:59.435Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:01:34",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 44,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:58.556Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:01:33",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 43,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:55.797Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:01:30",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 42,
+    "type": "throwIn",
+    "timestamp": "2025-02-09T12:32:48.448Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:01:23",
+    "team": "Home",
+    "details": {
+      "playerId": null,
+      "isConfirmed": true,
+      "throwInState": "Safe"
+    }
+  },
+  {
+    "id": 41,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:24.815Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:59",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 40,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:22.745Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:57",
+    "team": "Away",
+    "details": {
+      "dangerState": "DangerousAttack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 39,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:12.528Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:47",
+    "team": "Home",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 38,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:11.201Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:46",
+    "team": "Away",
+    "details": {
+      "dangerState": "Attack",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 37,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:32:00.986Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:36",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 36,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:31:35.117Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:10",
+    "team": "Home",
+    "details": {
+      "bookingState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 35,
+    "type": "bookingState",
+    "timestamp": "2025-02-09T12:31:32.982Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:08",
+    "team": "Home",
+    "details": {
+      "bookingState": "RedCardDanger",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 34,
+    "type": "dangerState",
+    "timestamp": "2025-02-09T12:31:25.876Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:01",
+    "team": "Away",
+    "details": {
+      "dangerState": "Safe",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 33,
+    "type": "kickOff",
+    "timestamp": "2025-02-09T12:31:24.86Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00:00",
+    "team": "Away",
+    "details": {
+      "playerId": null
+    }
+  },
+  {
+    "id": 31,
+    "type": "phaseChange",
+    "timestamp": "2025-02-09T12:31:24.858Z",
+    "phase": "FirstHalf",
+    "timeElapsed": "00:00",
+    "team": "Home",
+    "details": {
+      "previousPhase": "PreMatch",
+      "currentPhase": "FirstHalf",
+      "startTime": "2025-02-09T12:31:24.858Z"
+    }
+  },
+  {
+    "id": 29,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:31:15.735Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Standby",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 28,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:30:50.607Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Game about to start",
+      "messageId": 2011,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 27,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:30:28.018Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Coin Flip",
+      "messageId": 2007,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 26,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:30:09.77Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Photo taking",
+      "messageId": 2010,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 23,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:29:21.677Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Attendance is 50%",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 22,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:29:10.785Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Teams shake hands",
+      "messageId": 2006,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 21,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:28:56.049Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Players ON the field",
+      "messageId": 2003,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 18,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:28:38.412Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Players are coming out",
+      "messageId": 2002,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 17,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:11:02.635Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Players NOT on the field",
+      "messageId": 2000,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 16,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:10:52.615Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Pitch is regular",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 15,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:10:49.44Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Weather: clouds",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 14,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:10:47.609Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "Wind: windy",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 11,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:49.483Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 0",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 10,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:48.404Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 1",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 9,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:48.091Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 0",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 8,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:46.851Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 1",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 7,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:46.523Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 0",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 6,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:45.091Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 1",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 5,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:44.58Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 0",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 4,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:43.145Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 1",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 3,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:42.778Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 0",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  },
+  {
+    "id": 2,
+    "type": "systemMessage",
+    "timestamp": "2025-02-09T12:04:40.979Z",
+    "phase": "PreMatch",
+    "timeElapsed": "00:00:00",
+    "team": "System",
+    "details": {
+      "message": "callcenter control - 1",
+      "messageId": 0,
+      "messageType": "info",
+      "isConfirmed": true
+    }
+  }
+]
