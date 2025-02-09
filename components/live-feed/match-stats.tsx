@@ -20,6 +20,7 @@ interface TeamStats {
   attackingFreeKicks: number;
   yellowCards: number;
   redCards: number;
+  corners: number;
   throwIns: number;
   offsides: number;
   goalKicks: number;
@@ -40,6 +41,7 @@ const initialStats: TeamStats = {
   attackingFreeKicks: 0,
   yellowCards: 0,
   redCards: 0,
+  corners: 0,
   throwIns: 0,
   offsides: 0,
   goalKicks: 0,
@@ -108,13 +110,19 @@ export function MatchStats({ events }: MatchStatsProps) {
           if (state?.includes('Attack')) {
             if (!state.includes('Dangerous') && !state.includes('Free')) {
               stats.attacks++;
-            } else if (state.includes('DangerousAttack')) {
+            } else if (state.includes('DangerousAttack') && !state.includes('DangerousFreeKick')) {
               stats.dangerousAttacks++;
             } else if (state.includes('DangerousFreeKick')) {
               stats.dangerousFreeKicks++;
             } else if (state.includes('AttackingFreeKick')) {
               stats.attackingFreeKicks++;
             }
+          }
+          break;
+        case 'cornerAwarded':
+        case 'cornerTaken':
+          if (event.details.status === 'awarded') {
+            stats.corners++;
           }
           break;
         case 'penalty': stats.penalties++; break;
@@ -140,6 +148,7 @@ export function MatchStats({ events }: MatchStatsProps) {
       <StatRow label="Shots Blocked" home={homeStats.shotsBlocked} away={awayStats.shotsBlocked} />
       <StatRow label="Attacks" home={homeStats.attacks} away={awayStats.attacks} />
       <StatRow label="Dangerous Attacks" home={homeStats.dangerousAttacks} away={awayStats.dangerousAttacks} />
+      <StatRow label="Corners" home={homeStats.corners} away={awayStats.corners} />
       <StatRow label="Penalties" home={homeStats.penalties} away={awayStats.penalties} />
       <StatRow label="Missed Penalties" home={homeStats.missedPenalties} away={awayStats.missedPenalties} />
       <StatRow label="Dangerous FreeKicks" home={homeStats.dangerousFreeKicks} away={awayStats.dangerousFreeKicks} />

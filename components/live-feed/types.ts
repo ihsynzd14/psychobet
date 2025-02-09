@@ -14,10 +14,9 @@ export type DangerState =
   | 'CornerDanger'
   | 'HomeCornerDanger'
   | 'AwayCornerDanger'
-  | 'HomeAttackingFreeKick'
-  | 'AwayAttackingFreeKick'
-  | 'HomeDangerousAttackingFreeKick'
-  | 'AwayDangerousAttackingFreeKick';
+  | 'AttackingFreeKick'
+  | 'DangerousFreeKick'
+  | 'FreeKick';
 
 export type ThrowInState =
   | 'Safe'

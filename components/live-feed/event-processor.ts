@@ -192,12 +192,11 @@ const eventProcessors = {
       const team = danger.dangerState.startsWith('Away') ? 'Away' : danger.dangerState.startsWith('Home') ? 'Home' : null;
       if (team) {
         const rawState = danger.dangerState.replace(team, '');
-        const type = rawState === 'FreeKick' ? 'freeKick' : 'dangerState';
         const baseState = rawState as DangerState;
         
         events.push({
           id: danger.id,
-          type: type,
+          type: 'dangerState',
           timestamp: danger.timestampUtc,
           phase: danger.phase,
           timeElapsed: danger.timeElapsedInPhase,

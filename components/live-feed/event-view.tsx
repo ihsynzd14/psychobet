@@ -21,6 +21,30 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     return 'text-gray-600 dark:text-gray-400';
   }
 
+  // Danger States
+  if (type === 'dangerState') {
+    const dangerState = event?.details.dangerState;
+    if (dangerState?.includes('DangerousFreeKick')) {
+      return 'text-red-600 dark:text-red-400';
+    } else if (dangerState?.includes('AttackingFreeKick')) {
+      return 'text-orange-600 dark:text-orange-400';
+    } else if (dangerState === 'FreeKick') {
+      return 'text-green-600 dark:text-green-400';
+    } else if (dangerState?.includes('DangerousAttack')) {
+      return 'text-red-600 dark:text-red-400';
+    } else if (dangerState?.includes('Attack')) {
+      return 'text-orange-600 dark:text-orange-400';
+    } else if (dangerState === 'CornerDanger') {
+      return 'text-red-600 dark:text-red-400';
+    } else if (dangerState === 'Penalty') {
+      return 'text-red-600 dark:text-red-400';
+    }  
+    else if (dangerState?.includes('Corner')) {
+      return 'text-green-600 dark:text-green-400';
+    }
+    return 'text-green-600 dark:text-green-400';
+  }
+
   // Free Kick Types
   if (type === 'freeKick') {
     const dangerState = event?.details.dangerState;
@@ -39,24 +63,6 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-red-600 dark:text-red-400';
     } else if (throwInState === 'Attack') {
       return 'text-orange-600 dark:text-orange-400';
-    }
-    return 'text-green-600 dark:text-green-400';
-  }
-
-  // Danger States
-  if (type === 'dangerState') {
-    const dangerState = event?.details.dangerState;
-    if (dangerState?.includes('DangerousAttack')) {
-      return 'text-red-600 dark:text-red-400';
-    } else if (dangerState?.includes('Attack')) {
-      return 'text-orange-600 dark:text-orange-400';
-    } else if (dangerState === 'CornerDanger') {
-      return 'text-red-600 dark:text-red-400';
-    } else if (dangerState === 'Penalty') {
-      return 'text-red-600 dark:text-red-400';
-    }  
-    else if (dangerState?.includes('Corner')) {
-      return 'text-green-600 dark:text-green-400';
     }
     return 'text-green-600 dark:text-green-400';
   }
@@ -266,6 +272,30 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     return 'bg-gray-200 dark:bg-gray-700';
   }
 
+  // Danger States
+  if (type === 'dangerState') {
+    const dangerState = event?.details.dangerState;
+    if (dangerState?.includes('DangerousFreeKick')) {
+      return 'bg-red-300 dark:bg-red-900';
+    } else if (dangerState?.includes('AttackingFreeKick')) {
+      return 'bg-orange-300 dark:bg-orange-900';
+    } else if (dangerState === 'FreeKick') {
+      return 'bg-green-300 dark:bg-green-900';
+    } else if (dangerState?.includes('DangerousAttack')) {
+      return 'bg-red-300 dark:bg-red-900';
+    } else if (dangerState?.includes('Attack')) {
+      return 'bg-orange-300 dark:bg-orange-900';
+    } else if (dangerState === 'CornerDanger') {
+      return 'bg-red-200 dark:bg-red-900';
+    } else if (dangerState === 'Penalty') {
+      return 'bg-red-200 dark:bg-red-900';
+    }  
+    else if (dangerState?.includes('Corner')) {
+      return 'bg-green-200 dark:bg-green-900';
+    }
+    return 'bg-green-300 dark:bg-green-900';
+  }
+
   // Free Kick Types
   if (type === 'freeKick') {
     const dangerState = event?.details.dangerState;
@@ -286,21 +316,6 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-orange-200 dark:bg-orange-900';
     }
     return 'bg-green-200 dark:bg-green-900';
-  }
-
-  // Danger States
-  if (type === 'dangerState') {
-    const dangerState = event?.details.dangerState;
-    if (dangerState?.includes('DangerousAttack')) {
-      return 'bg-red-300 dark:bg-red-900';
-    } else if (dangerState?.includes('Attack')) {
-      return 'bg-orange-300 dark:bg-orange-900';
-    } else if (dangerState === 'CornerDanger') {
-      return 'bg-red-200 dark:bg-red-900';
-    } else if (dangerState?.includes('Corner')) {
-      return 'bg-green-200 dark:bg-green-900';
-    }
-    return 'bg-green-300 dark:bg-green-900';
   }
 
   // Other Events
@@ -363,6 +378,30 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     return 'bg-gray-50 dark:bg-gray-900';
   }
 
+  // Danger States
+  if (event.type === 'dangerState') {
+    const dangerState = event.details.dangerState;
+    if (dangerState?.includes('DangerousFreeKick')) {
+      return 'bg-red-200 dark:bg-red-950';
+    } else if (dangerState?.includes('AttackingFreeKick')) {
+      return 'bg-orange-200 dark:bg-orange-950';
+    } else if (dangerState === 'FreeKick') {
+      return 'bg-green-200 dark:bg-green-950';
+    } else if (dangerState?.includes('DangerousAttack')) {
+      return 'bg-red-200 dark:bg-red-950';
+    } else if (dangerState?.includes('Attack')) {
+      return 'bg-orange-200 dark:bg-orange-950';
+    } else if (dangerState === 'CornerDanger') {
+      return 'bg-red-100 dark:from-gray-900 dark:to-red-950';
+    } else if (dangerState === 'Penalty') {
+      return 'bg-red-200 dark:bg-red-950';
+    }  
+    else if (dangerState?.includes('Corner')) {
+      return 'bg-green-100';
+    }
+    return 'bg-green-100 dark:bg-green-950';
+  }
+
   // Free Kick Types
   if (event.type === 'freeKick') {
     const dangerState = event.details.dangerState;
@@ -383,21 +422,6 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-gradient-to-r from-white to-orange-200 dark:from-gray-900 dark:to-orange-950';
     }
     return 'bg-gradient-to-r from-white to-green-200 dark:from-gray-900 dark:to-green-950';
-  }
-
-  // Danger States
-  if (event.type === 'dangerState') {
-    const dangerState = event.details.dangerState;
-    if (dangerState?.includes('DangerousAttack')) {
-      return 'bg-red-200 dark:bg-red-950';
-    } else if (dangerState?.includes('Attack')) {
-      return 'bg-orange-200 dark:bg-orange-950';
-    } else if (dangerState === 'CornerDanger') {
-      return 'bg-red-100 dark:from-gray-900 dark:to-red-950';
-    } else if (dangerState?.includes('Corner')) {
-      return 'bg-green-100';
-    }
-    return 'bg-green-100 dark:bg-green-950';
   }
 
   // Other Events
@@ -460,6 +484,30 @@ const getEventBorderColor = (event: MatchEvent): string => {
     return 'border-gray-200 dark:border-gray-700';
   }
 
+  // Danger States
+  if (event.type === 'dangerState') {
+    const dangerState = event.details.dangerState;
+    if (dangerState?.includes('DangerousFreeKick')) {
+      return 'border-red-300 dark:border-red-800';
+    } else if (dangerState?.includes('AttackingFreeKick')) {
+      return 'border-orange-300 dark:border-orange-800';
+    } else if (dangerState === 'FreeKick') {
+      return 'border-green-300 dark:border-green-800';
+    } else if (dangerState?.includes('DangerousAttack')) {
+      return 'border-red-300 dark:border-red-800';
+    } else if (dangerState?.includes('Attack')) {
+      return 'border-orange-300 dark:border-orange-800';
+    } else if (dangerState === 'CornerDanger') {
+      return 'border-red-200 dark:border-red-800';
+    } else if (dangerState === 'Penalty') {
+      return 'border-red-200 dark:border-red-800';
+    }  
+    else if (dangerState?.includes('Corner')) {
+      return 'border-green-200 dark:border-green-800';
+    }
+    return 'border-green-300 dark:border-green-800';
+  }
+
   // Free Kick Types
   if (event.type === 'freeKick') {
     const dangerState = event.details.dangerState;
@@ -480,21 +528,6 @@ const getEventBorderColor = (event: MatchEvent): string => {
       return 'border-orange-200 dark:border-orange-800';
     }
     return 'border-green-200 dark:border-green-800';
-  }
-
-  // Danger States
-  if (event.type === 'dangerState') {
-    const dangerState = event.details.dangerState;
-    if (dangerState?.includes('DangerousAttack')) {
-      return 'border-red-300 dark:border-red-800';
-    } else if (dangerState?.includes('Attack')) {
-      return 'border-orange-300 dark:border-orange-800';
-    } else if (dangerState === 'CornerDanger') {
-      return 'border-red-200 dark:border-red-800';
-    } else if (dangerState?.includes('Corner')) {
-      return 'border-green-200 dark:border-green-800';
-    }
-    return 'border-green-300 dark:border-green-800';
   }
 
   // Other Events
@@ -520,6 +553,8 @@ const getEventBorderColor = (event: MatchEvent): string => {
       return 'border-red-200 dark:border-red-800';
     case 'var':
       return 'border-purple-200 dark:border-purple-800';
+    case 'foul':
+      return 'border-yellow-200 dark:border-yellow-800';
     case 'phaseChange':
       return 'border-green-200 dark:border-green-800';
     case 'throwIn':
