@@ -2,15 +2,16 @@
 
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Activity, Clock } from 'lucide-react';
+import { Activity, Clock, LucideAlignHorizontalJustifyStart, Users } from 'lucide-react';
 import { api } from '@/lib/api';
 import { formatTime } from './live-feed/utils';
 import { EventView } from './live-feed/event-view';
 import { processMatchActions } from './live-feed/event-processor';
-import { LiveFeedPageProps } from './live-feed/types';
+import { LiveFeedPageProps, TeamLineup } from './live-feed/types';
 import { MatchEvent } from './live-feed/types';
 import { MatchStats } from './live-feed/match-stats';
 import { MatchHeader } from './live-feed/match-header';
+import { MatchLineups } from './live-feed/match-lineups';
 
 interface TeamInfo {
   sourceId: string;
@@ -34,6 +35,8 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
   const [currentTime, setCurrentTime] = useState<string>(formatTime(new Date()));
   const [homeTeam, setHomeTeam] = useState<TeamInfo | null>(null);
   const [awayTeam, setAwayTeam] = useState<TeamInfo | null>(null);
+  const [homeTeamLineup, setHomeTeamLineup] = useState<TeamLineup | null>(null);
+  const [awayTeamLineup, setAwayTeamLineup] = useState<TeamLineup | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
   // Optimize event update function
@@ -56,17 +59,40 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
     }
   }, []);
 
+  // Optimize lineup updates with memoization
+  const updateLineups = useCallback((data: any) => {
+    const updates = data.raw?.matchActions?.lineupUpdates?.updates;
+    if (!updates?.length) return;
+
+    setHomeTeamLineup(prev => {
+      const latestHomeUpdate = updates
+        .filter((u: any) => u.team === 'Home')
+        .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
+      
+      return latestHomeUpdate?.newLineup || prev;
+    });
+
+    setAwayTeamLineup(prev => {
+      const latestAwayUpdate = updates
+        .filter((u: any) => u.team === 'Away')
+        .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
+      
+      return latestAwayUpdate?.newLineup || prev;
+    });
+  }, []);
+
   useEffect(() => {
     const unsubscribe = api.subscribeToFixture(fixtureId, (data) => {
       const newEvents = processMatchActions(data);
       updateEvents(newEvents);
       updateTeams(data);
+      updateLineups(data);
     });
 
     return () => {
       unsubscribe();
     };
-  }, [fixtureId, updateEvents, updateTeams]);
+  }, [fixtureId, updateEvents, updateTeams, updateLineups]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -144,9 +170,34 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
               )}
             </div>
           </div>
-          
-          <div className="w-[280px] border-l border-gray-100 dark:border-gray-700">
-            <MatchStats events={events} />
+          <div className="w-[300px] border-l border-gray-100 dark:border-gray-700 flex flex-col">
+          <div className="border-b border-gray-100 dark:border-gray-700 p-2">
+              <h2 className="text-sm font-normal flex items-center gap-2">
+                <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
+                Match Stats
+              </h2>
+            </div>
+            <div className="border-t border-gray-100 dark:border-gray-700">
+              <MatchStats events={events} />
+            </div>
+            <div className="border-b border-gray-100 dark:border-gray-700 p-2">
+              <h2 className="text-sm font-normal flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-500" />
+                Lineups
+              </h2>
+            </div>
+            <div className="flex-1 overflow-auto">
+              {homeTeamLineup && awayTeamLineup ? (
+                <MatchLineups
+                  homeTeamLineup={homeTeamLineup}
+                  awayTeamLineup={awayTeamLineup}
+                />
+              ) : (
+                <div className="text-center text-gray-500 dark:text-gray-400 py-6">
+                  Loading lineups...
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

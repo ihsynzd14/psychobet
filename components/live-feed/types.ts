@@ -19,9 +19,10 @@ export type DangerState =
   | 'FreeKick';
 
 export type ThrowInState =
+  | null
   | 'Safe'
   | 'Attack'
-  | 'DangerousAttack';
+  | 'Dangerous';
 
 export type BookingState =
   | 'Safe'
@@ -83,4 +84,19 @@ export interface MatchEvent {
 
 export interface LiveFeedPageProps {
   fixtureId: string;
+}
+
+export interface Player {
+  internalId: string;
+  sourceId: string;
+  sourceName: string;
+  position: string | null;
+  shirtNumber: number;
+  playerPosition: string;
+}
+
+export interface TeamLineup {
+  startingOnPitch: Player[];
+  startingBench: Player[];
+  formation: string | null;
 } 

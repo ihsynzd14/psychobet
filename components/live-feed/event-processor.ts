@@ -435,10 +435,10 @@ const getThrowInState = (events: Record<string, any>, currentEvent: any): ThrowI
       danger.dangerState.startsWith(currentEvent.team)
   );
 
-  if (!nextDangerState) return 'Safe';
+  if (!nextDangerState) return null;
 
   const state = nextDangerState.dangerState.replace(currentEvent.team, '');
-  if (state.includes('DangerousAttack')) return 'DangerousAttack';
+  if (state.includes('DangerousAttack')) return 'Dangerous';
   if (state.includes('Attack')) return 'Attack';
   return 'Safe';
 }; 

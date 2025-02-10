@@ -59,10 +59,12 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
   // Throw In Types
   if (type === 'throwIn') {
     const throwInState = event?.details.throwInState;
-    if (throwInState === 'DangerousAttack') {
+    if (throwInState === 'Dangerous') {
       return 'text-red-600 dark:text-red-400';
     } else if (throwInState === 'Attack') {
       return 'text-orange-600 dark:text-orange-400';
+    } else if (throwInState === null) {
+      return 'text-gray-600 dark:text-gray-400';
     }
     return 'text-green-600 dark:text-green-400';
   }
@@ -224,9 +226,10 @@ const getEventTitle = (event: MatchEvent): string => {
       return `${event.details.currentPhase} Started`;
     case 'throwIn':
       const throwInState = event.details.throwInState;
-      if (throwInState === 'DangerousAttack') return 'Throw In Dangerous Attack';
-      if (throwInState === 'Attack') return 'Throw In Attack';
-      return 'Throw In Safe';
+      if (throwInState) {
+        return `Throw In ${throwInState}`;
+      }
+      return 'Throw In';
     case 'freeKick': {
       return 'Free Kick - Safe';
     }
@@ -310,10 +313,12 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
   // Throw In Types
   if (type === 'throwIn') {
     const throwInState = event?.details.throwInState;
-    if (throwInState === 'DangerousAttack') {
+    if (throwInState === 'Dangerous') {
       return 'bg-red-200 dark:bg-red-900';
     } else if (throwInState === 'Attack') {
       return 'bg-orange-200 dark:bg-orange-900';
+    } else if (throwInState === null) {
+      return 'bg-gray-200 dark:bg-gray-700';
     }
     return 'bg-green-200 dark:bg-green-900';
   }
@@ -382,13 +387,13 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   if (event.type === 'dangerState') {
     const dangerState = event.details.dangerState;
     if (dangerState?.includes('DangerousFreeKick')) {
-      return 'bg-red-200 dark:bg-red-950';
+      return 'bg-gradient-to-r from-white to-red-200 dark:from-gray-900 dark:to-red-950';
     } else if (dangerState?.includes('AttackingFreeKick')) {
-      return 'bg-orange-200 dark:bg-orange-950';
+      return 'bg-gradient-to-r from-white to-orange-200 dark:from-gray-900 dark:to-orange-950';
     } else if (dangerState === 'FreeKick') {
-      return 'bg-green-200 dark:bg-green-950';
+      return 'bg-gradient-to-r from-white to-green-200 dark:from-gray-900 dark:to-green-950';
     } else if (dangerState?.includes('DangerousAttack')) {
-      return 'bg-red-200 dark:bg-red-950';
+      return 'bg-red-200 dark:bg-red-950';  
     } else if (dangerState?.includes('Attack')) {
       return 'bg-orange-200 dark:bg-orange-950';
     } else if (dangerState === 'CornerDanger') {
@@ -416,10 +421,12 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   // Throw In Types
   if (event.type === 'throwIn') {
     const throwInState = event.details.throwInState;
-    if (throwInState === 'DangerousAttack') {
+    if (throwInState === 'Dangerous') {
       return 'bg-gradient-to-r from-white to-red-200 dark:from-gray-900 dark:to-red-950';
     } else if (throwInState === 'Attack') {
       return 'bg-gradient-to-r from-white to-orange-200 dark:from-gray-900 dark:to-orange-950';
+    } else if (throwInState === null) {
+      return 'bg-gray-200 dark:bg-gray-700';
     }
     return 'bg-gradient-to-r from-white to-green-200 dark:from-gray-900 dark:to-green-950';
   }
@@ -522,10 +529,12 @@ const getEventBorderColor = (event: MatchEvent): string => {
   // Throw In Types
   if (event.type === 'throwIn') {
     const throwInState = event.details.throwInState;
-    if (throwInState === 'DangerousAttack') {
+    if (throwInState === 'Dangerous') {
       return 'border-red-200 dark:border-red-800';
     } else if (throwInState === 'Attack') {
       return 'border-orange-200 dark:border-orange-800';
+    } else if (throwInState === null) {
+      return 'border-gray-200 dark:border-gray-700';
     }
     return 'border-green-200 dark:border-green-800';
   }
@@ -595,18 +604,19 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
     event.type, 
     event.details?.dangerState, 
     event.details?.messageType,
-    event.details?.bookingState
+    event.details?.bookingState,
+    event.details?.throwInState
   ]);
 
   return (
-    <div className={`flex w-full ${
+    <div className={`flex w-full p-2 ${
       isSystemMessage || isBookingState ? 'py-0.5 justify-center' : 'py-1.5'
     } ${
       isHomeTeam ? 'justify-start' : isAwayTeam ? 'justify-end' : ''
     }`}>
       <div className={`
         flex items-start gap-2 
-        ${isSystemMessage || isBookingState ? 'w-[60%] py-1' : 'w-[48%] p-2'}
+        ${isSystemMessage || isBookingState ? 'w-[50%] py-1' : 'w-[36%] p-2'}
         ${isAwayTeam && !isSystemMessage && !isBookingState ? 'flex-row text-right' : 'flex-row'}
         ${isSystemMessage || isBookingState ? 'justify-center text-center' : ''}
         ${colors.background}
