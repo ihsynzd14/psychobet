@@ -24,6 +24,11 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
   // Danger States
   if (type === 'dangerState') {
     const dangerState = event?.details.dangerState;
+    if (dangerState === 'Safe' || 
+        dangerState === 'Attack' || 
+        dangerState === 'DangerousAttack') {
+      return 'text-gray-400 dark:text-gray-500';
+    }
     if (dangerState?.includes('DangerousFreeKick')) {
       return 'text-red-600 dark:text-red-400';
     } else if (dangerState?.includes('AttackingFreeKick')) {
@@ -278,6 +283,11 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
   // Danger States
   if (type === 'dangerState') {
     const dangerState = event?.details.dangerState;
+    if (dangerState === 'Safe' || 
+        dangerState === 'Attack' || 
+        dangerState === 'DangerousAttack') {
+      return 'bg-gray-100 dark:bg-gray-800';
+    }
     if (dangerState?.includes('DangerousFreeKick')) {
       return 'bg-red-300 dark:bg-red-900';
     } else if (dangerState?.includes('AttackingFreeKick')) {
@@ -386,6 +396,11 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   // Danger States
   if (event.type === 'dangerState') {
     const dangerState = event.details.dangerState;
+    if (dangerState === 'Safe' || 
+        dangerState === 'Attack' || 
+        dangerState === 'DangerousAttack') {
+      return 'bg-white dark:bg-gray-900';
+    }
     if (dangerState?.includes('DangerousFreeKick')) {
       return 'bg-gradient-to-r from-white to-red-200 dark:from-gray-900 dark:to-red-950';
     } else if (dangerState?.includes('AttackingFreeKick')) {
@@ -494,6 +509,13 @@ const getEventBorderColor = (event: MatchEvent): string => {
   // Danger States
   if (event.type === 'dangerState') {
     const dangerState = event.details.dangerState;
+    if (dangerState === 'Safe') {
+      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-3 before:bg-green-500 dark:before:bg-green-600 border-gray-200 dark:border-gray-700';
+    } else if (dangerState === 'Attack') {
+      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-3 before:bg-orange-500 dark:before:bg-orange-600 border-gray-200 dark:border-gray-700';
+    } else if (dangerState === 'DangerousAttack') {
+      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-3 before:bg-red-600 dark:before:bg-red-700 border-gray-200 dark:border-gray-700';
+    }
     if (dangerState?.includes('DangerousFreeKick')) {
       return 'border-red-300 dark:border-red-800';
     } else if (dangerState?.includes('AttackingFreeKick')) {
@@ -615,13 +637,14 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
       isHomeTeam ? 'justify-start' : isAwayTeam ? 'justify-end' : ''
     }`}>
       <div className={`
-        flex items-start gap-2 
+        flex items-start gap-2 relative
         ${isSystemMessage || isBookingState ? 'w-[50%] py-1' : 'w-[36%] p-2'}
         ${isAwayTeam && !isSystemMessage && !isBookingState ? 'flex-row text-right' : 'flex-row'}
         ${isSystemMessage || isBookingState ? 'justify-center text-center' : ''}
         ${colors.background}
         rounded-md border-2 ${colors.border}
         ${isSystemMessage || isBookingState ? 'bg-opacity-80' : ''}
+        overflow-hidden
       `}>
         <div className={`
           ${isSystemMessage || isBookingState ? 'p-1' : 'p-1.5'} 
