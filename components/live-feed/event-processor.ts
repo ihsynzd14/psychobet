@@ -171,17 +171,29 @@ const eventProcessors = {
   },
 
   phaseChanges: (phases: any[]): MatchEvent[] => {
+    const phaseTitles: Record<string, string> = {
+      'FirstHalf': '1st Half Started',
+      'HalfTime': '1st Half Complete',
+      'SecondHalf': '2nd Half Started',
+      'FullTime': '2nd Half Complete'
+    };
+
     return phases?.map((phase) => ({
       id: phase.id,
       type: 'phaseChange',
       timestamp: phase.timestampUtc,
       phase: phase.currentPhase,
       timeElapsed: '00:00',
-      team: 'Home',
+      team: 'System',
       details: {
         previousPhase: phase.previousPhase,
         currentPhase: phase.currentPhase,
-        startTime: phase.currentPhaseStartTime
+        startTime: phase.currentPhaseStartTime,
+        phaseTitle: phase.previousPhase === 'FirstHalf' && phase.currentPhase === 'HalfTime' 
+          ? '1st Half Complete' 
+          : phase.previousPhase === 'SecondHalf' && phase.currentPhase === 'FullTime'
+          ? '2nd Half Complete'
+          : phaseTitles[phase.currentPhase] || `${phase.currentPhase} Started`
       }
     })) || [];
   },
@@ -227,7 +239,7 @@ const eventProcessors = {
   },
 
   systemMessages: (msgs: any[]): MatchEvent[] => {
-    return msgs?.map((msg) => ({
+    return msgs?.filter(msg => msg.message !== "Standby").map((msg) => ({
       id: msg.id,
       type: 'systemMessage',
       timestamp: msg.timestamp,
@@ -305,6 +317,21 @@ const eventProcessors = {
         throwInState: getThrowInState(allEvents, event)
       }
     })) || [];
+  },
+
+  stoppageTimeAnnouncements: (announcements: any[]): MatchEvent[] => {
+    return announcements?.map((announcement) => ({
+      id: announcement.id,
+      type: 'stoppageTime',
+      timestamp: announcement.timestampUtc,
+      phase: announcement.phase,
+      timeElapsed: announcement.timeElapsedInPhase,
+      team: 'System',
+      details: {
+        addedMinutes: announcement.addedMinutes,
+        isConfirmed: announcement.isConfirmed
+      }
+    })) || [];
   }
 };
 
@@ -361,6 +388,7 @@ export const processMatchActions = (data: any): MatchEvent[] => {
   if (actions.penalties?.penalties) {
     newEvents.push(...eventProcessors.penalties(actions.penalties.penalties));
   }
+
   // Process VAR state changes
   if (actions.varStateChanges?.varStateChanges) {
     newEvents.push(...eventProcessors.varStateChanges(actions.varStateChanges.varStateChanges));
@@ -386,7 +414,7 @@ export const processMatchActions = (data: any): MatchEvent[] => {
     newEvents.push(...eventProcessors.systemMessages(actions.systemMessages.systemMessages));
   }
 
-  // Process throw-ins with danger state context
+  // Process throw-ins
   if (actions.throwIns?.matchActions) {
     newEvents.push(...eventProcessors.throwIns(actions.throwIns.matchActions, actions));
   }
@@ -409,6 +437,11 @@ export const processMatchActions = (data: any): MatchEvent[] => {
   // Process kick-offs
   if (actions.kickOffs?.matchActions) {
     newEvents.push(...eventProcessors.kickOffs(actions.kickOffs.matchActions));
+  }
+
+  // Process stoppage time announcements
+  if (actions.stoppageTimeAnnouncements?.stoppageTimeAnnouncements) {
+    newEvents.push(...eventProcessors.stoppageTimeAnnouncements(actions.stoppageTimeAnnouncements.stoppageTimeAnnouncements));
   }
 
   return newEvents;

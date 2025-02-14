@@ -67,6 +67,7 @@ export interface MatchEvent {
     message?: string;
     messageType?: SystemMessageType;
     messageId?: number;
+    addedMinutes?: number;
     cornerData?: {
       awarded?: {
         isConfirmed: boolean;
@@ -79,6 +80,7 @@ export interface MatchEvent {
         timeElapsedInPhase: string;
       };
     };
+    phaseTitle?: string;
   };
 }
 

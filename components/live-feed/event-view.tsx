@@ -90,6 +90,8 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     case 'shotOffTarget':
     case 'shotBlocked':
       return 'text-gray-600 dark:text-gray-400';
+    case 'shotOffWoodwork':
+      return 'text-orange-600 dark:text-orange-400';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'text-blue-600 dark:text-blue-400';
@@ -114,6 +116,8 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       if (messageType === 'warning') return 'text-yellow-600 dark:text-yellow-400';
       if (messageType === 'error') return 'text-red-600 dark:text-red-400';
       if (messageType === 'success') return 'text-green-600 dark:text-green-400';
+      return 'text-blue-600 dark:text-blue-400';
+    case 'stoppageTime':
       return 'text-blue-600 dark:text-blue-400';
     default:
       return 'text-gray-600 dark:text-gray-400';
@@ -186,6 +190,10 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       if (messageType === 'error') return <X className="w-5 h-5" />;
       if (messageType === 'success') return <Shield className="w-5 h-5" />;
       return <Info className="w-5 h-5" />;
+    case 'stoppageTime':
+      return <Timer className="w-5 h-5" />;
+    case 'shotOffWoodwork':
+      return <Target className="w-5 h-5" />;
     default:
       return <Activity className="w-5 h-5" />;
   }
@@ -228,7 +236,7 @@ const getEventTitle = (event: MatchEvent): string => {
     case 'var':
       return `VAR Review - ${event.details.reason || ''}`;
     case 'phaseChange':
-      return `${event.details.currentPhase} Started`;
+      return `${event.details.phaseTitle}`;
     case 'throwIn':
       const throwInState = event.details.throwInState;
       if (throwInState) {
@@ -263,6 +271,10 @@ const getEventTitle = (event: MatchEvent): string => {
       return 'Kick Off';
     case 'systemMessage':
       return event.details.message || 'System Message';
+    case 'stoppageTime':
+      return `Stoppage Time - ${event.details.addedMinutes} min`;
+    case 'shotOffWoodwork':
+      return 'Shot Off Woodwork';
     default:
       return event.type;
   }
@@ -349,6 +361,8 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     case 'shotOffTarget':
     case 'shotBlocked':
       return 'bg-gray-200 dark:bg-gray-700';
+    case 'shotOffWoodwork':
+      return 'bg-orange-200 dark:bg-orange-900';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'bg-blue-200 dark:bg-blue-900';
@@ -375,6 +389,8 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       if (messageType === 'warning') return 'bg-yellow-200 dark:bg-yellow-900';
       if (messageType === 'error') return 'bg-red-200 dark:bg-red-900';
       if (messageType === 'success') return 'bg-green-200 dark:bg-green-900';
+      return 'bg-blue-200 dark:bg-blue-900';
+    case 'stoppageTime':
       return 'bg-blue-200 dark:bg-blue-900';
     default:
       return 'bg-gray-200 dark:bg-gray-700';
@@ -462,6 +478,8 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     case 'shotOffTarget':
     case 'shotBlocked':
       return 'bg-gray-100 dark:bg-gray-800';
+    case 'shotOffWoodwork':
+      return 'bg-orange-50 dark:bg-orange-950';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'bg-blue-50 dark:bg-blue-950';
@@ -489,6 +507,8 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       if (messageType === 'error') return 'bg-red-50 dark:bg-red-950';
       if (messageType === 'success') return 'bg-green-50 dark:bg-green-950';
       return 'bg-blue-50 dark:bg-blue-950';
+    case 'stoppageTime':
+      return 'bg-white dark:bg-blue-950';
     default:
       return 'bg-gray-50 dark:bg-gray-900';
   }
@@ -577,6 +597,8 @@ const getEventBorderColor = (event: MatchEvent): string => {
     case 'shotOffTarget':
     case 'shotBlocked':
       return 'border-gray-200 dark:border-gray-700';
+    case 'shotOffWoodwork':
+      return 'border-orange-200 dark:border-orange-800';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'border-blue-200 dark:border-blue-800';
@@ -604,6 +626,8 @@ const getEventBorderColor = (event: MatchEvent): string => {
       if (messageType === 'error') return 'border-red-200 dark:border-red-800';
       if (messageType === 'success') return 'border-green-200 dark:border-green-800';
       return 'border-blue-200 dark:border-blue-800';
+    case 'stoppageTime':
+      return 'border-blue-200 dark:border-blue-800';
     default:
       return 'border-gray-200 dark:border-gray-700';
   }
@@ -614,6 +638,8 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
   const isAwayTeam = event.team === 'Away';
   const isSystemMessage = event.team === 'System';
   const isBookingState = event.type === 'bookingState';
+  const isPhaseChange = event.type === 'phaseChange';
+  const isStoppageTime = event.type === 'stoppageTime';
 
   // Memoize colors for better performance
   const colors = useMemo(() => ({
@@ -632,22 +658,22 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
 
   return (
     <div className={`flex w-full p-2 ${
-      isSystemMessage || isBookingState ? 'py-0.5 justify-center' : 'py-1.5'
+      isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'py-0.5 justify-center' : 'py-1.5'
     } ${
       isHomeTeam ? 'justify-start' : isAwayTeam ? 'justify-end' : ''
     }`}>
       <div className={`
         flex items-start gap-2 relative
-        ${isSystemMessage || isBookingState ? 'w-[50%] py-1' : 'w-[36%] p-2'}
-        ${isAwayTeam && !isSystemMessage && !isBookingState ? 'flex-row text-right' : 'flex-row'}
-        ${isSystemMessage || isBookingState ? 'justify-center text-center' : ''}
+        ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'w-[28%] py-1' : 'w-[36%] p-2'}
+        ${isAwayTeam && !isSystemMessage && !isBookingState && !isPhaseChange && !isStoppageTime ? 'flex-row text-right' : 'flex-row'}
+        ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'justify-center text-center' : ''}
         ${colors.background}
         rounded-md border-2 ${colors.border}
-        ${isSystemMessage || isBookingState ? 'bg-opacity-80' : ''}
+        ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'bg-opacity-80' : ''}
         overflow-hidden
       `}>
         <div className={`
-          ${isSystemMessage || isBookingState ? 'p-1' : 'p-1.5'} 
+          ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'p-1' : 'p-1.5'} 
           rounded-md shrink-0
           ${colors.iconBg}
           ${colors.icon}
@@ -655,11 +681,11 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
           {getEventIcon(event.type, event)}
         </div>
         
-        <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState ? 'flex items-center justify-center' : ''}`}>
-          <div className={`flex items-center gap-1 ${isSystemMessage || isBookingState ? 'mb-0 text-xs' : 'mb-0.5 text-sm'} font-medium text-gray-900 dark:text-white ${isSystemMessage || isBookingState ? 'justify-center' : isAwayTeam ? 'justify-start' : 'justify-start'}`}>
+        <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'flex items-center justify-center' : ''}`}>
+          <div className={`flex items-center gap-1 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'mb-0 text-xs' : 'mb-0.5 text-sm'} font-medium text-gray-900 dark:text-white ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'justify-center' : isAwayTeam ? 'justify-start' : 'justify-start'}`}>
             {getEventTitle(event)}
           </div>
-          {!isSystemMessage && !isBookingState && (
+          {!isSystemMessage && !isBookingState && !isPhaseChange && !isStoppageTime && (
             <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ${isAwayTeam ? 'text-right' : 'text-right'}`}>
               {event.phase} - {event.timeElapsed}
             </div>

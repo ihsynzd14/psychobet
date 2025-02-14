@@ -118,21 +118,19 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="h-screen">
-        {homeTeam && awayTeam && (
-          <MatchHeader homeTeam={homeTeam} awayTeam={awayTeam} />
-        )}
+      <div className="h-screen flex">
+        <div className="flex-1">
+          {homeTeam && awayTeam && (
+            <MatchHeader 
+              homeTeam={homeTeam} 
+              awayTeam={awayTeam} 
+              currentTime={currentTime}
+              matchPeriod="1st Half"
+            />
+          )}
 
-        <div className="flex h-[calc(100vh-100px)]">
-          <div className="flex-1">
-            <div className="bg-white dark:bg-gray-800 h-full flex flex-col">
-              <div className="border-b border-gray-100 dark:border-gray-700 p-3">
-                <h2 className="text-lg font-semibold flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-blue-500" />
-                  Live Feed
-                </h2>
-              </div>
-              
+          <div className="h-[calc(100vh-100px)]">
+            <div className="bg-white dark:bg-gray-800 h-full flex flex-col">              
               <div 
                 ref={parentRef} 
                 className="flex-1 overflow-auto"
@@ -170,34 +168,35 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
               )}
             </div>
           </div>
-          <div className="w-[300px] border-l border-gray-100 dark:border-gray-700 flex flex-col">
+        </div>
+
+        <div className="w-[300px] border-l border-gray-100 dark:border-gray-700">
           <div className="border-b border-gray-100 dark:border-gray-700 p-2">
-              <h2 className="text-sm font-normal flex items-center gap-2">
-                <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
-                Match Stats
-              </h2>
-            </div>
-            <div className="border-t border-gray-100 dark:border-gray-700">
-              <MatchStats events={events} />
-            </div>
-            <div className="border-b border-gray-100 dark:border-gray-700 p-2">
-              <h2 className="text-sm font-normal flex items-center gap-2">
-                <Users className="w-4 h-4 text-blue-500" />
-                Lineups
-              </h2>
-            </div>
-            <div className="flex-1 overflow-auto">
-              {homeTeamLineup && awayTeamLineup ? (
-                <MatchLineups
-                  homeTeamLineup={homeTeamLineup}
-                  awayTeamLineup={awayTeamLineup}
-                />
-              ) : (
-                <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-                  Loading lineups...
-                </div>
-              )}
-            </div>
+            <h2 className="text-sm font-normal flex items-center gap-2">
+              <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
+              Match Stats
+            </h2>
+          </div>
+          <div className="border-t border-gray-100 dark:border-gray-700">
+            <MatchStats events={events} />
+          </div>
+          <div className="border-b border-gray-100 dark:border-gray-700 p-2">
+            <h2 className="text-sm font-normal flex items-center gap-2">
+              <Users className="w-4 h-4 text-blue-500" />
+              Lineups
+            </h2>
+          </div>
+          <div className="flex-1 overflow-auto">
+            {homeTeamLineup && awayTeamLineup ? (
+              <MatchLineups
+                homeTeamLineup={homeTeamLineup}
+                awayTeamLineup={awayTeamLineup}
+              />
+            ) : (
+              <div className="text-center text-gray-500 dark:text-gray-400 py-6">
+                Loading lineups...
+              </div>
+            )}
           </div>
         </div>
       </div>
