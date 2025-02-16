@@ -1,39 +1,10 @@
-export type DangerState = 
-  | 'HomeSafe'
-  | 'HomeAttack'
-  | 'HomeDangerousAttack'
-  | 'HomeFreeKick'
-  | 'AwaySafe'
-  | 'AwayAttack'
-  | 'AwayDangerousAttack'
-  | 'AwayFreeKick'
-  | 'Safe'
-  | 'Attack'
-  | 'DangerousAttack'
-  | 'Penalty'
-  | 'CornerDanger'
-  | 'HomeCornerDanger'
-  | 'AwayCornerDanger'
-  | 'AttackingFreeKick'
-  | 'DangerousFreeKick'
-  | 'FreeKick';
+export type DangerState = 'Safe' | 'Attack' | 'DangerousAttack' | 'FreeKick' | 'AttackingFreeKick' | 'DangerousFreeKick' | 'CornerDanger' | 'Penalty' | 'Corner' | 'Goal';
 
-export type ThrowInState =
-  | null
-  | 'Safe'
-  | 'Attack'
-  | 'Dangerous';
+export type ThrowInState = 'Dangerous' | 'Attack' | 'Safe' | null;
 
-export type BookingState =
-  | 'Safe'
-  | 'YellowCardDanger'
-  | 'RedCardDanger';
+export type BookingState = 'YellowCardDanger' | 'RedCardDanger' | 'Safe';
 
-export type SystemMessageType =
-  | 'info'
-  | 'warning'
-  | 'error'
-  | 'success';
+export type SystemMessageType = 'info' | 'warning' | 'error' | 'success';
 
 export interface MatchEvent {
   id: number;
@@ -46,28 +17,28 @@ export interface MatchEvent {
     dangerState?: DangerState;
     throwInState?: ThrowInState;
     bookingState?: BookingState;
+    previousState?: BookingState;
     isConfirmed?: boolean;
     isOwnGoal?: boolean;
     wasPenalty?: boolean;
-    scoredBy?: string;
-    assistBy?: string;
-    playerId?: string;
-    playerOn?: string;
-    playerOff?: string;
-    savedBy?: string;
-    status?: string;
+    scoredBy?: number;
+    assistBy?: number;
+    playerId?: number;
+    playerOn?: number;
+    playerOff?: number;
+    savedBy?: number;
     outcome?: string;
-    fouledPlayer?: string;
-    fouledBy?: string;
-    state?: string;
     reason?: string;
+    state?: string;
+    message?: string;
+    messageId?: number;
+    messageType?: SystemMessageType;
+    addedMinutes?: number;
     previousPhase?: string;
     currentPhase?: string;
     startTime?: string;
-    message?: string;
-    messageType?: SystemMessageType;
-    messageId?: number;
-    addedMinutes?: number;
+    phaseTitle?: string;
+    status?: string;
     cornerData?: {
       awarded?: {
         isConfirmed: boolean;
@@ -80,7 +51,6 @@ export interface MatchEvent {
         timeElapsedInPhase: string;
       };
     };
-    phaseTitle?: string;
   };
 }
 

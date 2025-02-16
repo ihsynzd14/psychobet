@@ -1,7 +1,10 @@
 import { Activity, Goal, CreditCard, Repeat, Target, Ban, Flag, Timer,
   AlertTriangle, CornerUpRight, AlertCircle, Save, X, RefreshCw, Shield,
   Video, MessageCircle, Flame, ArrowRight, Info, 
-  Award} from 'lucide-react';
+  Award,
+  RectangleVerticalIcon,
+  RectangleVertical,
+  LucideRectangleVertical} from 'lucide-react';
 import { MatchEvent } from './types';
 import { useMemo } from 'react';
 
@@ -13,9 +16,9 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
   // Booking States
   if (type === 'bookingState') {
     const state = event?.details.bookingState;
-    if (state === 'YellowCardDanger') {
+    if (state === 'YellowCardDanger' || (state === 'Safe' && event?.details.previousState === 'YellowCardDanger')) {
       return 'text-yellow-600 dark:text-yellow-400';
-    } else if (state === 'RedCardDanger') {
+    } else if (state === 'RedCardDanger' || (state === 'Safe' && event?.details.previousState === 'RedCardDanger')) {
       return 'text-red-600 dark:text-red-400';
     }
     return 'text-gray-600 dark:text-gray-400';
@@ -44,9 +47,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     } else if (dangerState === 'Penalty') {
       return 'text-red-600 dark:text-red-400';
     }  
-    else if (dangerState?.includes('Corner')) {
-      return 'text-green-600 dark:text-green-400';
-    }
+  
     return 'text-green-600 dark:text-green-400';
   }
 
@@ -129,19 +130,13 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
     case 'goal':
       return <Goal className="w-5 h-5" />;
     case 'yellowCard':
-      return <CreditCard className="w-5 h-5" />;
+      return <LucideRectangleVertical className="w-5 h-5" />;
     case 'secondYellow':
-      return <CreditCard className="w-5 h-5" />;
+      return <LucideRectangleVertical className="w-5 h-5" />;
     case 'redCard':
-      return <CreditCard className="w-5 h-5" />;
+      return <LucideRectangleVertical className="w-5 h-5" />;
     case 'bookingState':
-      const state = event?.details?.bookingState;
-      if (state === 'YellowCardDanger') {
-        return <CreditCard className="w-5 h-5" />;
-      } else if (state === 'RedCardDanger') {
-        return <CreditCard className="w-5 h-5" />;
-      }
-      return <CreditCard className="w-5 h-5" />;
+      return  null;
     case 'substitution':
       return <Repeat className="w-5 h-5" />;
     case 'shotOnTarget':
@@ -165,9 +160,7 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       return <Target className="w-5 h-5" />;
     }
     case 'dangerState':
-      if(event?.details.dangerState?.includes('Corner')) {
-        return <Award className="w-5 h-5" />;
-      }
+     
       if (event?.details.dangerState === 'Safe' || 
           event?.details.dangerState === 'Attack' ||
           event?.details.dangerState === 'DangerousAttack') {
@@ -215,6 +208,8 @@ const getEventTitle = (event: MatchEvent): string => {
         return 'Yellow Card Risk';
       } else if (state === 'RedCardDanger') {
         return 'Red Card Risk';
+      } else if (state === 'Safe') {
+        return `${event.details.previousState === 'RedCardDanger' ? 'Red' : 'Yellow'} Card Risk Ended`;
       }
       return 'Card Risk Ended';
     case 'substitution':
@@ -256,7 +251,6 @@ const getEventTitle = (event: MatchEvent): string => {
         'DangerousFreeKick': 'Free Kick - Dangerous Attack',
         'CornerDanger': 'Corner Risk',
         'Penalty': 'Penalty Risk',
-        'Corner': 'Corner Awarded - Confirmed',
         'Goal': 'Goal',
       };
       return `${dangerTexts[event.details.dangerState || 'Safe']}`;
@@ -284,9 +278,9 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
   // Booking States
   if (type === 'bookingState') {
     const state = event?.details.bookingState;
-    if (state === 'YellowCardDanger') {
+    if (state === 'YellowCardDanger' || (state === 'Safe' && event?.details.previousState === 'YellowCardDanger')) {
       return 'bg-yellow-200 dark:bg-yellow-900';
-    } else if (state === 'RedCardDanger') {
+    } else if (state === 'RedCardDanger' || (state === 'Safe' && event?.details.previousState === 'RedCardDanger')) {
       return 'bg-red-200 dark:bg-red-900';
     }
     return 'bg-gray-200 dark:bg-gray-700';
@@ -315,9 +309,6 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     } else if (dangerState === 'Penalty') {
       return 'bg-red-200 dark:bg-red-900';
     }  
-    else if (dangerState?.includes('Corner')) {
-      return 'bg-green-200 dark:bg-green-900';
-    }
     return 'bg-green-300 dark:bg-green-900';
   }
 
@@ -401,9 +392,9 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   // Booking States
   if (event.type === 'bookingState') {
     const state = event.details.bookingState;
-    if (state === 'YellowCardDanger') {
+    if (state === 'YellowCardDanger' || (state === 'Safe' && event.details.previousState === 'YellowCardDanger')) {
       return 'bg-yellow-100 dark:bg-yellow-950';
-    } else if (state === 'RedCardDanger') {
+    } else if (state === 'RedCardDanger' || (state === 'Safe' && event.details.previousState === 'RedCardDanger')) {
       return 'bg-red-100 dark:bg-red-950';
     }
     return 'bg-gray-50 dark:bg-gray-900';
@@ -432,9 +423,6 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     } else if (dangerState === 'Penalty') {
       return 'bg-red-200 dark:bg-red-950';
     }  
-    else if (dangerState?.includes('Corner')) {
-      return 'bg-green-100';
-    }
     return 'bg-green-100 dark:bg-green-950';
   }
 
@@ -518,9 +506,9 @@ const getEventBorderColor = (event: MatchEvent): string => {
   // Booking States
   if (event.type === 'bookingState') {
     const state = event.details.bookingState;
-    if (state === 'YellowCardDanger') {
+    if (state === 'YellowCardDanger' || (state === 'Safe' && event.details.previousState === 'YellowCardDanger')) {
       return 'border-yellow-300 dark:border-yellow-800';
-    } else if (state === 'RedCardDanger') {
+    } else if (state === 'RedCardDanger' || (state === 'Safe' && event.details.previousState === 'RedCardDanger')) {
       return 'border-red-300 dark:border-red-800';
     }
     return 'border-gray-200 dark:border-gray-700';
@@ -551,9 +539,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
     } else if (dangerState === 'Penalty') {
       return 'border-red-200 dark:border-red-800';
     }  
-    else if (dangerState?.includes('Corner')) {
-      return 'border-green-200 dark:border-green-800';
-    }
+   
     return 'border-green-300 dark:border-green-800';
   }
 

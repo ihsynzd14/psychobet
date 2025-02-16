@@ -30,7 +30,7 @@ export const MatchHeader = memo<MatchHeaderProps>(({ homeTeam, awayTeam, current
     return (
       <div className="flex flex-col border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
         <div className="flex items-center justify-center p-4">
-          <span className="text-gray-500 dark:text-gray-400">Yükleniyor...</span>
+          <span className="text-gray-500 dark:text-gray-400"></span>
         </div>
       </div>
     );

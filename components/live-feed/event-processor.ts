@@ -204,38 +204,51 @@ const eventProcessors = {
       const team = danger.dangerState.startsWith('Away') ? 'Away' : danger.dangerState.startsWith('Home') ? 'Home' : null;
       if (team) {
         const rawState = danger.dangerState.replace(team, '');
-        const baseState = rawState as DangerState;
-        
-        events.push({
-          id: danger.id,
-          type: 'dangerState',
-          timestamp: danger.timestampUtc,
-          phase: danger.phase,
-          timeElapsed: danger.timeElapsedInPhase,
-          team: team,
-          details: {
-            dangerState: baseState,
-            isConfirmed: danger.isConfirmed
-          }
-        });
+        if (rawState !== 'Corner') {
+          const baseState = rawState as DangerState;
+          
+          events.push({
+            id: danger.id,
+            type: 'dangerState',
+            timestamp: danger.timestampUtc,
+            phase: danger.phase,
+            timeElapsed: danger.timeElapsedInPhase,
+            team: team,
+            details: {
+              dangerState: baseState,
+              isConfirmed: danger.isConfirmed
+            }
+          });
+        }
       }
     });
     return events;
   },
 
-  bookingStateChanges: (bookings: any[]): MatchEvent[] => {
-    return bookings?.map((booking) => ({
-      id: booking.id,
-      type: 'bookingState',
-      timestamp: booking.timestampUtc,
-      phase: booking.phase,
-      timeElapsed: booking.timeElapsedInPhase,
-      team: 'Home',
-      details: {
-        bookingState: booking.bookingState,
-        isConfirmed: booking.isConfirmed
-      }
-    })) || [];
+  bookingStateChanges: (bookings: any[], allEvents: any): MatchEvent[] => {
+    return bookings?.map((booking) => {
+      // Önceki booking state'i bul
+      const previousBooking = allEvents.bookingStateChanges?.bookingStateChanges?.find(
+        (prevBooking: any) => 
+          prevBooking.sequenceId < booking.sequenceId && 
+          prevBooking.team === booking.team &&
+          prevBooking.bookingState !== 'Safe'
+      );
+
+      return {
+        id: booking.id,
+        type: 'bookingState',
+        timestamp: booking.timestampUtc,
+        phase: booking.phase,
+        timeElapsed: booking.timeElapsedInPhase,
+        team: booking.team,
+        details: {
+          bookingState: booking.bookingState,
+          previousState: previousBooking?.bookingState || null,
+          isConfirmed: booking.isConfirmed
+        }
+      };
+    }) || [];
   },
 
   systemMessages: (msgs: any[]): MatchEvent[] => {
@@ -406,7 +419,7 @@ export const processMatchActions = (data: any): MatchEvent[] => {
 
   // Process booking state changes
   if (actions.bookingStateChanges?.bookingStateChanges) {
-    newEvents.push(...eventProcessors.bookingStateChanges(actions.bookingStateChanges.bookingStateChanges));
+    newEvents.push(...eventProcessors.bookingStateChanges(actions.bookingStateChanges.bookingStateChanges, actions));
   }
 
   // Process system messages
