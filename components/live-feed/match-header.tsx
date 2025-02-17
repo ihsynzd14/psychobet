@@ -1,5 +1,6 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { TeamJersey } from './jerseys';
+import { Square } from 'lucide-react';
 
 interface TeamInfo {
   sourceId: string;
@@ -23,9 +24,34 @@ interface MatchHeaderProps {
   awayTeam: TeamInfo;
   currentTime: string;
   matchPeriod?: string;
+  homeRedCards?: number;
+  awayRedCards?: number;
 }
 
-export const MatchHeader = memo<MatchHeaderProps>(({ homeTeam, awayTeam, currentTime, matchPeriod = '1st Half' }) => {
+const RedCards = memo(({ count }: { count: number }) => {
+  const cards = useMemo(() => Array(count).fill(0), [count]);
+  
+  if (count === 0) return null;
+  
+  return (
+    <div className="flex items-center gap-0.5">
+      {cards.map((_, index) => (
+        <Square key={index} className="w-4 h-4 fill-red-600 text-red-600" />
+      ))}
+    </div>
+  );
+});
+
+RedCards.displayName = 'RedCards';
+
+export const MatchHeader = memo<MatchHeaderProps>(({ 
+  homeTeam, 
+  awayTeam, 
+  currentTime, 
+  matchPeriod = '1st Half',
+  homeRedCards = 0,
+  awayRedCards = 0
+}) => {
   if (!homeTeam?.strip || !awayTeam?.strip) {
     return (
       <div className="flex flex-col border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
@@ -46,9 +72,12 @@ export const MatchHeader = memo<MatchHeaderProps>(({ homeTeam, awayTeam, current
             color2={homeTeam.strip.color2} 
             type="home"
           />
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {homeTeam.sourceName}
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {homeTeam.sourceName}
+            </h2>
+            <RedCards count={homeRedCards} />
+          </div>
         </div>
 
         {/* Match Time and Period */}
@@ -59,9 +88,12 @@ export const MatchHeader = memo<MatchHeaderProps>(({ homeTeam, awayTeam, current
 
         {/* Away Team */}
         <div className="flex items-center gap-3 flex-1 justify-end">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {awayTeam.sourceName}
-          </h2>
+          <div className="flex items-center gap-2">
+            <RedCards count={awayRedCards} />
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {awayTeam.sourceName}
+            </h2>
+          </div>
           <TeamJersey 
             color1={awayTeam.strip.color1} 
             color2={awayTeam.strip.color2} 

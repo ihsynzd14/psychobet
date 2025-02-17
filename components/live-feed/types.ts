@@ -1,4 +1,4 @@
-export type DangerState = 'Safe' | 'Attack' | 'DangerousAttack' | 'FreeKick' | 'AttackingFreeKick' | 'DangerousFreeKick' | 'CornerDanger' | 'Penalty' | 'Corner' | 'Goal';
+export type DangerState = 'Safe' | 'Attack' | 'DangerousAttack' | 'FreeKick' | 'AttackingFreeKick' | 'DangerousFreeKick' | 'CornerDanger' | 'Penalty' | 'Corner' | 'Goal' | 'FoulGiven';
 
 export type ThrowInState = 'Dangerous' | 'Attack' | 'Safe' | null;
 
@@ -13,6 +13,7 @@ export interface MatchEvent {
   phase: string;
   timeElapsed: string;
   team: 'Home' | 'Away' | 'System';
+  sequenceId?: number;
   details: {
     dangerState?: DangerState;
     throwInState?: ThrowInState;
@@ -27,6 +28,7 @@ export interface MatchEvent {
     playerOn?: number;
     playerOff?: number;
     savedBy?: number;
+    ballReturnedToPlay?: boolean;
     outcome?: string;
     reason?: string;
     state?: string;

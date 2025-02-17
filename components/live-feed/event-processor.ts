@@ -85,6 +85,23 @@ const eventProcessors = {
     })) || [];
   },
 
+  shotsOffWoodwork: (shots: any[]): MatchEvent[] => {
+    // Handle the nested structure
+    return shots?.map((shot) => ({
+      id: shot.id,
+      type: 'shotOffWoodwork',
+      timestamp: shot.timestampUtc,
+      phase: shot.phase,
+      timeElapsed: shot.timeElapsedInPhase,
+      team: shot.team,
+      details: { 
+        playerId: shot.playerInternalId,
+        isConfirmed: shot.isConfirmed,
+        ballReturnedToPlay: shot.ballReturnedToPlay
+      }
+    })) || [];
+  },
+
   shotsOffTarget: (shots: any[]): MatchEvent[] => {
     return shots?.map((shot) => ({
       id: shot.id,
@@ -199,30 +216,47 @@ const eventProcessors = {
   },
 
   dangerStateChanges: (dangers: any[]): MatchEvent[] => {
-    const events: MatchEvent[] = [];
-    dangers?.forEach((danger) => {
-      const team = danger.dangerState.startsWith('Away') ? 'Away' : danger.dangerState.startsWith('Home') ? 'Home' : null;
-      if (team) {
-        const rawState = danger.dangerState.replace(team, '');
-        if (rawState !== 'Corner') {
-          const baseState = rawState as DangerState;
-          
-          events.push({
-            id: danger.id,
-            type: 'dangerState',
-            timestamp: danger.timestampUtc,
-            phase: danger.phase,
-            timeElapsed: danger.timeElapsedInPhase,
-            team: team,
-            details: {
-              dangerState: baseState,
-              isConfirmed: danger.isConfirmed
-            }
-          });
-        }
+    if (!dangers) return [];
+    
+    // Tek seferde map işlemi
+    return dangers
+      .filter(event => {
+        const team = event.dangerState.startsWith('Away') ? 'Away' : event.dangerState.startsWith('Home') ? 'Home' : null;
+        return team && !event.dangerState.endsWith('Corner');
+      })
+      .map(event => {
+        const team = event.dangerState.startsWith('Away') ? 'Away' : 'Home';
+        return {
+          id: event.id,
+          type: 'dangerState',
+          timestamp: event.timestampUtc,
+          phase: event.phase,
+          timeElapsed: event.timeElapsedInPhase,
+          team,
+          details: {
+            dangerState: event.dangerState.replace(team, '') as DangerState,
+            isConfirmed: event.isConfirmed
+          }
+        };
+      });
+  },
+
+  fouls: (fouls: any[]): MatchEvent[] => {
+    if (!fouls) return [];
+    
+    // Tek seferde map işlemi
+    return fouls.map(event => ({
+      id: event.id + 10000, // FoulGiven olayları için ID offset
+      type: 'foul',
+      timestamp: event.timestampUtc,
+      phase: event.phase,
+      timeElapsed: event.timeElapsedInPhase,
+      team: event.foulingTeam === 'Home' ? 'Away' : 'Home', // Karşı takıma atama
+      details: {
+        dangerState: 'FoulGiven' as DangerState,
+        isConfirmed: event.isConfirmed
       }
-    });
-    return events;
+    }));
   },
 
   bookingStateChanges: (bookings: any[], allEvents: any): MatchEvent[] => {
@@ -265,18 +299,6 @@ const eventProcessors = {
         messageType: getSystemMessageType(msg.messageId),
         isConfirmed: true
       }
-    })) || [];
-  },
-
-  shotsOffWoodwork: (events: any[]): MatchEvent[] => {
-    return events?.map((event) => ({
-      id: event.id,
-      type: 'shotOffWoodwork',
-      timestamp: event.timestampUtc,
-      phase: event.phase,
-      timeElapsed: event.timeElapsedInPhase,
-      team: event.team,
-      details: { playerId: event.playerInternalId }
     })) || [];
   },
 
@@ -352,112 +374,57 @@ export const processMatchActions = (data: any): MatchEvent[] => {
   const actions = data.raw.matchActions;
   const newEvents: MatchEvent[] = [];
 
-  // Process goals
-  if (actions.goals?.goals) {
-    newEvents.push(...eventProcessors.goals(actions.goals.goals));
+  // Tüm event processorları için array oluştur
+  const processors: [string, (events: any[], extra?: any) => MatchEvent[]][] = [
+    ['goals.goals', eventProcessors.goals],
+    ['yellowCards.matchActions', eventProcessors.yellowCards],
+    ['secondYellowCards.matchActions', eventProcessors.secondYellowCards],
+    ['straightRedCards.matchActions', eventProcessors.straightRedCards],
+    ['substitutions.substitutions', eventProcessors.substitutions],
+    ['shotsOnTarget.shotsOnTarget', eventProcessors.shotsOnTarget],
+    ['shotsOffTarget.matchActions', eventProcessors.shotsOffTarget],
+    ['blockedShots.matchActions', eventProcessors.blockedShots],
+    ['cornersV2.corners', eventProcessors.corners],
+    ['penalties.penalties', eventProcessors.penalties],
+    ['varStateChanges.varStateChanges', eventProcessors.varStateChanges],
+    ['phaseChanges.phaseChanges', eventProcessors.phaseChanges],
+    ['dangerStateChanges.dangerStateChanges', eventProcessors.dangerStateChanges],
+    ['fouls.fouls', eventProcessors.fouls],
+    ['bookingStateChanges.bookingStateChanges', eventProcessors.bookingStateChanges],
+    ['systemMessages.systemMessages', eventProcessors.systemMessages],
+    ['throwIns.matchActions', eventProcessors.throwIns],
+    ['shotsOffWoodwork.matchActions', eventProcessors.shotsOffWoodwork],
+    ['goalKicks.matchActions', eventProcessors.goalKicks],
+    ['offsides.matchActions', eventProcessors.offsides],
+    ['kickOffs.matchActions', eventProcessors.kickOffs],
+    ['stoppageTimeAnnouncements.stoppageTimeAnnouncements', eventProcessors.stoppageTimeAnnouncements]
+  ];
+
+  // Tek seferde tüm processorları çalıştır
+  for (const [path, processor] of processors) {
+    const events = path.split('.').reduce((obj, key) => obj?.[key], actions);
+    if (events) {
+      newEvents.push(...processor(events, actions));
+    }
   }
 
-  // Process yellow cards
-  if (actions.yellowCards?.matchActions) {
-    newEvents.push(...eventProcessors.yellowCards(actions.yellowCards.matchActions));
-  }
+  // Son sıralama işlemi
+  return newEvents.sort((a, b) => {
+    // Önce timestamp'e göre sırala (yeni olaylar önce)
+    const timestampCompare = b.timestamp.localeCompare(a.timestamp);
+    if (timestampCompare !== 0) return timestampCompare;
 
-  // Process second yellow cards
-  if (actions.secondYellowCards?.matchActions) {
-    newEvents.push(...eventProcessors.secondYellowCards(actions.secondYellowCards.matchActions));
-  }
-
-  // Process straight red cards
-  if (actions.straightRedCards?.matchActions) {
-    newEvents.push(...eventProcessors.straightRedCards(actions.straightRedCards.matchActions));
-  }
-
-  // Process substitutions
-  if (actions.substitutions?.substitutions) {
-    newEvents.push(...eventProcessors.substitutions(actions.substitutions.substitutions));
-  }
-
-  // Process shots on target
-  if (actions.shotsOnTarget?.shotsOnTarget) {
-    newEvents.push(...eventProcessors.shotsOnTarget(actions.shotsOnTarget.shotsOnTarget));
-  }
-
-  // Process shots off target
-  if (actions.shotsOffTarget?.matchActions) {
-    newEvents.push(...eventProcessors.shotsOffTarget(actions.shotsOffTarget.matchActions));
-  }
-
-  // Process blocked shots
-  if (actions.blockedShots?.matchActions) {
-    newEvents.push(...eventProcessors.blockedShots(actions.blockedShots.matchActions));
-  }
-
-  // Process corners
-  if (actions.cornersV2?.corners) {
-    newEvents.push(...eventProcessors.corners(actions.cornersV2.corners));
-  }
-
-  // Process penalties
-  if (actions.penalties?.penalties) {
-    newEvents.push(...eventProcessors.penalties(actions.penalties.penalties));
-  }
-
-  // Process VAR state changes
-  if (actions.varStateChanges?.varStateChanges) {
-    newEvents.push(...eventProcessors.varStateChanges(actions.varStateChanges.varStateChanges));
-  }
-
-  // Process phase changes
-  if (actions.phaseChanges?.phaseChanges) {
-    newEvents.push(...eventProcessors.phaseChanges(actions.phaseChanges.phaseChanges));
-  }
-
-  // Process danger state changes
-  if (actions.dangerStateChanges?.dangerStateChanges) {
-    newEvents.push(...eventProcessors.dangerStateChanges(actions.dangerStateChanges.dangerStateChanges));
-  }
-
-  // Process booking state changes
-  if (actions.bookingStateChanges?.bookingStateChanges) {
-    newEvents.push(...eventProcessors.bookingStateChanges(actions.bookingStateChanges.bookingStateChanges, actions));
-  }
-
-  // Process system messages
-  if (actions.systemMessages?.systemMessages) {
-    newEvents.push(...eventProcessors.systemMessages(actions.systemMessages.systemMessages));
-  }
-
-  // Process throw-ins
-  if (actions.throwIns?.matchActions) {
-    newEvents.push(...eventProcessors.throwIns(actions.throwIns.matchActions, actions));
-  }
-
-  // Process shots off woodwork
-  if (actions.shotsOffWoodwork?.matchActions) {
-    newEvents.push(...eventProcessors.shotsOffWoodwork(actions.shotsOffWoodwork.matchActions));
-  }
-
-  // Process goal kicks
-  if (actions.goalKicks?.matchActions) {
-    newEvents.push(...eventProcessors.goalKicks(actions.goalKicks.matchActions));
-  }
-
-  // Process offsides
-  if (actions.offsides?.matchActions) {
-    newEvents.push(...eventProcessors.offsides(actions.offsides.matchActions));
-  }
-
-  // Process kick-offs
-  if (actions.kickOffs?.matchActions) {
-    newEvents.push(...eventProcessors.kickOffs(actions.kickOffs.matchActions));
-  }
-
-  // Process stoppage time announcements
-  if (actions.stoppageTimeAnnouncements?.stoppageTimeAnnouncements) {
-    newEvents.push(...eventProcessors.stoppageTimeAnnouncements(actions.stoppageTimeAnnouncements.stoppageTimeAnnouncements));
-  }
-
-  return newEvents;
+    // Aynı timestamp'te, FoulGiven ve diğer olayları sırala
+    const aIsFoul = a.details.dangerState === 'FoulGiven';
+    const bIsFoul = b.details.dangerState === 'FoulGiven';
+    
+    if (aIsFoul !== bIsFoul) {
+      return aIsFoul ? 1 : -1;  // FoulGiven'ı sona koy
+    }
+    
+    // Aynı tip olayları ID'ye göre sırala
+    return a.id - b.id;
+  });
 };
 
 // Helper function to determine message type

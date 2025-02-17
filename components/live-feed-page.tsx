@@ -126,6 +126,8 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
               awayTeam={awayTeam} 
               currentTime={currentTime}
               matchPeriod="1st Half"
+              homeRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Home').length}
+              awayRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Away').length}
             />
           )}
 

@@ -46,6 +46,8 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-red-600 dark:text-red-400';
     } else if (dangerState === 'Penalty') {
       return 'text-red-600 dark:text-red-400';
+    } else if (dangerState === 'FoulGiven') {
+      return 'text-gray-600 dark:text-gray-400';
     }  
   
     return 'text-green-600 dark:text-green-400';
@@ -100,8 +102,6 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-red-600 dark:text-red-400';
     case 'var':
       return 'text-purple-600 dark:text-purple-400';
-    case 'foul':
-      return 'text-yellow-600 dark:text-yellow-400';
     case 'phaseChange':
       return 'text-green-600 dark:text-green-400';
     case 'woodwork':
@@ -150,8 +150,6 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       return <CornerUpRight className="w-5 h-5" />;
     case 'penalty':
       return <AlertTriangle className="w-5 h-5" />;
-    case 'foul':
-      return <AlertCircle className="w-5 h-5" />;
     case 'var':
       return <Video className="w-5 h-5" />;
     case 'phaseChange':
@@ -165,6 +163,8 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
           event?.details.dangerState === 'Attack' ||
           event?.details.dangerState === 'DangerousAttack') {
         return null;
+      } else if (event?.details.dangerState === 'FoulGiven' || event?.details.dangerState === 'DangerousFreeKick' || event?.details.dangerState === 'AttackingFreeKick') {
+        return <Target className="w-5 h-5" />;
       }
       return <Flame className="w-5 h-5" />;
     case 'throwIn':
@@ -226,8 +226,6 @@ const getEventTitle = (event: MatchEvent): string => {
       return 'Corner Taken';
     case 'penalty':
       return `Penalty - ${event.details.outcome || 'Pending'}`;
-    case 'foul':
-      return 'Foul';
     case 'var':
       return `VAR Review - ${event.details.reason || ''}`;
     case 'phaseChange':
@@ -238,9 +236,7 @@ const getEventTitle = (event: MatchEvent): string => {
         return `Throw In ${throwInState}`;
       }
       return 'Throw In';
-    case 'freeKick': {
-      return 'Free Kick - Safe';
-    }
+
     case 'dangerState': {
       const dangerTexts: Record<string, string> = {
         'Safe': 'Safe',
@@ -252,6 +248,7 @@ const getEventTitle = (event: MatchEvent): string => {
         'CornerDanger': 'Corner Risk',
         'Penalty': 'Penalty Risk',
         'Goal': 'Goal',
+        'FoulGiven': 'Free Kick',
       };
       return `${dangerTexts[event.details.dangerState || 'Safe']}`;
     }
@@ -268,7 +265,7 @@ const getEventTitle = (event: MatchEvent): string => {
     case 'stoppageTime':
       return `Stoppage Time - ${event.details.addedMinutes} min`;
     case 'shotOffWoodwork':
-      return 'Shot Off Woodwork';
+      return `Shot Hit Woodwork${event.details.ballReturnedToPlay ? ' - Ball In Play' : ''}`;
     default:
       return event.type;
   }
@@ -308,7 +305,9 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-red-200 dark:bg-red-900';
     } else if (dangerState === 'Penalty') {
       return 'bg-red-200 dark:bg-red-900';
-    }  
+    } else if (dangerState === 'FoulGiven') {
+      return 'bg-gray-300 dark:bg-gray-800';
+    }
     return 'bg-green-300 dark:bg-green-900';
   }
 
@@ -353,7 +352,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     case 'shotBlocked':
       return 'bg-gray-200 dark:bg-gray-700';
     case 'shotOffWoodwork':
-      return 'bg-orange-200 dark:bg-orange-900';
+      return 'bg-orange-50 dark:bg-orange-950 border-l-4 border-l-orange-500';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'bg-blue-200 dark:bg-blue-900';
@@ -361,8 +360,6 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-red-200 dark:bg-red-900';
     case 'var':
       return 'bg-purple-200 dark:bg-purple-900';
-    case 'foul':
-      return 'bg-yellow-200 dark:bg-yellow-900';
     case 'phaseChange':
       return 'bg-green-200 dark:bg-green-900';
     case 'throwIn':
@@ -421,7 +418,9 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     } else if (dangerState === 'CornerDanger') {
       return 'bg-red-100 dark:from-gray-900 dark:to-red-950';
     } else if (dangerState === 'Penalty') {
-      return 'bg-red-200 dark:bg-red-950';
+      return 'bg-red-100 dark:bg-red-950';
+    } else if (dangerState === 'FoulGiven') {
+      return 'bg-gray-100 dark:bg-gray-800';
     }  
     return 'bg-green-100 dark:bg-green-950';
   }
@@ -467,7 +466,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     case 'shotBlocked':
       return 'bg-gray-100 dark:bg-gray-800';
     case 'shotOffWoodwork':
-      return 'bg-orange-50 dark:bg-orange-950';
+      return 'bg-orange-50 dark:bg-orange-950 border-l-4 border-l-orange-500';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'bg-blue-50 dark:bg-blue-950';
@@ -475,8 +474,6 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-red-50 dark:bg-red-950';
     case 'var':
       return 'bg-purple-50 dark:bg-purple-950';
-    case 'foul':
-      return 'bg-yellow-50 dark:bg-yellow-950';
     case 'phaseChange':
       return 'bg-green-50 dark:bg-green-950';
     case 'throwIn':
@@ -537,7 +534,10 @@ const getEventBorderColor = (event: MatchEvent): string => {
     } else if (dangerState === 'CornerDanger') {
       return 'border-red-200 dark:border-red-800';
     } else if (dangerState === 'Penalty') {
-      return 'border-red-200 dark:border-red-800';
+      return 'border-red-300 dark:border-red-800';
+    }  
+     else if (dangerState === 'FoulGiven') {
+      return 'border-gray-300 dark:border-gray-800';
     }  
    
     return 'border-green-300 dark:border-green-800';
@@ -592,8 +592,6 @@ const getEventBorderColor = (event: MatchEvent): string => {
       return 'border-red-200 dark:border-red-800';
     case 'var':
       return 'border-purple-200 dark:border-purple-800';
-    case 'foul':
-      return 'border-yellow-200 dark:border-yellow-800';
     case 'phaseChange':
       return 'border-green-200 dark:border-green-800';
     case 'throwIn':
@@ -626,6 +624,7 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
   const isBookingState = event.type === 'bookingState';
   const isPhaseChange = event.type === 'phaseChange';
   const isStoppageTime = event.type === 'stoppageTime';
+  const isConfirmed = event.details.isConfirmed !== false; // undefined da true sayılacak
 
   // Memoize colors for better performance
   const colors = useMemo(() => ({
@@ -656,6 +655,7 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
         ${colors.background}
         rounded-md border-2 ${colors.border}
         ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'bg-opacity-80' : ''}
+        ${!isConfirmed ? 'opacity-50' : ''}
         overflow-hidden
       `}>
         <div className={`
