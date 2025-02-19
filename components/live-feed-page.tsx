@@ -179,12 +179,15 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
                         key={event.id}
                         data-index={virtualRow.index}
                         ref={rowVirtualizer.measureElement}
-                        className="absolute top-0 left-0 w-full p-2"
+                        className="absolute top-0 left-0 w-full p-2 border-t border-b border-gray-100 dark:border-gray-800"
                         style={{
                           transform: `translateY(${virtualRow.start}px)`,
                         }}
                       >
-                        <EventView event={event} />
+                        <div className="relative">
+                          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-[6px] h-[6px] rounded-full bg-gray-300 dark:bg-gray-600" />
+                          <EventView event={event} />
+                        </div>
                       </div>
                     );
                   })}

@@ -250,7 +250,7 @@ const getEventTitle = (event: MatchEvent): string => {
       return `${dangerTexts[event.details.dangerState || 'Safe']}`;
     }
     case 'foul':
-      return 'Foul - Confirmed';
+      return 'Foul Given';
     case 'goalKick':
       return 'Goal Kick';
     case 'offsides':
