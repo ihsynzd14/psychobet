@@ -376,27 +376,84 @@ export const processMatchActions = (data: any): MatchEvent[] => {
 
   // Tüm event processorları için array oluştur
   const processors: [string, (events: any[], extra?: any) => MatchEvent[]][] = [
-    ['goals.goals', eventProcessors.goals],
-    ['yellowCards.matchActions', eventProcessors.yellowCards],
-    ['secondYellowCards.matchActions', eventProcessors.secondYellowCards],
-    ['straightRedCards.matchActions', eventProcessors.straightRedCards],
-    ['substitutions.substitutions', eventProcessors.substitutions],
-    ['shotsOnTarget.shotsOnTarget', eventProcessors.shotsOnTarget],
-    ['shotsOffTarget.matchActions', eventProcessors.shotsOffTarget],
-    ['blockedShots.matchActions', eventProcessors.blockedShots],
-    ['cornersV2.corners', eventProcessors.corners],
-    ['penalties.penalties', eventProcessors.penalties],
-    ['varStateChanges.varStateChanges', eventProcessors.varStateChanges],
+    ['goals.goals', (events) => eventProcessors.goals(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['yellowCards.matchActions', (events) => eventProcessors.yellowCards(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['secondYellowCards.matchActions', (events) => eventProcessors.secondYellowCards(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['straightRedCards.matchActions', (events) => eventProcessors.straightRedCards(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['substitutions.substitutions', (events) => eventProcessors.substitutions(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['shotsOnTarget.shotsOnTarget', (events) => eventProcessors.shotsOnTarget(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['shotsOffTarget.matchActions', (events) => eventProcessors.shotsOffTarget(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['blockedShots.matchActions', (events) => eventProcessors.blockedShots(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['cornersV2.corners', (events) => eventProcessors.corners(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['penalties.penalties', (events) => eventProcessors.penalties(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['varStateChanges.varStateChanges', (events) => eventProcessors.varStateChanges(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
     ['phaseChanges.phaseChanges', eventProcessors.phaseChanges],
-    ['dangerStateChanges.dangerStateChanges', eventProcessors.dangerStateChanges],
-    ['fouls.fouls', eventProcessors.fouls],
-    ['bookingStateChanges.bookingStateChanges', eventProcessors.bookingStateChanges],
+    ['dangerStateChanges.dangerStateChanges', (events) => eventProcessors.dangerStateChanges(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['fouls.fouls', (events) => eventProcessors.fouls(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['bookingStateChanges.bookingStateChanges', (events, extra) => eventProcessors.bookingStateChanges(events, extra).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
     ['systemMessages.systemMessages', eventProcessors.systemMessages],
-    ['throwIns.matchActions', eventProcessors.throwIns],
-    ['shotsOffWoodwork.matchActions', eventProcessors.shotsOffWoodwork],
-    ['goalKicks.matchActions', eventProcessors.goalKicks],
-    ['offsides.matchActions', eventProcessors.offsides],
-    ['kickOffs.matchActions', eventProcessors.kickOffs],
+    ['throwIns.matchActions', (events, extra) => eventProcessors.throwIns(events, extra).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['shotsOffWoodwork.matchActions', (events) => eventProcessors.shotsOffWoodwork(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['goalKicks.matchActions', (events) => eventProcessors.goalKicks(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['offsides.matchActions', (events) => eventProcessors.offsides(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['kickOffs.matchActions', (events) => eventProcessors.kickOffs(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
     ['stoppageTimeAnnouncements.stoppageTimeAnnouncements', eventProcessors.stoppageTimeAnnouncements]
   ];
 
@@ -410,20 +467,16 @@ export const processMatchActions = (data: any): MatchEvent[] => {
 
   // Son sıralama işlemi
   return newEvents.sort((a, b) => {
-    // Önce timestamp'e göre sırala (yeni olaylar önce)
-    const timestampCompare = b.timestamp.localeCompare(a.timestamp);
-    if (timestampCompare !== 0) return timestampCompare;
-
-    // Aynı timestamp'te, FoulGiven ve diğer olayları sırala
-    const aIsFoul = a.details.dangerState === 'FoulGiven';
-    const bIsFoul = b.details.dangerState === 'FoulGiven';
+    // Foul olaylarını her zaman üste koy
+    const aIsFoul = a.type === 'foul';
+    const bIsFoul = b.type === 'foul';
     
     if (aIsFoul !== bIsFoul) {
-      return aIsFoul ? 1 : -1;  // FoulGiven'ı sona koy
+      return aIsFoul ? 1 : -1;  // Foul'u her zaman üste koy
     }
     
-    // Aynı tip olayları ID'ye göre sırala
-    return a.id - b.id;
+    // Eğer ikisi de foul veya ikisi de foul değilse, timestamp'e göre sırala
+    return b.timestamp.localeCompare(a.timestamp);
   });
 };
 
@@ -437,6 +490,13 @@ const getSystemMessageType = (messageId: number): SystemMessageType => {
   if (messageId >= 3000) return 'error';
   // Default info messages
   return 'info';
+};
+
+// Optimize edilmiş zaman formatı fonksiyonu
+const formatTimeElapsed = (phase: string, timeElapsed: string): string => {
+  const [hours, minutes, seconds] = timeElapsed.split(':').map(Number);
+  const totalMinutes = (phase === 'SecondHalf' ? 45 : 0) + (hours * 60) + minutes;
+  return `${totalMinutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
 const getThrowInState = (events: Record<string, any>, currentEvent: any): ThrowInState => {

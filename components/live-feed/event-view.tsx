@@ -46,10 +46,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-red-600 dark:text-red-400';
     } else if (dangerState === 'Penalty') {
       return 'text-red-600 dark:text-red-400';
-    } else if (dangerState === 'FoulGiven') {
-      return 'text-gray-600 dark:text-gray-400';
-    }  
-  
+    }
     return 'text-green-600 dark:text-green-400';
   }
 
@@ -163,7 +160,7 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
           event?.details.dangerState === 'Attack' ||
           event?.details.dangerState === 'DangerousAttack') {
         return null;
-      } else if (event?.details.dangerState === 'FoulGiven' || event?.details.dangerState === 'DangerousFreeKick' || event?.details.dangerState === 'AttackingFreeKick') {
+      } else if ( event?.details.dangerState === 'DangerousFreeKick' || event?.details.dangerState === 'AttackingFreeKick') {
         return <Target className="w-5 h-5" />;
       }
       return <Flame className="w-5 h-5" />;
@@ -248,12 +245,12 @@ const getEventTitle = (event: MatchEvent): string => {
         'CornerDanger': 'Corner Risk',
         'Penalty': 'Penalty Risk',
         'Goal': 'Goal',
-        'FoulGiven': 'Free Kick',
+       
       };
       return `${dangerTexts[event.details.dangerState || 'Safe']}`;
     }
-    case 'woodwork':
-      return 'Hit the Woodwork!';
+    case 'foul':
+      return 'Foul - Confirmed';
     case 'goalKick':
       return 'Goal Kick';
     case 'offsides':
@@ -305,8 +302,6 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-red-200 dark:bg-red-900';
     } else if (dangerState === 'Penalty') {
       return 'bg-red-200 dark:bg-red-900';
-    } else if (dangerState === 'FoulGiven') {
-      return 'bg-gray-300 dark:bg-gray-800';
     }
     return 'bg-green-300 dark:bg-green-900';
   }
@@ -419,9 +414,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-red-100 dark:from-gray-900 dark:to-red-950';
     } else if (dangerState === 'Penalty') {
       return 'bg-red-100 dark:bg-red-950';
-    } else if (dangerState === 'FoulGiven') {
-      return 'bg-gray-100 dark:bg-gray-800';
-    }  
+    } 
     return 'bg-green-100 dark:bg-green-950';
   }
 
@@ -536,10 +529,6 @@ const getEventBorderColor = (event: MatchEvent): string => {
     } else if (dangerState === 'Penalty') {
       return 'border-red-300 dark:border-red-800';
     }  
-     else if (dangerState === 'FoulGiven') {
-      return 'border-gray-300 dark:border-gray-800';
-    }  
-   
     return 'border-green-300 dark:border-green-800';
   }
 
@@ -673,7 +662,7 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
           </div>
           {!isSystemMessage && !isBookingState && !isPhaseChange && !isStoppageTime && (
             <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ${isAwayTeam ? 'text-right' : 'text-right'}`}>
-              {event.phase} - {event.timeElapsed}
+              {event.timeElapsed}
             </div>
           )}
         </div>

@@ -37,6 +37,7 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
   const [awayTeam, setAwayTeam] = useState<TeamInfo | null>(null);
   const [homeTeamLineup, setHomeTeamLineup] = useState<TeamLineup | null>(null);
   const [awayTeamLineup, setAwayTeamLineup] = useState<TeamLineup | null>(null);
+  const [isLineupsLoading, setIsLineupsLoading] = useState<boolean>(true);
   const parentRef = useRef<HTMLDivElement>(null);
 
   // Optimize event update function
@@ -45,7 +46,24 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
       const eventMap = new Map(prev.map(e => [e.id, e]));
       newEvents.forEach(e => eventMap.set(e.id, e));
       return Array.from(eventMap.values())
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        .sort((a, b) => {
+          const timeA = new Date(a.timestamp).getTime();
+          const timeB = new Date(b.timestamp).getTime();
+          
+          // Eğer timestamp'ler aynıysa, özel sıralama mantığı uygula
+          if (timeA === timeB) {
+            // Foul ve DangerState olayları için özel sıralama
+            if (a.type === 'foul' && b.type === 'dangerState' && b.details.dangerState?.includes('FreeKick')) {
+              return 1; // Foul'u üste koy
+            }
+            if (b.type === 'foul' && a.type === 'dangerState' && a.details.dangerState?.includes('FreeKick')) {
+              return -1; // Foul'u üste koy
+            }
+          }
+          
+          // Normal timestamp sıralaması
+          return timeB - timeA;
+        });
     });
   }, []);
 
@@ -69,7 +87,9 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
         .filter((u: any) => u.team === 'Home')
         .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
       
-      return latestHomeUpdate?.newLineup || prev;
+      const newLineup = latestHomeUpdate?.newLineup || prev;
+      if (newLineup) setIsLineupsLoading(false);
+      return newLineup;
     });
 
     setAwayTeamLineup(prev => {
@@ -77,7 +97,9 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
         .filter((u: any) => u.team === 'Away')
         .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
       
-      return latestAwayUpdate?.newLineup || prev;
+      const newLineup = latestAwayUpdate?.newLineup || prev;
+      if (newLineup) setIsLineupsLoading(false);
+      return newLineup;
     });
   }, []);
 
@@ -89,8 +111,14 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
       updateLineups(data);
     });
 
+    // 10 saniye sonra hala data gelmemişse loading'i kaldır
+    const timer = setTimeout(() => {
+      setIsLineupsLoading(false);
+    }, 10000);
+
     return () => {
       unsubscribe();
+      clearTimeout(timer);
     };
   }, [fixtureId, updateEvents, updateTeams, updateLineups]);
 
@@ -189,14 +217,18 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
             </h2>
           </div>
           <div className="flex-1 overflow-auto">
-            {homeTeamLineup && awayTeamLineup ? (
+            {isLineupsLoading ? (
+              <div className="text-center text-gray-500 dark:text-gray-400 py-6">
+                Loading lineups...
+              </div>
+            ) : homeTeamLineup && awayTeamLineup ? (
               <MatchLineups
                 homeTeamLineup={homeTeamLineup}
                 awayTeamLineup={awayTeamLineup}
               />
             ) : (
               <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-                Loading lineups...
+                No lineups available for this match
               </div>
             )}
           </div>
