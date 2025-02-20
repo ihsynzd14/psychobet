@@ -98,7 +98,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     case 'penalty':
       return 'text-red-600 dark:text-red-400';
     case 'var':
-      return 'text-purple-600 dark:text-purple-400';
+      return event?.details?.stateColor || 'text-purple-600 dark:text-purple-400';
     case 'phaseChange':
       return 'text-green-600 dark:text-green-400';
     case 'woodwork':
@@ -148,7 +148,7 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
     case 'penalty':
       return <AlertTriangle className="w-5 h-5" />;
     case 'var':
-      return <Video className="w-5 h-5" />;
+      return <Video className={`w-5 h-5 ${event?.details?.isInProgress ? 'animate-pulse' : ''}`} />;
     case 'phaseChange':
       return <RefreshCw className="w-5 h-5" />;
     case 'freeKick': {
@@ -192,13 +192,13 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
 const getEventTitle = (event: MatchEvent): string => {
   switch (event.type) {
     case 'goal':
-      return `GOAL! ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''}`;
+      return `GOAL! ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''} ${event.details.scoredBy?.sourceName ? `- ${event.details.scoredBy.sourceName}` : ''}${event.details.assistBy?.sourceName ? ` (Assist: ${event.details.assistBy.sourceName})` : ''}`;
     case 'yellowCard':
-      return 'Yellow Card';
+      return `Yellow Card${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'secondYellow':
-      return 'Second Yellow Card - RED';
+      return `Second Yellow Card - RED${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'redCard':
-      return 'Red Card';
+      return `Red Card${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'bookingState':
       const state = event.details.bookingState;
       if (state === 'YellowCardDanger') {
@@ -206,17 +206,17 @@ const getEventTitle = (event: MatchEvent): string => {
       } else if (state === 'RedCardDanger') {
         return 'Red Card Risk';
       } else if (state === 'Safe') {
-        return `${event.details.previousState === 'RedCardDanger' ? 'Red' : 'Yellow'} Card Risk Ended`;
+        return event.details.previousState === 'RedCardDanger' ? 'Red Card Risk Ended' : event.details.previousState === 'YellowCardDanger' ? 'Yellow Card Risk Ended' : 'Card Risk Ended';
       }
       return 'Card Risk Ended';
     case 'substitution':
-      return 'Substitution';
+      return `Substitution${event.details.playerOn?.sourceName && event.details.playerOff?.sourceName ? `: ${event.details.playerOff.sourceName} ➔ ${event.details.playerOn.sourceName}` : ''}`;
     case 'shotOnTarget':
-      return 'Shot on Target';
+      return `Shot on Target${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}${event.details.savedBy?.sourceName ? ` (Saved by: ${event.details.savedBy.sourceName})` : ''}`;
     case 'shotOffTarget':
-      return 'Shot off Target';
+      return `Shot off Target${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'shotBlocked':
-      return 'Shot Blocked';
+      return `Shot Blocked${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'cornerAwarded':
       return 'Corner Awarded';
     case 'cornerTaken':
@@ -224,16 +224,15 @@ const getEventTitle = (event: MatchEvent): string => {
     case 'penalty':
       return `Penalty - ${event.details.outcome || 'Pending'}`;
     case 'var':
-      return `VAR Review - ${event.details.reason || ''}`;
+      return `${event.details.stateText || 'VAR Review'} - ${event.details.reason || ''}${event.details.outcome ? ` - ${event.details.outcome}` : ''}`;
     case 'phaseChange':
       return `${event.details.phaseTitle}`;
     case 'throwIn':
       const throwInState = event.details.throwInState;
       if (throwInState) {
-        return `Throw In ${throwInState}`;
+        return `Throw In ${throwInState}${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
       }
-      return 'Throw In';
-
+      return `Throw In${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'dangerState': {
       const dangerTexts: Record<string, string> = {
         'Safe': 'Safe',
@@ -245,24 +244,23 @@ const getEventTitle = (event: MatchEvent): string => {
         'CornerDanger': 'Corner Risk',
         'Penalty': 'Penalty Risk',
         'Goal': 'Goal',
-       
       };
       return `${dangerTexts[event.details.dangerState || 'Safe']}`;
     }
     case 'foul':
       return 'Foul Given';
     case 'goalKick':
-      return 'Goal Kick';
+      return `Goal Kick${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'offsides':
-      return 'Offside';
+      return `Offside${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'kickOff':
-      return 'Kick Off';
+      return `Kick Off${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'systemMessage':
       return event.details.message || 'System Message';
     case 'stoppageTime':
       return `Stoppage Time - ${event.details.addedMinutes} min`;
     case 'shotOffWoodwork':
-      return `Shot Hit Woodwork${event.details.ballReturnedToPlay ? ' - Ball In Play' : ''}`;
+      return `Shot Hit Woodwork${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}${event.details.ballReturnedToPlay ? ' - Ball In Play' : ''}`;
     default:
       return event.type;
   }
@@ -354,7 +352,11 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     case 'penalty':
       return 'bg-red-200 dark:bg-red-900';
     case 'var':
-      return 'bg-purple-200 dark:bg-purple-900';
+      return event?.details?.isInProgress 
+        ? 'bg-yellow-100 dark:bg-yellow-950'
+        : event?.details?.state === 'Danger'
+        ? 'bg-red-100 dark:bg-red-950'
+        : 'bg-purple-50 dark:bg-purple-950';
     case 'phaseChange':
       return 'bg-green-200 dark:bg-green-900';
     case 'throwIn':
@@ -466,7 +468,11 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     case 'penalty':
       return 'bg-red-50 dark:bg-red-950';
     case 'var':
-      return 'bg-purple-50 dark:bg-purple-950';
+      return event?.details?.isInProgress 
+        ? 'bg-yellow-100 dark:bg-yellow-950'
+        : event?.details?.state === 'Danger'
+        ? 'bg-red-100 dark:bg-red-950'
+        : 'bg-purple-50 dark:bg-purple-950';
     case 'phaseChange':
       return 'bg-green-50 dark:bg-green-950';
     case 'throwIn':
@@ -580,7 +586,11 @@ const getEventBorderColor = (event: MatchEvent): string => {
     case 'penalty':
       return 'border-red-200 dark:border-red-800';
     case 'var':
-      return 'border-purple-200 dark:border-purple-800';
+      return event?.details?.isInProgress 
+        ? 'border-yellow-300 dark:border-yellow-800'
+        : event?.details?.state === 'Danger'
+        ? 'border-red-300 dark:border-red-800'
+        : 'border-purple-200 dark:border-purple-800';
     case 'phaseChange':
       return 'border-green-200 dark:border-green-800';
     case 'throwIn':

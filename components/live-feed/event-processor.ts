@@ -1,4 +1,43 @@
-import { MatchEvent, DangerState, SystemMessageType, ThrowInState } from './types';
+import { MatchEvent, DangerState, SystemMessageType, ThrowInState, LineupUpdate, Player } from './types';
+import { useMemo } from 'react';
+
+// Lineup verilerini tutacak cache
+let lineupCache: {
+  home: Map<string, Player>;
+  away: Map<string, Player>;
+} | null = null;
+
+// Lineup verilerini işle ve cache'e al
+const processLineupData = (lineupUpdates: LineupUpdate[]) => {
+  if (lineupCache) return; // Cache zaten varsa tekrar işleme
+
+  lineupCache = {
+    home: new Map(),
+    away: new Map()
+  };
+
+  // Her takım için son lineup güncellemesini bul
+  const homeUpdate = lineupUpdates.filter(u => u.team === 'Home').pop();
+  const awayUpdate = lineupUpdates.filter(u => u.team === 'Away').pop();
+
+  if (homeUpdate) {
+    [...homeUpdate.newLineup.startingOnPitch, ...homeUpdate.newLineup.startingBench].forEach(player => {
+      lineupCache!.home.set(player.internalId, player);
+    });
+  }
+
+  if (awayUpdate) {
+    [...awayUpdate.newLineup.startingOnPitch, ...awayUpdate.newLineup.startingBench].forEach(player => {
+      lineupCache!.away.set(player.internalId, player);
+    });
+  }
+};
+
+// Player bilgisini getir
+const getPlayerInfo = (internalId: string | null, team: 'Home' | 'Away'): Player | null => {
+  if (!internalId || !lineupCache) return null;
+  return lineupCache[team.toLowerCase() as 'home' | 'away'].get(internalId) || null;
+};
 
 // Pre-define processors for better performance
 const eventProcessors = {
@@ -13,8 +52,9 @@ const eventProcessors = {
       details: {
         isOwnGoal: goal.isOwnGoal,
         wasPenalty: goal.wasScoredFromPenalty,
-        scoredBy: goal.scoredByInternalId,
-        assistBy: goal.assistByInternalId
+        scoredBy: getPlayerInfo(goal.scoredByInternalId, goal.team),
+        assistBy: getPlayerInfo(goal.assistByInternalId, goal.team),
+        isConfirmed: goal.isConfirmed
       }
     })) || [];
   },
@@ -27,7 +67,10 @@ const eventProcessors = {
       phase: card.phase,
       timeElapsed: card.timeElapsedInPhase,
       team: card.team,
-      details: { playerId: card.playerInternalId }
+      details: { 
+        player: getPlayerInfo(card.playerInternalId, card.team),
+        isConfirmed: card.isConfirmed 
+      }
     })) || [];
   },
 
@@ -39,7 +82,10 @@ const eventProcessors = {
       phase: card.phase,
       timeElapsed: card.timeElapsedInPhase,
       team: card.team,
-      details: { playerId: card.playerInternalId }
+      details: { 
+        player: getPlayerInfo(card.playerInternalId, card.team),
+        isConfirmed: card.isConfirmed 
+      }
     })) || [];
   },
 
@@ -51,7 +97,10 @@ const eventProcessors = {
       phase: card.phase,
       timeElapsed: card.timeElapsedInPhase,
       team: card.team,
-      details: { playerId: card.playerInternalId }
+      details: { 
+        player: getPlayerInfo(card.playerInternalId, card.team),
+        isConfirmed: card.isConfirmed 
+      }
     })) || [];
   },
 
@@ -64,8 +113,9 @@ const eventProcessors = {
       timeElapsed: sub.timeElapsedInPhase,
       team: sub.team,
       details: {
-        playerOn: sub.playerOnInternalId,
-        playerOff: sub.playerOffInternalId
+        playerOn: getPlayerInfo(sub.playerOnInternalId, sub.team),
+        playerOff: getPlayerInfo(sub.playerOffInternalId, sub.team),
+        isConfirmed: sub.isConfirmed
       }
     })) || [];
   },
@@ -79,14 +129,14 @@ const eventProcessors = {
       timeElapsed: shot.timeElapsedInPhase,
       team: shot.team,
       details: {
-        playerId: shot.playerInternalId,
-        savedBy: shot.savedByInternalId
+        player: getPlayerInfo(shot.playerInternalId, shot.team),
+        savedBy: getPlayerInfo(shot.savedByInternalId, shot.team === 'Home' ? 'Away' : 'Home'),
+        isConfirmed: shot.isConfirmed
       }
     })) || [];
   },
 
   shotsOffWoodwork: (shots: any[]): MatchEvent[] => {
-    // Handle the nested structure
     return shots?.map((shot) => ({
       id: shot.id,
       type: 'shotOffWoodwork',
@@ -95,7 +145,7 @@ const eventProcessors = {
       timeElapsed: shot.timeElapsedInPhase,
       team: shot.team,
       details: { 
-        playerId: shot.playerInternalId,
+        player: getPlayerInfo(shot.playerInternalId, shot.team),
         isConfirmed: shot.isConfirmed,
         ballReturnedToPlay: shot.ballReturnedToPlay
       }
@@ -110,7 +160,10 @@ const eventProcessors = {
       phase: shot.phase,
       timeElapsed: shot.timeElapsedInPhase,
       team: shot.team,
-      details: { playerId: shot.playerInternalId }
+      details: { 
+        player: getPlayerInfo(shot.playerInternalId, shot.team),
+        isConfirmed: shot.isConfirmed
+      }
     })) || [];
   },
 
@@ -122,7 +175,10 @@ const eventProcessors = {
       phase: shot.phase,
       timeElapsed: shot.timeElapsedInPhase,
       team: shot.team,
-      details: { playerId: shot.playerInternalId }
+      details: { 
+        player: getPlayerInfo(shot.playerInternalId, shot.team),
+        isConfirmed: shot.isConfirmed
+      }
     })) || [];
   },
 
@@ -170,21 +226,117 @@ const eventProcessors = {
     })) || [];
   },
 
-
   varStateChanges: (var_: any[]): MatchEvent[] => {
-    return var_?.map((v) => ({
-      id: v.id,
-      type: 'var',
-      timestamp: v.timestampUtc,
-      phase: v.phase,
-      timeElapsed: v.timeElapsedInPhase,
-      team: v.team,
-      details: {
-        state: v.varState,
-        reason: v.varReasonV2 || v.varReason,
-        outcome: v.varOutcomeV2 || v.varOutcome
+    if (!var_) return [];
+
+    // VAR State mapping
+    const varStateMapping: Record<string, string> = {
+      'Safe': 'VAR Complete',
+      'InProgress': 'VAR In Progress',
+      'Danger': 'VAR Check'
+    };
+
+    const getVarTitle = (reason: string): string => {
+      if (!reason || reason === 'NotSet' || reason === 'Unknown') return 'VAR Check';
+
+      // Remove team prefix for mapping
+      const cleanReason = reason.replace(/^(Home|Away)/, '');
+
+      const reasonMapping: Record<string, string> = {
+        'Goal': 'Goal Check',
+        'Penalty': 'Penalty Check',
+        'RedCard': 'Red Card Check',
+        'MistakenIdentity': 'Player Identity Check',
+        'PenaltyRetake': 'Penalty Retake Check',
+        'Unknown': 'VAR Check'
+      };
+
+      return reasonMapping[cleanReason] || 'VAR Check';
+    };
+
+    const getVarOutcomeText = (outcome: string, state: string): string => {
+      if (!outcome || outcome === 'NotSet' || outcome === 'Unknown') {
+        return state === 'InProgress' ? 'Checking...' : '';
       }
-    })) || [];
+
+      // Remove team prefix for mapping
+      const cleanOutcome = outcome.replace(/^(Home|Away)/, '');
+
+      const outcomeMapping: Record<string, string> = {
+        // Goal Outcomes
+        'GoalAwarded': 'Goal Given',
+        'NoGoal': 'No Goal',
+        
+        // Penalty Outcomes
+        'PenaltyAwarded': 'Penalty Given',
+        'NoPenalty': 'No Penalty',
+        'PenaltyWillBeRetaken': 'Penalty to be Retaken',
+        'NoPenaltyRetake': 'No Penalty Retake',
+        
+        // Card Outcomes
+        'RedCardGiven': 'Red Card Given',
+        'NoRedCard': 'No Red Card',
+        
+        // Player Identity Outcomes
+        'PlayerChanged': 'Player Identity Corrected',
+        'PlayerNotChanged': 'Player Identity Confirmed',
+        
+        // Other Outcomes
+        'NoAction': 'No Action Required',
+        'Unknown': 'Decision Pending'
+      };
+
+      return outcomeMapping[cleanOutcome] || cleanOutcome;
+    };
+
+    const getVarStateColor = (state: string): string => {
+      switch (state) {
+        case 'InProgress':
+          return 'text-yellow-600 dark:text-yellow-400';
+        case 'Danger':
+          return 'text-red-600 dark:text-red-400';
+        case 'Safe':
+        default:
+          return 'text-green-600 dark:text-green-400';
+      }
+    };
+
+    return var_.map((v) => {
+      // Determine team based on reason or outcome with V2 priority
+      const team = v.varReasonV2?.startsWith('Home') || v.varOutcomeV2?.startsWith('Home') 
+        ? 'Home' 
+        : v.varReasonV2?.startsWith('Away') || v.varOutcomeV2?.startsWith('Away')
+        ? 'Away' 
+        : v.varReason?.startsWith('Home') || v.varOutcome?.startsWith('Home')
+        ? 'Home'
+        : v.varReason?.startsWith('Away') || v.varOutcome?.startsWith('Away')
+        ? 'Away'
+        : 'System';
+
+      const reason = v.varReasonV2 || v.varReason;
+      const outcome = v.varOutcomeV2 || v.varOutcome;
+      const state = v.varState || 'Safe';
+
+      return {
+        id: v.id,
+        type: 'var',
+        timestamp: v.timestampUtc,
+        phase: v.phase,
+        timeElapsed: v.timeElapsedInPhase,
+        team,
+        details: {
+          state,
+          stateText: varStateMapping[state] || 'VAR Check',
+          stateColor: getVarStateColor(state),
+          reason: getVarTitle(reason),
+          outcome: getVarOutcomeText(outcome, state),
+          isConfirmed: v.isConfirmed,
+          originalReason: reason,
+          originalOutcome: outcome,
+          isInProgress: state === 'InProgress'
+        }
+      };
+    });
   },
 
   phaseChanges: (phases: any[]): MatchEvent[] => {
@@ -261,13 +413,16 @@ const eventProcessors = {
 
   bookingStateChanges: (bookings: any[], allEvents: any): MatchEvent[] => {
     return bookings?.map((booking) => {
-      // Önceki booking state'i bul
-      const previousBooking = allEvents.bookingStateChanges?.bookingStateChanges?.find(
+      // Önceki booking state'i bul - aynı takım için ve daha önceki bir zaman için
+      const previousBookings = allEvents.bookingStateChanges?.bookingStateChanges?.filter(
         (prevBooking: any) => 
           prevBooking.sequenceId < booking.sequenceId && 
           prevBooking.team === booking.team &&
           prevBooking.bookingState !== 'Safe'
       );
+
+      // En son booking state'i al
+      const previousBooking = previousBookings?.sort((a: any, b: any) => b.sequenceId - a.sequenceId)[0];
 
       return {
         id: booking.id,
@@ -310,7 +465,10 @@ const eventProcessors = {
       phase: event.phase,
       timeElapsed: event.timeElapsedInPhase,
       team: event.team,
-      details: { playerId: event.playerInternalId }
+      details: { 
+        player: getPlayerInfo(event.playerInternalId, event.team),
+        isConfirmed: event.isConfirmed
+      }
     })) || [];
   },
 
@@ -322,7 +480,10 @@ const eventProcessors = {
       phase: event.phase,
       timeElapsed: event.timeElapsedInPhase,
       team: event.team,
-      details: { playerId: event.playerInternalId }
+      details: { 
+        player: getPlayerInfo(event.playerInternalId, event.team),
+        isConfirmed: event.isConfirmed
+      }
     })) || [];
   },
 
@@ -334,7 +495,10 @@ const eventProcessors = {
       phase: event.phase,
       timeElapsed: event.timeElapsedInPhase,
       team: event.team,
-      details: { playerId: event.playerInternalId }
+      details: { 
+        player: getPlayerInfo(event.playerInternalId, event.team),
+        isConfirmed: event.isConfirmed
+      }
     })) || [];
   },
 
@@ -347,7 +511,7 @@ const eventProcessors = {
       timeElapsed: event.timeElapsedInPhase,
       team: event.team,
       details: {
-        playerId: event.playerInternalId,
+        player: getPlayerInfo(event.playerInternalId, event.team),
         isConfirmed: event.isConfirmed,
         throwInState: getThrowInState(allEvents, event)
       }
@@ -372,6 +536,12 @@ const eventProcessors = {
 
 export const processMatchActions = (data: any): MatchEvent[] => {
   const actions = data.raw.matchActions;
+  
+  // Lineup verilerini işle
+  if (actions.lineupUpdates?.updates) {
+    processLineupData(actions.lineupUpdates.updates);
+  }
+
   const newEvents: MatchEvent[] = [];
 
   // Tüm event processorları için array oluştur
