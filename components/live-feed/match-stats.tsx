@@ -4,6 +4,10 @@ import React from 'react';
 
 interface MatchStatsProps {
   events: MatchEvent[];
+  possession?: {
+    home: number;
+    away: number;
+  };
 }
 
 interface TeamStats {
@@ -25,6 +29,7 @@ interface TeamStats {
   offsides: number;
   goalKicks: number;
   substitutions: number;
+  possession: number;
 }
 
 const initialStats: TeamStats = {
@@ -46,6 +51,7 @@ const initialStats: TeamStats = {
   offsides: 0,
   goalKicks: 0,
   substitutions: 0,
+  possession: 0,
 };
 
 // Optimized StatRow with memo for better performance
@@ -78,10 +84,16 @@ const StatRow = React.memo(({ label, home, away }: { label: string; home: number
 
 StatRow.displayName = 'StatRow';
 
-export function MatchStats({ events }: MatchStatsProps) {
+export function MatchStats({ events, possession }: MatchStatsProps) {
   const { homeStats, awayStats } = useMemo(() => {
     const home = { ...initialStats };
     const away = { ...initialStats };
+
+    // Possession verilerini ekle
+    if (possession) {
+      home.possession = possession.home;
+      away.possession = possession.away;
+    }
 
     // Optimized event processing
     for (let i = 0; i < events.length; i++) {
@@ -139,6 +151,7 @@ export function MatchStats({ events }: MatchStatsProps) {
 
   return (
     <div className="bg-white divide-y divide-gray-100">
+      <StatRow label="Possession %" home={homeStats.possession} away={awayStats.possession} />
       <StatRow label="Shots" home={homeStats.shots} away={awayStats.shots} />
       <StatRow label="Shots On" home={homeStats.shotsOn} away={awayStats.shotsOn} />
       <StatRow label="Shots Off" home={homeStats.shotsOff} away={awayStats.shotsOff} />

@@ -344,6 +344,7 @@ const eventProcessors = {
       'FirstHalf': '1st Half Started',
       'HalfTime': '1st Half Complete',
       'SecondHalf': '2nd Half Started',
+      'PostMatch': '2nd Half Complete',
       'FullTime': '2nd Half Complete'
     };
 

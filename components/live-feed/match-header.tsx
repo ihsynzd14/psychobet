@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState, useEffect } from 'react';
 import { TeamJersey } from './jerseys';
 import { Square } from 'lucide-react';
 
@@ -26,6 +26,9 @@ interface MatchHeaderProps {
   matchPeriod?: string;
   homeRedCards?: number;
   awayRedCards?: number;
+  matchTimeElapsed?: string;
+  homeScore?: number;
+  awayScore?: number;
 }
 
 const RedCards = memo(({ count }: { count: number }) => {
@@ -44,14 +47,55 @@ const RedCards = memo(({ count }: { count: number }) => {
 
 RedCards.displayName = 'RedCards';
 
+const ScoreDisplay = memo(({ score = 0 }: { score?: number }) => (
+  <div className="text-4xl font-bold text-gray-900 dark:text-white tabular-nums bg-gray-100 dark:from-transparent dark:to-gray-800 px-4 py-2 rounded-lg shadow-sm">
+    {score}
+  </div>
+));
+
+ScoreDisplay.displayName = 'ScoreDisplay';
+
+const timeElapsedToSeconds = (timeElapsed: string): number => {
+  const [minutes, seconds] = timeElapsed.split(':').map(Number);
+  return minutes * 60 + seconds;
+};
+
+const secondsToTimeElapsed = (totalSeconds: number): string => {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
+
 export const MatchHeader = memo<MatchHeaderProps>(({ 
   homeTeam, 
   awayTeam, 
   currentTime, 
   matchPeriod = '1st Half',
   homeRedCards = 0,
-  awayRedCards = 0
+  awayRedCards = 0,
+  matchTimeElapsed = '00:00',
+  homeScore = 0,
+  awayScore = 0
 }) => {
+  const [displayTime, setDisplayTime] = useState(matchTimeElapsed);
+  const [lastTimeElapsed, setLastTimeElapsed] = useState(matchTimeElapsed);
+
+  useEffect(() => {
+    if (matchTimeElapsed !== lastTimeElapsed) {
+      setDisplayTime(matchTimeElapsed);
+      setLastTimeElapsed(matchTimeElapsed);
+    }
+
+    const timer = setInterval(() => {
+      setDisplayTime(prevTime => {
+        const seconds = timeElapsedToSeconds(prevTime);
+        return secondsToTimeElapsed(seconds + 1);
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [matchTimeElapsed, lastTimeElapsed]);
+
   if (!homeTeam?.strip || !awayTeam?.strip) {
     return (
       <div className="flex flex-col border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
@@ -72,27 +116,35 @@ export const MatchHeader = memo<MatchHeaderProps>(({
             color2={homeTeam.strip.color2} 
             type="home"
           />
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {homeTeam.sourceName}
-            </h2>
-            <RedCards count={homeRedCards} />
+          <div className="flex flex-col items-start">
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {homeTeam.sourceName}
+              </h2>
+              <RedCards count={homeRedCards} />
+            </div>
           </div>
         </div>
 
-        {/* Match Time and Period */}
-        <div className="px-4 flex flex-col items-center">
-          <span className="text-lg font-bold text-gray-900 dark:text-white">{currentTime}</span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">{matchPeriod}</span>
+        {/* Score and Match Time */}
+        <div className="flex items-center gap-4">
+          <ScoreDisplay score={homeScore} />
+          <div className="flex flex-col items-center min-w-[80px]">
+            <span className="text-lg font-bold text-gray-900 dark:text-white">{displayTime}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{matchPeriod}</span>
+          </div>
+          <ScoreDisplay score={awayScore} />
         </div>
 
         {/* Away Team */}
         <div className="flex items-center gap-3 flex-1 justify-end">
-          <div className="flex items-center gap-2">
-            <RedCards count={awayRedCards} />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {awayTeam.sourceName}
-            </h2>
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-2">
+              <RedCards count={awayRedCards} />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {awayTeam.sourceName}
+              </h2>
+            </div>
           </div>
           <TeamJersey 
             color1={awayTeam.strip.color1} 
@@ -103,4 +155,6 @@ export const MatchHeader = memo<MatchHeaderProps>(({
       </div>
     </div>
   );
-}); 
+});
+
+MatchHeader.displayName = 'MatchHeader';

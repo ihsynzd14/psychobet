@@ -38,6 +38,7 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
   const [homeTeamLineup, setHomeTeamLineup] = useState<TeamLineup | null>(null);
   const [awayTeamLineup, setAwayTeamLineup] = useState<TeamLineup | null>(null);
   const [isLineupsLoading, setIsLineupsLoading] = useState<boolean>(true);
+  const [possession, setPossession] = useState<{ home: number; away: number }>({ home: 0, away: 0 });
   const parentRef = useRef<HTMLDivElement>(null);
 
   // Optimize event update function
@@ -103,12 +104,49 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
     });
   }, []);
 
+  // Optimize possession updates with memoization and deep comparison
+  const updatePossession = useCallback((data: any) => {
+    if (data.raw?.statistics?.possession) {
+      setPossession(prev => {
+        const newPossession = {
+          home: data.raw.statistics.possession.home,
+          away: data.raw.statistics.possession.away
+        };
+        
+        // Sadece değerler değiştiyse güncelle
+        if (prev.home !== newPossession.home || prev.away !== newPossession.away) {
+          return newPossession;
+        }
+        return prev;
+      });
+    }
+  }, []);
+
+  // Memoize possession data for MatchStats
+  const memoizedPossession = useMemo(() => possession, [possession.home, possession.away]);
+
+  // Son event'in timeElapsed'ını al
+  const lastTimeElapsed = useMemo(() => {
+    if (events.length === 0) return '00:00';
+    return events[0].timeElapsed; // Events zaten timestamp'e göre sıralı olduğu için ilk event en son event
+  }, [events]);
+
+  // Gol sayılarını hesapla
+  const { homeGoals, awayGoals } = useMemo(() => {
+    const goals = events.filter(e => e.type === 'dangerState' && e.details.dangerState === 'Goal');
+    return {
+      homeGoals: goals.filter(e => e.team === 'Home').length,
+      awayGoals: goals.filter(e => e.team === 'Away').length
+    };
+  }, [events]);
+
   useEffect(() => {
     const unsubscribe = api.subscribeToFixture(fixtureId, (data) => {
       const newEvents = processMatchActions(data);
       updateEvents(newEvents);
       updateTeams(data);
       updateLineups(data);
+      updatePossession(data);
     });
 
     // 10 saniye sonra hala data gelmemişse loading'i kaldır
@@ -120,7 +158,7 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
       unsubscribe();
       clearTimeout(timer);
     };
-  }, [fixtureId, updateEvents, updateTeams, updateLineups]);
+  }, [fixtureId, updateEvents, updateTeams, updateLineups, updatePossession]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -156,6 +194,9 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
               matchPeriod="1st Half"
               homeRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Home').length}
               awayRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Away').length}
+              matchTimeElapsed={lastTimeElapsed}
+              homeScore={homeGoals}
+              awayScore={awayGoals}
             />
           )}
 
@@ -211,7 +252,10 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
             </h2>
           </div>
           <div className="border-t border-gray-100 dark:border-gray-700">
-            <MatchStats events={events} />
+            <MatchStats 
+              events={events} 
+              possession={memoizedPossession} 
+            />
           </div>
           <div className="border-b border-gray-100 dark:border-gray-700 p-2">
             <h2 className="text-sm font-normal flex items-center gap-2">
