@@ -1,6 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { MatchEvent } from './types';
 import React from 'react';
+import { Activity, Users } from 'lucide-react';
+import { MatchLineups } from './match-lineups';
+import { TeamLineup } from './types';
 
 interface MatchStatsProps {
   events: MatchEvent[];
@@ -8,6 +11,9 @@ interface MatchStatsProps {
     home: number;
     away: number;
   };
+  homeTeamLineup?: TeamLineup | null;
+  awayTeamLineup?: TeamLineup | null;
+  isLineupsLoading?: boolean;
 }
 
 interface TeamStats {
@@ -84,7 +90,9 @@ const StatRow = React.memo(({ label, home, away }: { label: string; home: number
 
 StatRow.displayName = 'StatRow';
 
-export function MatchStats({ events, possession }: MatchStatsProps) {
+export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup, isLineupsLoading }: MatchStatsProps) {
+  const [activeTab, setActiveTab] = useState<'stats' | 'lineups'>('stats');
+
   const { homeStats, awayStats } = useMemo(() => {
     const home = { ...initialStats };
     const away = { ...initialStats };
@@ -150,26 +158,74 @@ export function MatchStats({ events, possession }: MatchStatsProps) {
   }, [events]);
 
   return (
-    <div className="bg-white divide-y divide-gray-100">
-      <StatRow label="Possession %" home={homeStats.possession} away={awayStats.possession} />
-      <StatRow label="Shots" home={homeStats.shots} away={awayStats.shots} />
-      <StatRow label="Shots On" home={homeStats.shotsOn} away={awayStats.shotsOn} />
-      <StatRow label="Shots Off" home={homeStats.shotsOff} away={awayStats.shotsOff} />
-      <StatRow label="Shots WW" home={homeStats.shotsWW} away={awayStats.shotsWW} />
-      <StatRow label="Shots Blocked" home={homeStats.shotsBlocked} away={awayStats.shotsBlocked} />
-      <StatRow label="Attacks" home={homeStats.attacks} away={awayStats.attacks} />
-      <StatRow label="Dangerous Attacks" home={homeStats.dangerousAttacks} away={awayStats.dangerousAttacks} />
-      <StatRow label="Corners" home={homeStats.corners} away={awayStats.corners} />
-      <StatRow label="Penalties" home={homeStats.penalties} away={awayStats.penalties} />
-      <StatRow label="Missed Penalties" home={homeStats.missedPenalties} away={awayStats.missedPenalties} />
-      <StatRow label="Dangerous FreeKicks" home={homeStats.dangerousFreeKicks} away={awayStats.dangerousFreeKicks} />
-      <StatRow label="Attacking FreeKicks" home={homeStats.attackingFreeKicks} away={awayStats.attackingFreeKicks} />
-      <StatRow label="Yellow Cards" home={homeStats.yellowCards} away={awayStats.yellowCards} />
-      <StatRow label="Red Cards" home={homeStats.redCards} away={awayStats.redCards} />
-      <StatRow label="Throw Ins" home={homeStats.throwIns} away={awayStats.throwIns} />
-      <StatRow label="Offsides" home={homeStats.offsides} away={awayStats.offsides} />
-      <StatRow label="Goal Kicks" home={homeStats.goalKicks} away={awayStats.goalKicks} />
-      <StatRow label="Substitutions" home={homeStats.substitutions} away={awayStats.substitutions} />
+    <div className="flex flex-col h-full">
+      <div className="flex border-b border-gray-100 dark:border-gray-700">
+        <button
+          onClick={() => setActiveTab('stats')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
+            activeTab === 'stats'
+              ? 'text-blue-500 border-b-2 border-blue-500'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          Stats
+        </button>
+        <button
+          onClick={() => setActiveTab('lineups')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
+            activeTab === 'lineups'
+              ? 'text-blue-500 border-b-2 border-blue-500'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          Lineups
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-hidden">
+        {activeTab === 'stats' ? (
+          <div className="bg-white divide-y divide-gray-100">
+            <StatRow label="Possession %" home={homeStats.possession} away={awayStats.possession} />
+            <StatRow label="Shots" home={homeStats.shots} away={awayStats.shots} />
+            <StatRow label="Shots On" home={homeStats.shotsOn} away={awayStats.shotsOn} />
+            <StatRow label="Shots Off" home={homeStats.shotsOff} away={awayStats.shotsOff} />
+            <StatRow label="Shots WW" home={homeStats.shotsWW} away={awayStats.shotsWW} />
+            <StatRow label="Shots Blocked" home={homeStats.shotsBlocked} away={awayStats.shotsBlocked} />
+            <StatRow label="Attacks" home={homeStats.attacks} away={awayStats.attacks} />
+            <StatRow label="Dangerous Attacks" home={homeStats.dangerousAttacks} away={awayStats.dangerousAttacks} />
+            <StatRow label="Corners" home={homeStats.corners} away={awayStats.corners} />
+            <StatRow label="Penalties" home={homeStats.penalties} away={awayStats.penalties} />
+            <StatRow label="Missed Penalties" home={homeStats.missedPenalties} away={awayStats.missedPenalties} />
+            <StatRow label="Dangerous FreeKicks" home={homeStats.dangerousFreeKicks} away={awayStats.dangerousFreeKicks} />
+            <StatRow label="Attacking FreeKicks" home={homeStats.attackingFreeKicks} away={awayStats.attackingFreeKicks} />
+            <StatRow label="Yellow Cards" home={homeStats.yellowCards} away={awayStats.yellowCards} />
+            <StatRow label="Red Cards" home={homeStats.redCards} away={awayStats.redCards} />
+            <StatRow label="Throw Ins" home={homeStats.throwIns} away={awayStats.throwIns} />
+            <StatRow label="Offsides" home={homeStats.offsides} away={awayStats.offsides} />
+            <StatRow label="Goal Kicks" home={homeStats.goalKicks} away={awayStats.goalKicks} />
+            <StatRow label="Substitutions" home={homeStats.substitutions} away={awayStats.substitutions} />
+          </div>
+        ) : (
+          <div className="h-full">
+            {isLineupsLoading ? (
+              <div className="text-center text-gray-500 dark:text-gray-400 py-6">
+                Kadrolar yükleniyor...
+              </div>
+            ) : homeTeamLineup && awayTeamLineup ? (
+              <MatchLineups
+                homeTeamLineup={homeTeamLineup}
+                awayTeamLineup={awayTeamLineup}
+              />
+            ) : (
+              <div className="text-center text-gray-500 dark:text-gray-400 py-6">
+                Bu maç için kadro bilgisi bulunmuyor
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

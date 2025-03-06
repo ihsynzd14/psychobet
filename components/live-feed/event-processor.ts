@@ -345,6 +345,9 @@ const eventProcessors = {
       'HalfTime': '1st Half Complete',
       'SecondHalf': '2nd Half Started',
       'PostMatch': '2nd Half Complete',
+      'Penalties': 'Penalties Started',
+      'FullTimeNormalTime': 'Full Time Normal Time',
+      'FullTimeExtraTime': 'Extra Time',
       'FullTime': '2nd Half Complete'
     };
 
@@ -591,7 +594,10 @@ export const processMatchActions = (data: any): MatchEvent[] => {
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
-    ['phaseChanges.phaseChanges', eventProcessors.phaseChanges],
+    ['phaseChanges.phaseChanges', (events) => eventProcessors.phaseChanges(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
     ['dangerStateChanges.dangerStateChanges', (events) => eventProcessors.dangerStateChanges(events).map(event => ({
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
@@ -604,12 +610,15 @@ export const processMatchActions = (data: any): MatchEvent[] => {
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
-    ['systemMessages.systemMessages', eventProcessors.systemMessages],
+    ['systemMessages.systemMessages', (events) => eventProcessors.systemMessages(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
     ['throwIns.matchActions', (events, extra) => eventProcessors.throwIns(events, extra).map(event => ({
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
-    ['shotsOffWoodwork.matchActions', (events) => eventProcessors.shotsOffWoodwork(events).map(event => ({
+    ['shotsOffWoodwork.shotsOffWoodwork', (events) => eventProcessors.shotsOffWoodwork(events).map(event => ({
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
@@ -625,7 +634,10 @@ export const processMatchActions = (data: any): MatchEvent[] => {
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
-    ['stoppageTimeAnnouncements.stoppageTimeAnnouncements', eventProcessors.stoppageTimeAnnouncements]
+    ['stoppageTimeAnnouncements.stoppageTimeAnnouncements', (events) => eventProcessors.stoppageTimeAnnouncements(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
   ];
 
   // Tek seferde tüm processorları çalıştır
@@ -665,8 +677,18 @@ const getSystemMessageType = (messageId: number): SystemMessageType => {
 
 // Optimize edilmiş zaman formatı fonksiyonu
 const formatTimeElapsed = (phase: string, timeElapsed: string): string => {
-  const [hours, minutes, seconds] = timeElapsed.split(':').map(Number);
-  const totalMinutes = (phase === 'SecondHalf' ? 45 : 0) + (hours * 60) + minutes;
+  if (!timeElapsed || timeElapsed === '00:00') return '00:00';
+
+  // HH:MM:SS formatını kontrol et
+  if (timeElapsed.split(':').length === 3) {
+    const [hours, minutes, seconds] = timeElapsed.split(':').map(Number);
+    const totalMinutes = (phase === 'SecondHalf' ? 45 : 0) + (hours * 60) + minutes;
+    return `${totalMinutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  // MM:SS formatı için
+  const [minutes, seconds] = timeElapsed.split(':').map(Number);
+  const totalMinutes = (phase === 'SecondHalf' ? 45 : 0) + minutes;
   return `${totalMinutes}:${seconds.toString().padStart(2, '0')}`;
 };
 

@@ -12,6 +12,7 @@ import { MatchEvent } from './live-feed/types';
 import { MatchStats } from './live-feed/match-stats';
 import { MatchHeader } from './live-feed/match-header';
 import { MatchLineups } from './live-feed/match-lineups';
+import { MatchInfo } from './live-feed/match-info';
 
 interface TeamInfo {
   sourceId: string;
@@ -30,7 +31,7 @@ interface TeamInfo {
   };
 }
 
-export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
+export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateUtc }: LiveFeedPageProps) {
   const [events, setEvents] = useState<MatchEvent[]>([]);
   const [currentTime, setCurrentTime] = useState<string>(formatTime(new Date()));
   const [homeTeam, setHomeTeam] = useState<TeamInfo | null>(null);
@@ -39,6 +40,8 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
   const [awayTeamLineup, setAwayTeamLineup] = useState<TeamLineup | null>(null);
   const [isLineupsLoading, setIsLineupsLoading] = useState<boolean>(true);
   const [possession, setPossession] = useState<{ home: number; away: number }>({ home: 0, away: 0 });
+  const [matchPeriod, setMatchPeriod] = useState<string>('First Half');
+  const [stoppageTime, setStoppageTime] = useState<number | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
   // Optimize event update function
@@ -125,18 +128,97 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
   // Memoize possession data for MatchStats
   const memoizedPossession = useMemo(() => possession, [possession.home, possession.away]);
 
-  // Son event'in timeElapsed'ını al
-  const lastTimeElapsed = useMemo(() => {
-    if (events.length === 0) return '00:00';
-    return events[0].timeElapsed; // Events zaten timestamp'e göre sıralı olduğu için ilk event en son event
+  // Son event'in timeElapsed'ını al ve matchPeriod'u güncelle
+  const { lastTimeElapsed, currentPhase } = useMemo(() => {
+    if (events.length === 0) return { lastTimeElapsed: '00:00', currentPhase: 'First Half' };
+    const lastEvent = events[0]; // Events zaten timestamp'e göre sıralı olduğu için ilk event en son event
+    
+    // Phase'e göre periyot metnini belirle
+    let phase = 'First Half';
+    switch (lastEvent.phase) {
+      case 'SecondHalf':
+        phase = 'Second Half';
+        break;
+      case 'HalfTime':
+        phase = 'Half Time';
+        break;
+      case 'FullTime':
+        phase = 'Full Time';
+        break;
+      case 'FullTimeExtraTime':
+        phase = 'Extra Time';
+        break;
+      case 'Penalties':
+        phase = 'Penalties';
+        break;
+      case 'PostMatch':
+        phase = 'Match Complete';
+        break;
+      default:
+        phase = 'First Half';
+    }
+    
+    return {
+      lastTimeElapsed: lastEvent.timeElapsed,
+      currentPhase: lastEvent.phase
+    };
   }, [events]);
+
+  useEffect(() => {
+    setMatchPeriod(currentPhase);
+  }, [currentPhase]);
+
+  // Uzatma süresini takip et
+  useEffect(() => {
+    // Uzatma süresi olaylarını bul
+    const stoppageTimeEvents = events.filter(e => e.type === 'stoppageTime');
+    
+    if (stoppageTimeEvents.length > 0) {
+      // En son uzatma süresi olayını al
+      const latestStoppageTimeEvent = stoppageTimeEvents.sort((a, b) => 
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )[0];
+      
+      // Eğer olay mevcut fazla ilgiliyse, uzatma süresini ayarla
+      if (latestStoppageTimeEvent.phase === currentPhase) {
+        const minutes = latestStoppageTimeEvent.details.addedMinutes;
+        setStoppageTime(typeof minutes === 'number' ? minutes : null);
+      } else {
+        // Eğer olay mevcut fazla ilgili değilse, uzatma süresini sıfırla
+        setStoppageTime(null);
+      }
+    } else {
+      // Uzatma süresi olayı yoksa, uzatma süresini sıfırla
+      setStoppageTime(null);
+    }
+  }, [events, currentPhase]);
 
   // Gol sayılarını hesapla
   const { homeGoals, awayGoals } = useMemo(() => {
-    const goals = events.filter(e => e.type === 'dangerState' && e.details.dangerState === 'Goal');
+    // Tüm gol olaylarını bul (dangerState tipindeki Goal olayları)
+    const dangerStateGoals = events.filter(e => e.type === 'dangerState' && e.details.dangerState === 'Goal');
+    
+    // VAR kararlarını bul - sadece gol ile ilgili ve "No Goal" kararı verilmiş olanlar
+    const cancelledGoals = events.filter(e => 
+      e.type === 'var' && 
+      e.details.reason?.includes('Goal') && 
+      e.details.outcome?.includes('No Goal') &&
+      e.details.state === 'Safe' // Sadece tamamlanmış VAR kararlarını dikkate al
+    );
+    
+    // Ev sahibi ve deplasman takımlarının gol sayılarını hesapla
+    const homeTeamGoals = dangerStateGoals.filter(e => e.team === 'Home').length;
+    const awayTeamGoals = dangerStateGoals.filter(e => e.team === 'Away').length;
+    
+    // İptal edilen golleri takımlara göre say
+    const cancelledHomeGoals = cancelledGoals.filter(e => e.team === 'Home').length;
+    const cancelledAwayGoals = cancelledGoals.filter(e => e.team === 'Away').length;
+    
+    // Net gol sayısını hesapla
+    // Tehlike durumu olaylarından gelen goller - VAR ile iptal edilen goller
     return {
-      homeGoals: goals.filter(e => e.team === 'Home').length,
-      awayGoals: goals.filter(e => e.team === 'Away').length
+      homeGoals: Math.max(0, homeTeamGoals - cancelledHomeGoals),
+      awayGoals: Math.max(0, awayTeamGoals - cancelledAwayGoals)
     };
   }, [events]);
 
@@ -149,6 +231,34 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
       updatePossession(data);
     });
 
+    // Sayfa yenilendiğinde feed'in aktif olduğundan emin ol
+    const ensureFeedIsActive = async () => {
+      try {
+        // Feed'in aktif olup olmadığını kontrol et
+        await api.getLastAction(fixtureId);
+      } catch (error: any) {
+        // Eğer feed aktif değilse, yeniden başlat
+        if (error.message?.includes('Feed not found')) {
+          try {
+            await api.startFeed(fixtureId);
+            console.log('Feed restarted after page refresh');
+          } catch (startError) {
+            console.error('Error restarting feed:', startError);
+          }
+        }
+      }
+    };
+
+    // Konsola yazdırarak değerleri kontrol et
+    console.log('LiveFeedPage received props:', {
+      fixtureId,
+      competitionName,
+      matchName,
+      startDateUtc
+    });
+
+    ensureFeedIsActive();
+
     // 10 saniye sonra hala data gelmemişse loading'i kaldır
     const timer = setTimeout(() => {
       setIsLineupsLoading(false);
@@ -158,7 +268,7 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
       unsubscribe();
       clearTimeout(timer);
     };
-  }, [fixtureId, updateEvents, updateTeams, updateLineups, updatePossession]);
+  }, [fixtureId, updateEvents, updateTeams, updateLineups, updatePossession, competitionName, matchName, startDateUtc]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -187,17 +297,27 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
       <div className="h-screen flex">
         <div className="flex-1">
           {homeTeam && awayTeam && (
-            <MatchHeader 
-              homeTeam={homeTeam} 
-              awayTeam={awayTeam} 
-              currentTime={currentTime}
-              matchPeriod="1st Half"
-              homeRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Home').length}
-              awayRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Away').length}
-              matchTimeElapsed={lastTimeElapsed}
-              homeScore={homeGoals}
-              awayScore={awayGoals}
-            />
+            <>
+              <MatchInfo 
+                competitionName={competitionName}
+                matchName={matchName}
+                startDateUtc={startDateUtc}
+                events={events}
+              />
+              <MatchHeader 
+                homeTeam={homeTeam} 
+                awayTeam={awayTeam} 
+                currentTime={currentTime}
+                matchPeriod={matchPeriod}
+                homeRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Home').length}
+                awayRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Away').length}
+                matchTimeElapsed={lastTimeElapsed}
+                homeScore={homeGoals}
+                awayScore={awayGoals}
+                stoppageTime={stoppageTime}
+                currentPhase={currentPhase}
+              />
+            </>
           )}
 
           <div className="h-[calc(100vh-100px)]">
@@ -248,36 +368,17 @@ export function LiveFeedPage({ fixtureId }: LiveFeedPageProps) {
           <div className="border-b border-gray-100 dark:border-gray-700 p-2">
             <h2 className="text-sm font-normal flex items-center gap-2">
               <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
-              Match Stats
+              Match Details
             </h2>
           </div>
           <div className="border-t border-gray-100 dark:border-gray-700">
             <MatchStats 
               events={events} 
-              possession={memoizedPossession} 
+              possession={memoizedPossession}
+              homeTeamLineup={homeTeamLineup}
+              awayTeamLineup={awayTeamLineup}
+              isLineupsLoading={isLineupsLoading}
             />
-          </div>
-          <div className="border-b border-gray-100 dark:border-gray-700 p-2">
-            <h2 className="text-sm font-normal flex items-center gap-2">
-              <Users className="w-4 h-4 text-blue-500" />
-              Lineups
-            </h2>
-          </div>
-          <div className="flex-1 overflow-auto">
-            {isLineupsLoading ? (
-              <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-                Loading lineups...
-              </div>
-            ) : homeTeamLineup && awayTeamLineup ? (
-              <MatchLineups
-                homeTeamLineup={homeTeamLineup}
-                awayTeamLineup={awayTeamLineup}
-              />
-            ) : (
-              <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-                No lineups available for this match
-              </div>
-            )}
           </div>
         </div>
       </div>

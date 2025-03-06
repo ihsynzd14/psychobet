@@ -16,6 +16,7 @@ import type { Fixture } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { RealTimeFeedModal } from './real-time-feed-modal';
+import { useFixtureStore } from '@/lib/store';
 
 interface FeedTableProps {
   fixtures: Fixture[];
@@ -118,11 +119,12 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
                       <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                         <Clock className="w-4 h-4 text-blue-500" />
                         <time className="tabular-nums font-medium whitespace-nowrap">
-                          {new Date(fixture.startDateUtc).toLocaleString(undefined, {
+                          {new Date(fixture.startDateUtc).toLocaleString('en-EN', {
                             month: 'short',
                             day: 'numeric',
                             hour: '2-digit',
-                            minute: '2-digit'
+                            minute: '2-digit',
+                            hour12: false
                           })}
                         </time>
                       </div>
@@ -145,7 +147,16 @@ export function FeedTable({ fixtures, activeFeeds, onStart, onStop }: FeedTableP
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => router.push(`/live/${fixture.fixtureId}`)}
+                              onClick={() => {
+                                // Store'a fixture detaylarını kaydet
+                                useFixtureStore.getState().setFixtureDetails(fixture.fixtureId, {
+                                  competitionName: fixture.competitionName,
+                                  matchName: fixture.name,
+                                  startDateUtc: fixture.startDateUtc
+                                });
+                                // URL'e sadece fixtureId'yi ekleyerek yönlendir
+                                router.push(`/live/${fixture.fixtureId}`);
+                              }}
                               className="text-xs bg-blue-50 text-blue-600 group/btn hover:bg-blue-100 hover:text-blue-700 hover:border-blue-300 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 dark:hover:text-blue-300 transition-all hover:scale-105"
                             >
                               <Radio className="w-3 h-3 mr-1 group-hover/btn:animate-pulse" />

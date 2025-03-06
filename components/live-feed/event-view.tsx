@@ -98,7 +98,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     case 'penalty':
       return 'text-red-600 dark:text-red-400';
     case 'var':
-      return event?.details?.stateColor || 'text-purple-600 dark:text-purple-400';
+      return 'text-purple-600 dark:text-purple-400';
     case 'phaseChange':
       return 'text-green-600 dark:text-green-400';
     case 'woodwork':
@@ -111,10 +111,14 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-blue-600 dark:text-blue-400';
     case 'systemMessage':
       const messageType = event?.details.messageType;
-      if (messageType === 'warning') return 'text-yellow-600 dark:text-yellow-400';
-      if (messageType === 'error') return 'text-red-600 dark:text-red-400';
-      if (messageType === 'success') return 'text-green-600 dark:text-green-400';
-      return 'text-blue-600 dark:text-blue-400';
+      if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
+        if (event?.details?.message?.toLowerCase().includes('yellow')) {
+          return 'text-yellow-600 dark:text-yellow-400';
+        } else if (event?.details?.message?.toLowerCase().includes('red')) {
+          return 'text-red-600 dark:text-red-400';
+        }
+      }
+      return 'text-orange-600 dark:text-orange-400';
     case 'stoppageTime':
       return 'text-blue-600 dark:text-blue-400';
     default:
@@ -210,7 +214,7 @@ const getEventTitle = (event: MatchEvent): string => {
       }
       return 'Card Risk Ended';
     case 'substitution':
-      return `Substitution${event.details.playerOn?.sourceName && event.details.playerOff?.sourceName ? `: ${event.details.playerOff.sourceName} ➔ ${event.details.playerOn.sourceName}` : ''}`;
+      return `Substitution${event.details.playerOn?.sourceName && event.details.playerOff?.sourceName ? `: <span class="text-red-600 dark:text-red-400">${event.details.playerOff.sourceName}</span> ➔ <span class="text-green-600 dark:text-green-400">${event.details.playerOn.sourceName}</span>` : ''}`;
     case 'shotOnTarget':
       return `Shot on Target${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}${event.details.savedBy?.sourceName ? ` (Saved by: ${event.details.savedBy.sourceName})` : ''}`;
     case 'shotOffTarget':
@@ -345,18 +349,14 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     case 'shotBlocked':
       return 'bg-gray-200 dark:bg-gray-700';
     case 'shotOffWoodwork':
-      return 'bg-orange-50 dark:bg-orange-950 border-l-4 border-l-orange-500';
+      return 'bg-orange-200 dark:bg-orange-900';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'bg-blue-200 dark:bg-blue-900';
     case 'penalty':
       return 'bg-red-200 dark:bg-red-900';
     case 'var':
-      return event?.details?.isInProgress 
-        ? 'bg-yellow-100 dark:bg-yellow-950'
-        : event?.details?.state === 'Danger'
-        ? 'bg-red-100 dark:bg-red-950'
-        : 'bg-purple-50 dark:bg-purple-950';
+      return 'bg-purple-200 dark:bg-purple-900';
     case 'phaseChange':
       return 'bg-green-200 dark:bg-green-900';
     case 'throwIn':
@@ -371,10 +371,14 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-blue-200 dark:bg-blue-900';
     case 'systemMessage':
       const messageType = event?.details.messageType;
-      if (messageType === 'warning') return 'bg-yellow-200 dark:bg-yellow-900';
-      if (messageType === 'error') return 'bg-red-200 dark:bg-red-900';
-      if (messageType === 'success') return 'bg-green-200 dark:bg-green-900';
-      return 'bg-blue-200 dark:bg-blue-900';
+      if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
+        if (event?.details?.message?.toLowerCase().includes('yellow')) {
+          return 'bg-yellow-200 dark:bg-yellow-900';
+        } else if (event?.details?.message?.toLowerCase().includes('red')) {
+          return 'bg-red-200 dark:bg-red-900';
+        }
+      }
+      return 'bg-orange-200 dark:bg-orange-900';
     case 'stoppageTime':
       return 'bg-blue-200 dark:bg-blue-900';
     default:
@@ -461,18 +465,14 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     case 'shotBlocked':
       return 'bg-gray-100 dark:bg-gray-800';
     case 'shotOffWoodwork':
-      return 'bg-orange-50 dark:bg-orange-950 border-l-4 border-l-orange-500';
+      return 'bg-orange-50 dark:bg-orange-950';
     case 'cornerAwarded':
     case 'cornerTaken':
       return 'bg-blue-50 dark:bg-blue-950';
     case 'penalty':
       return 'bg-red-50 dark:bg-red-950';
     case 'var':
-      return event?.details?.isInProgress 
-        ? 'bg-yellow-100 dark:bg-yellow-950'
-        : event?.details?.state === 'Danger'
-        ? 'bg-red-100 dark:bg-red-950'
-        : 'bg-purple-50 dark:bg-purple-950';
+      return 'bg-purple-50 dark:bg-purple-950';
     case 'phaseChange':
       return 'bg-green-50 dark:bg-green-950';
     case 'throwIn':
@@ -487,10 +487,14 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-blue-50 dark:bg-blue-950';
     case 'systemMessage':
       const messageType = event.details.messageType;
-      if (messageType === 'warning') return 'bg-yellow-50 dark:bg-yellow-950';
-      if (messageType === 'error') return 'bg-red-50 dark:bg-red-950';
-      if (messageType === 'success') return 'bg-green-50 dark:bg-green-950';
-      return 'bg-blue-50 dark:bg-blue-950';
+      if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
+        if (event?.details?.message?.toLowerCase().includes('yellow')) {
+          return 'bg-yellow-50 dark:bg-yellow-950';
+        } else if (event?.details?.message?.toLowerCase().includes('red')) {
+          return 'bg-red-50 dark:bg-red-950';
+        }
+      }
+      return 'bg-orange-50 dark:bg-orange-950';
     case 'stoppageTime':
       return 'bg-white dark:bg-blue-950';
     default:
@@ -586,11 +590,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
     case 'penalty':
       return 'border-red-200 dark:border-red-800';
     case 'var':
-      return event?.details?.isInProgress 
-        ? 'border-yellow-300 dark:border-yellow-800'
-        : event?.details?.state === 'Danger'
-        ? 'border-red-300 dark:border-red-800'
-        : 'border-purple-200 dark:border-purple-800';
+      return 'border-purple-200 dark:border-purple-800';
     case 'phaseChange':
       return 'border-green-200 dark:border-green-800';
     case 'throwIn':
@@ -605,10 +605,14 @@ const getEventBorderColor = (event: MatchEvent): string => {
       return 'border-blue-200 dark:border-blue-800';
     case 'systemMessage':
       const messageType = event.details.messageType;
-      if (messageType === 'warning') return 'border-yellow-200 dark:border-yellow-800';
-      if (messageType === 'error') return 'border-red-200 dark:border-red-800';
-      if (messageType === 'success') return 'border-green-200 dark:border-green-800';
-      return 'border-blue-200 dark:border-blue-800';
+      if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
+        if (event?.details?.message?.toLowerCase().includes('yellow')) {
+          return 'border-yellow-200 dark:border-yellow-800';
+        } else if (event?.details?.message?.toLowerCase().includes('red')) {
+          return 'border-red-200 dark:border-red-800';
+        }
+      }
+      return 'border-orange-200 dark:border-orange-800';
     case 'stoppageTime':
       return 'border-blue-200 dark:border-blue-800';
     default:
@@ -666,15 +670,13 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
           {getEventIcon(event.type, event)}
         </div>
         
-        <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'flex items-center justify-center' : ''}`}>
-          <div className={`flex items-center gap-1 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'mb-0 text-xs' : 'mb-0.5 text-sm'} font-medium text-gray-900 dark:text-white ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'justify-center' : isAwayTeam ? 'justify-start' : 'justify-start'}`}>
-            {getEventTitle(event)}
+        <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'flex flex-col items-center justify-center gap-0.5' : ''}`}>
+          <div className={`flex items-center gap-1 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs' : 'mb-0.5 text-sm'} font-medium text-gray-900 dark:text-white ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'justify-center' : isAwayTeam ? 'justify-start' : 'justify-start'}`}>
+            <div dangerouslySetInnerHTML={{ __html: getEventTitle(event) }} />
           </div>
-          {!isSystemMessage && !isBookingState && !isPhaseChange && !isStoppageTime && (
-            <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ${isAwayTeam ? 'text-right' : 'text-right'}`}>
+            <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-center justify-center mr-4' : isAwayTeam ? 'text-right' : 'text-right'}`}>
               {event.timeElapsed}
             </div>
-          )}
         </div>
       </div>
     </div>

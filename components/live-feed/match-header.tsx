@@ -29,6 +29,8 @@ interface MatchHeaderProps {
   matchTimeElapsed?: string;
   homeScore?: number;
   awayScore?: number;
+  stoppageTime?: number | null;
+  currentPhase?: string;
 }
 
 const RedCards = memo(({ count }: { count: number }) => {
@@ -75,12 +77,29 @@ export const MatchHeader = memo<MatchHeaderProps>(({
   awayRedCards = 0,
   matchTimeElapsed = '00:00',
   homeScore = 0,
-  awayScore = 0
+  awayScore = 0,
+  stoppageTime = null,
+  currentPhase = 'FirstHalf'
 }) => {
   const [displayTime, setDisplayTime] = useState(matchTimeElapsed);
   const [lastTimeElapsed, setLastTimeElapsed] = useState(matchTimeElapsed);
 
   useEffect(() => {
+    if (matchPeriod === 'Half Time') {
+      setDisplayTime('45:00');
+      return;
+    }
+    
+    if (matchPeriod === 'Match Complete') {
+      setDisplayTime('90:00');
+      return;
+    }
+
+    if (matchPeriod === 'Extra Time') {
+      setDisplayTime('90:00');
+      return;
+    }
+
     if (matchTimeElapsed !== lastTimeElapsed) {
       setDisplayTime(matchTimeElapsed);
       setLastTimeElapsed(matchTimeElapsed);
@@ -94,7 +113,13 @@ export const MatchHeader = memo<MatchHeaderProps>(({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [matchTimeElapsed, lastTimeElapsed]);
+  }, [matchTimeElapsed, lastTimeElapsed, matchPeriod]);
+
+  const showStoppageTime = useMemo(() => {
+    return stoppageTime !== null && 
+           stoppageTime > 0 && 
+           (currentPhase === 'FirstHalf' || currentPhase === 'SecondHalf');
+  }, [stoppageTime, currentPhase]);
 
   if (!homeTeam?.strip || !awayTeam?.strip) {
     return (
@@ -130,8 +155,15 @@ export const MatchHeader = memo<MatchHeaderProps>(({
         <div className="flex items-center gap-4">
           <ScoreDisplay score={homeScore} />
           <div className="flex flex-col items-center min-w-[80px]">
-            <span className="text-lg font-bold text-gray-900 dark:text-white">{displayTime}</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{matchPeriod}</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-white">
+              {displayTime}
+              {showStoppageTime && (
+                <span className="text-red-500 dark:text-red-400 ml-1">+{stoppageTime}'</span>
+              )}
+            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {matchPeriod === 'Half Time' ? 'Half Time - Break' : matchPeriod}
+            </span>
           </div>
           <ScoreDisplay score={awayScore} />
         </div>

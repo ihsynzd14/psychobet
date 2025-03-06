@@ -37,7 +37,8 @@
     "socket.io-client": "^4.7.4",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@types/node": "^20.11.25",

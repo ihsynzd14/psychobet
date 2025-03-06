@@ -92,6 +92,9 @@ export interface MatchEvent {
 
 export interface LiveFeedPageProps {
   fixtureId: string;
+  competitionName: string;
+  matchName: string;
+  startDateUtc: string;
 }
 
 export interface Player {
