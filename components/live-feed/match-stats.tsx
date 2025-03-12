@@ -121,7 +121,7 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
           stats.shots++;
           stats.shotsBlocked++;
           break;
-        case 'shotWoodwork':
+        case 'shotOffWoodwork':
           stats.shots++;
           stats.shotsWW++;
           break;
@@ -147,6 +147,7 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
         case 'missedPenalty': stats.missedPenalties++; break;
         case 'yellowCard': stats.yellowCards++; break;
         case 'redCard': stats.redCards++; break;
+        case 'secondYellow': stats.redCards++; break;
         case 'throwIn': stats.throwIns++; break;
         case 'offside': stats.offsides++; break;
         case 'goalKick': stats.goalKicks++; break;

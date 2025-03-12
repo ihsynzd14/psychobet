@@ -1,6 +1,7 @@
 import { memo, useMemo, useState, useEffect } from 'react';
 import { TeamJersey } from './jerseys';
 import { Square } from 'lucide-react';
+import Image from 'next/image';
 
 interface TeamInfo {
   sourceId: string;
@@ -41,7 +42,14 @@ const RedCards = memo(({ count }: { count: number }) => {
   return (
     <div className="flex items-center gap-0.5">
       {cards.map((_, index) => (
-        <Square key={index} className="w-4 h-4 fill-red-600 text-red-600" />
+        <Image 
+          key={index} 
+          src="/img/red.png" 
+          alt="Red Card" 
+          width={16} 
+          height={16} 
+          className="w-4 h-5"
+        />
       ))}
     </div>
   );
@@ -83,37 +91,181 @@ export const MatchHeader = memo<MatchHeaderProps>(({
 }) => {
   const [displayTime, setDisplayTime] = useState(matchTimeElapsed);
   const [lastTimeElapsed, setLastTimeElapsed] = useState(matchTimeElapsed);
+  const [halfTimeEndTime, setHalfTimeEndTime] = useState('45:00');
+  const [prevMatchPeriod, setPrevMatchPeriod] = useState(matchPeriod);
+  const [displayHomeScore, setDisplayHomeScore] = useState(homeScore);
+  const [displayAwayScore, setDisplayAwayScore] = useState(awayScore);
+
+  // Update scores when props change (including when VAR cancels a goal)
+  useEffect(() => {
+    setDisplayHomeScore(homeScore);
+    setDisplayAwayScore(awayScore);
+  }, [homeScore, awayScore]);
 
   useEffect(() => {
-    if (matchPeriod === 'Half Time') {
-      setDisplayTime('45:00');
-      return;
+    // Debug log to help identify why timer might still be running
+    console.log('Current state:', { 
+      matchPeriod, 
+      currentPhase, 
+      displayTime,
+      matchTimeElapsed,
+      shouldStopTimer: currentPhase === 'PostMatch'
+    });
+
+    // If match period changes, update the previous match period
+    if (matchPeriod !== prevMatchPeriod) {
+      setPrevMatchPeriod(matchPeriod);
+    }
+
+    // FIRST HALF - Timer runs normally
+    if (currentPhase === 'FirstHalf') {
+      // Update time if we get a new time from events
+      if (matchTimeElapsed !== lastTimeElapsed) {
+        setDisplayTime(matchTimeElapsed);
+        setLastTimeElapsed(matchTimeElapsed);
+      }
+      
+      // Start the timer
+      const timer = setInterval(() => {
+        setDisplayTime(prevTime => {
+          const seconds = timeElapsedToSeconds(prevTime);
+          return secondsToTimeElapsed(seconds + 1);
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
     }
     
-    if (matchPeriod === 'Match Complete') {
-      setDisplayTime('90:00');
-      return;
+    // HALF TIME - Show last time from first half and stop timer
+    if (currentPhase === 'HalfTime' || matchPeriod === 'Half Time') {
+      // Save the end time of first half when we first enter half time
+      if (prevMatchPeriod !== 'Half Time' && matchPeriod === 'Half Time') {
+        setHalfTimeEndTime(displayTime);
+      }
+      
+      // Display the saved half time end
+      setDisplayTime(halfTimeEndTime);
+      return; // Stop timer
     }
-
-    if (matchPeriod === 'Extra Time') {
-      setDisplayTime('90:00');
-      return;
+    
+    // SECOND HALF - Timer starts from 45:00
+    if (currentPhase === 'SecondHalf' || matchPeriod === 'Second Half') {
+      // If we're just starting second half, set time to 45:00
+      if (prevMatchPeriod === 'Half Time' && (matchPeriod === 'Second Half' || currentPhase === 'SecondHalf')) {
+        setDisplayTime('45:00');
+      }
+      
+      // Update time if we get a new time from events
+      if (matchTimeElapsed !== lastTimeElapsed) {
+        setDisplayTime(matchTimeElapsed);
+        setLastTimeElapsed(matchTimeElapsed);
+      }
+      
+      // Start the timer
+      const timer = setInterval(() => {
+        setDisplayTime(prevTime => {
+          const seconds = timeElapsedToSeconds(prevTime);
+          return secondsToTimeElapsed(seconds + 1);
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
     }
-
+    
+    // FULL TIME NORMAL TIME - Show last time from second half and stop timer
+    if (currentPhase === 'FullTimeNormalTime' || matchPeriod === 'Full Time Normal Time') {
+      // Keep the last elapsed time
+      if (prevMatchPeriod !== 'Full Time Normal Time' && matchPeriod === 'Full Time Normal Time') {
+        setDisplayTime(matchTimeElapsed);
+      }
+      return; // Stop timer
+    }
+    
+    // EXTRA TIME FIRST HALF - Timer starts from 90:00
+    if (currentPhase === 'FullTimeExtraTime' || matchPeriod === 'Extra Time First Half') {
+      // If we're just starting extra time, set time to 90:00
+      if (prevMatchPeriod === 'Full Time Normal Time' && 
+          (matchPeriod === 'Extra Time First Half' || currentPhase === 'FullTimeExtraTime')) {
+        setDisplayTime('90:00');
+      }
+      
+      // Update time if we get a new time from events
+      if (matchTimeElapsed !== lastTimeElapsed) {
+        setDisplayTime(matchTimeElapsed);
+        setLastTimeElapsed(matchTimeElapsed);
+      }
+      
+      // Start the timer
+      const timer = setInterval(() => {
+        setDisplayTime(prevTime => {
+          const seconds = timeElapsedToSeconds(prevTime);
+          return secondsToTimeElapsed(seconds + 1);
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
+    }
+    
+    // EXTRA TIME HALF TIME - Show last time from extra time first half and stop timer
+    if (currentPhase === 'ExtraTimeHalfTime' || matchPeriod === 'Extra Time Half Time') {
+      // Keep the last elapsed time
+      if (prevMatchPeriod !== 'Extra Time Half Time' && matchPeriod === 'Extra Time Half Time') {
+        setDisplayTime(matchTimeElapsed);
+      }
+      return; // Stop timer
+    }
+    
+    // EXTRA TIME SECOND HALF - Timer starts from 105:00
+    if (currentPhase === 'ExtraTimeSecondHalf' || matchPeriod === 'Extra Time Second Half') {
+      // If we're just starting extra time second half, set time to 105:00
+      if (prevMatchPeriod === 'Extra Time Half Time' && 
+          (matchPeriod === 'Extra Time Second Half' || currentPhase === 'ExtraTimeSecondHalf')) {
+        setDisplayTime('105:00');
+      }
+      
+      // Update time if we get a new time from events
+      if (matchTimeElapsed !== lastTimeElapsed) {
+        setDisplayTime(matchTimeElapsed);
+        setLastTimeElapsed(matchTimeElapsed);
+      }
+      
+      // Start the timer
+      const timer = setInterval(() => {
+        setDisplayTime(prevTime => {
+          const seconds = timeElapsedToSeconds(prevTime);
+          return secondsToTimeElapsed(seconds + 1);
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
+    }
+    
+    // PENALTIES - Show last time from extra time second half and stop timer
+    if (currentPhase === 'Penalties' || matchPeriod === 'Penalties') {
+      // Keep the last elapsed time (should be 120:00)
+      if (prevMatchPeriod !== 'Penalties' && matchPeriod === 'Penalties') {
+        setDisplayTime('120:00');
+      }
+      return; // Stop timer
+    }
+    
+    // POST MATCH - Show last time and stop timer
+    if (currentPhase === 'PostMatch' || matchPeriod === 'Match Complete' || 
+        matchPeriod === '2nd Half Complete' || matchPeriod === 'Full Time') {
+      // Preserve the final time
+      if (prevMatchPeriod !== 'Match Complete' && prevMatchPeriod !== 'PostMatch' && 
+          prevMatchPeriod !== '2nd Half Complete' && prevMatchPeriod !== 'Full Time') {
+        setDisplayTime(matchTimeElapsed);
+      }
+      return; // Stop timer
+    }
+    
+    // Default case - update time if we get a new time from events
     if (matchTimeElapsed !== lastTimeElapsed) {
       setDisplayTime(matchTimeElapsed);
       setLastTimeElapsed(matchTimeElapsed);
     }
-
-    const timer = setInterval(() => {
-      setDisplayTime(prevTime => {
-        const seconds = timeElapsedToSeconds(prevTime);
-        return secondsToTimeElapsed(seconds + 1);
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [matchTimeElapsed, lastTimeElapsed, matchPeriod]);
+  }, [matchTimeElapsed, lastTimeElapsed, matchPeriod, currentPhase, prevMatchPeriod, halfTimeEndTime, displayTime]);
 
   const showStoppageTime = useMemo(() => {
     return stoppageTime !== null && 
@@ -153,7 +305,7 @@ export const MatchHeader = memo<MatchHeaderProps>(({
 
         {/* Score and Match Time */}
         <div className="flex items-center gap-4">
-          <ScoreDisplay score={homeScore} />
+          <ScoreDisplay score={displayHomeScore} />
           <div className="flex flex-col items-center min-w-[80px]">
             <span className="text-lg font-bold text-gray-900 dark:text-white">
               {displayTime}
@@ -165,7 +317,7 @@ export const MatchHeader = memo<MatchHeaderProps>(({
               {matchPeriod === 'Half Time' ? 'Half Time - Break' : matchPeriod}
             </span>
           </div>
-          <ScoreDisplay score={awayScore} />
+          <ScoreDisplay score={displayAwayScore} />
         </div>
 
         {/* Away Team */}

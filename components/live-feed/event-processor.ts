@@ -185,7 +185,7 @@ const eventProcessors = {
   corners: (corners: any[]): MatchEvent[] => {
     const events: MatchEvent[] = [];
     corners?.forEach((corner) => {
-      if (corner.awarded?.isConfirmed) {
+      if (corner.awarded) {
         events.push({
           id: parseInt(corner.id + '01'),
           type: 'cornerAwarded',
@@ -212,18 +212,50 @@ const eventProcessors = {
   },
 
   penalties: (penalties: any[]): MatchEvent[] => {
-    return penalties?.map((penalty) => ({
-      id: penalty.id,
-      type: 'penalty',
-      timestamp: penalty.timestampUtc,
-      phase: penalty.phase,
-      timeElapsed: penalty.timeElapsedInPhase,
-      team: penalty.team,
-      details: {
-        outcome: penalty.penaltyOutcome?.outcome,
-        isConfirmed: penalty.penaltyOutcome?.isConfirmed
+    if (!penalties) return [];
+
+    const events: MatchEvent[] = [];
+
+    penalties.forEach(penalty => {
+      // Create initial penalty awarded event
+      events.push({
+        id: penalty.id * 10, // Multiply by 10 to avoid ID conflicts with outcome events
+        type: 'penalty',
+        timestamp: penalty.timestampUtc,
+        phase: penalty.phase,
+        timeElapsed: penalty.timeElapsedInPhase,
+        team: penalty.team,
+        details: {
+          state: 'awarded',
+          outcome: undefined,
+          player: getPlayerInfo(penalty.playerInternalId, penalty.team),
+          isConfirmed: penalty.isConfirmed
+        }
+      });
+
+      // If we have an outcome, create an outcome event
+      if (penalty.penaltyOutcome) {
+        const outcomeTimestamp = new Date(penalty.timestampUtc);
+        outcomeTimestamp.setSeconds(outcomeTimestamp.getSeconds() + 1); // Add 1 second to ensure proper ordering
+
+        events.push({
+          id: penalty.id * 10 + 1, // Add 1 to differentiate from award event
+          type: 'penalty',
+          timestamp: outcomeTimestamp.toISOString(),
+          phase: penalty.phase,
+          timeElapsed: penalty.timeElapsedInPhase,
+          team: penalty.team,
+          details: {
+            state: 'outcome',
+            outcome: penalty.penaltyOutcome.outcome || 'NotTaken',
+            player: getPlayerInfo(penalty.playerInternalId, penalty.team),
+            isConfirmed: penalty.penaltyOutcome.isConfirmed
+          }
+        });
       }
-    })) || [];
+    });
+
+    return events;
   },
 
   varStateChanges: (var_: any[]): MatchEvent[] => {
@@ -344,10 +376,12 @@ const eventProcessors = {
       'FirstHalf': '1st Half Started',
       'HalfTime': '1st Half Complete',
       'SecondHalf': '2nd Half Started',
-      'PostMatch': '2nd Half Complete',
+      'PostMatch': 'Match Complete',
       'Penalties': 'Penalties Started',
       'FullTimeNormalTime': 'Full Time Normal Time',
-      'FullTimeExtraTime': 'Extra Time',
+      'FullTimeExtraTime': 'Extra Time First Half',
+      'ExtraTimeHalfTime': 'Extra Time Half Time',
+      'ExtraTimeSecondHalf': 'Extra Time Second Half',
       'FullTime': '2nd Half Complete'
     };
 
@@ -366,6 +400,16 @@ const eventProcessors = {
           ? '1st Half Complete' 
           : phase.previousPhase === 'SecondHalf' && phase.currentPhase === 'FullTime'
           ? '2nd Half Complete'
+          : phase.previousPhase === 'SecondHalf' && phase.currentPhase === 'FullTimeNormalTime'
+          ? 'Full Time Normal Time'
+          : phase.previousPhase === 'FullTimeNormalTime' && phase.currentPhase === 'FullTimeExtraTime'
+          ? 'Extra Time First Half'
+          : phase.previousPhase === 'FullTimeExtraTime' && phase.currentPhase === 'ExtraTimeHalfTime'
+          ? 'Extra Time Half Time'
+          : phase.previousPhase === 'ExtraTimeHalfTime' && phase.currentPhase === 'ExtraTimeSecondHalf'
+          ? 'Extra Time Second Half'
+          : phase.previousPhase === 'ExtraTimeSecondHalf' && phase.currentPhase === 'Penalties'
+          ? 'Penalties Started'
           : phaseTitles[phase.currentPhase] || `${phase.currentPhase} Started`
       }
     })) || [];
@@ -416,32 +460,108 @@ const eventProcessors = {
   },
 
   bookingStateChanges: (bookings: any[], allEvents: any): MatchEvent[] => {
-    return bookings?.map((booking) => {
-      // Önceki booking state'i bul - aynı takım için ve daha önceki bir zaman için
-      const previousBookings = allEvents.bookingStateChanges?.bookingStateChanges?.filter(
-        (prevBooking: any) => 
-          prevBooking.sequenceId < booking.sequenceId && 
-          prevBooking.team === booking.team &&
-          prevBooking.bookingState !== 'Safe'
-      );
-
-      // En son booking state'i al
-      const previousBooking = previousBookings?.sort((a: any, b: any) => b.sequenceId - a.sequenceId)[0];
-
-      return {
-        id: booking.id,
-        type: 'bookingState',
-        timestamp: booking.timestampUtc,
-        phase: booking.phase,
-        timeElapsed: booking.timeElapsedInPhase,
-        team: booking.team,
-        details: {
-          bookingState: booking.bookingState,
-          previousState: previousBooking?.bookingState || null,
-          isConfirmed: booking.isConfirmed
+    const result: MatchEvent[] = [];
+    
+    if (!bookings) return result;
+    
+    interface YellowCardState {
+      sequenceId: number;
+      timestamp: string;
+    }
+    
+    // Track active booking states with their sequence IDs and timestamps
+    const activeStates = {
+      yellow: [] as YellowCardState[], // Array to track multiple yellow cards with their details
+      red: new Set<number>()
+    };
+    
+    // Process bookings in sequence order
+    const sortedBookings = [...bookings].sort((a, b) => a.sequenceId - b.sequenceId);
+    
+    sortedBookings.forEach(booking => {
+      if (booking.bookingState === 'YellowCardDanger') {
+        // Store the yellow card risk with its details
+        activeStates.yellow.push({
+          sequenceId: booking.sequenceId,
+          timestamp: booking.timestampUtc
+        });
+        
+        result.push({
+          id: booking.id,
+          type: 'bookingState',
+          timestamp: booking.timestampUtc,
+          phase: booking.phase,
+          timeElapsed: booking.timeElapsedInPhase,
+          team: booking.team,
+          details: {
+            bookingState: booking.bookingState,
+            previousState: undefined,
+            isConfirmed: booking.isConfirmed
+          }
+        });
+      } 
+      else if (booking.bookingState === 'RedCardDanger') {
+        activeStates.red.add(booking.sequenceId);
+        result.push({
+          id: booking.id,
+          type: 'bookingState',
+          timestamp: booking.timestampUtc,
+          phase: booking.phase,
+          timeElapsed: booking.timeElapsedInPhase,
+          team: booking.team,
+          details: {
+            bookingState: booking.bookingState,
+            previousState: undefined,
+            isConfirmed: booking.isConfirmed
+          }
+        });
+      }
+      else if (booking.bookingState === 'Safe') {
+        // Create end events for all active states
+        if (activeStates.red.size > 0) {
+          result.push({
+            id: booking.id * 10 + 1,
+            type: 'bookingState',
+            timestamp: booking.timestampUtc,
+            phase: booking.phase,
+            timeElapsed: booking.timeElapsedInPhase,
+            team: booking.team,
+            details: {
+              bookingState: 'Safe',
+              previousState: 'RedCardDanger',
+              isConfirmed: booking.isConfirmed
+            }
+          });
+          activeStates.red.clear();
         }
-      };
-    }) || [];
+        
+        // Create separate end events for each active yellow card risk
+        activeStates.yellow.forEach((yellowCard, index) => {
+          const yellowEndTime = new Date(booking.timestampUtc);
+          // Add small time offset for each yellow card to maintain order
+          yellowEndTime.setMilliseconds(yellowEndTime.getMilliseconds() + index + 1);
+          
+          result.push({
+            id: booking.id * 10 + 2 + index,
+            type: 'bookingState',
+            timestamp: yellowEndTime.toISOString(),
+            phase: booking.phase,
+            timeElapsed: booking.timeElapsedInPhase,
+            team: booking.team,
+            details: {
+              bookingState: 'Safe',
+              previousState: 'YellowCardDanger',
+              isConfirmed: booking.isConfirmed
+            }
+          });
+        });
+        
+        // Clear all active states
+        activeStates.yellow = [];
+      }
+    });
+    
+    return result;
   },
 
   systemMessages: (msgs: any[]): MatchEvent[] => {
@@ -535,6 +655,12 @@ const eventProcessors = {
         isConfirmed: announcement.isConfirmed
       }
     })) || [];
+  },
+
+  // Remove the missedPenalties processor since it's now handled in the penalties processor
+  missedPenalties: (penalties: any[]): MatchEvent[] => {
+    // Return empty array since missed penalties are now handled in the penalties processor
+    return [];
   }
 };
 
@@ -635,6 +761,10 @@ export const processMatchActions = (data: any): MatchEvent[] => {
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
     ['stoppageTimeAnnouncements.stoppageTimeAnnouncements', (events) => eventProcessors.stoppageTimeAnnouncements(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
+    ['missedPenalties.matchActions', (events) => eventProcessors.missedPenalties(events).map(event => ({
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],

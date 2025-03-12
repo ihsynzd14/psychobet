@@ -110,7 +110,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     case 'kickOff':
       return 'text-blue-600 dark:text-blue-400';
     case 'systemMessage':
-      const messageType = event?.details.messageType;
+      const messageType = event?.details?.messageType;
       if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
         if (event?.details?.message?.toLowerCase().includes('yellow')) {
           return 'text-yellow-600 dark:text-yellow-400';
@@ -210,9 +210,15 @@ const getEventTitle = (event: MatchEvent): string => {
       } else if (state === 'RedCardDanger') {
         return 'Red Card Risk';
       } else if (state === 'Safe') {
-        return event.details.previousState === 'RedCardDanger' ? 'Red Card Risk Ended' : event.details.previousState === 'YellowCardDanger' ? 'Yellow Card Risk Ended' : 'Card Risk Ended';
+        if (event.details.previousState === 'RedCardDanger') {
+          return 'Red Card Risk Ended';
+        } else if (event.details.previousState === 'YellowCardDanger') {
+          return 'Yellow Card Risk Ended';
+        } else {
+          return 'Yellow Card Risk Ended';
+        }
       }
-      return 'Card Risk Ended';
+      return 'Yellow Card Risk Ended';
     case 'substitution':
       return `Substitution${event.details.playerOn?.sourceName && event.details.playerOff?.sourceName ? `: <span class="text-red-600 dark:text-red-400">${event.details.playerOff.sourceName}</span> ➔ <span class="text-green-600 dark:text-green-400">${event.details.playerOn.sourceName}</span>` : ''}`;
     case 'shotOnTarget':
@@ -226,7 +232,17 @@ const getEventTitle = (event: MatchEvent): string => {
     case 'cornerTaken':
       return 'Corner Taken';
     case 'penalty':
-      return `Penalty - ${event.details.outcome || 'Pending'}`;
+      if (event.details.state === 'awarded') {
+        return `Penalty Awarded${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
+      }
+      // Handle outcome states
+      const outcomeTexts: Record<string, string> = {
+        'Scored': 'Penalty Scored',
+        'Missed': 'Penalty Missed',
+        'NotTaken': 'Penalty Pending',
+        'Retaken': 'Penalty to be Retaken'
+      };
+      return `${outcomeTexts[event.details.outcome || 'NotTaken']}${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'var':
       return `${event.details.stateText || 'VAR Review'} - ${event.details.reason || ''}${event.details.outcome ? ` - ${event.details.outcome}` : ''}`;
     case 'phaseChange':

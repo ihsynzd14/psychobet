@@ -11,7 +11,6 @@ import { LiveFeedPageProps, TeamLineup } from './live-feed/types';
 import { MatchEvent } from './live-feed/types';
 import { MatchStats } from './live-feed/match-stats';
 import { MatchHeader } from './live-feed/match-header';
-import { MatchLineups } from './live-feed/match-lineups';
 import { MatchInfo } from './live-feed/match-info';
 
 interface TeamInfo {
@@ -129,44 +128,152 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const memoizedPossession = useMemo(() => possession, [possession.home, possession.away]);
 
   // Son event'in timeElapsed'ını al ve matchPeriod'u güncelle
-  const { lastTimeElapsed, currentPhase } = useMemo(() => {
-    if (events.length === 0) return { lastTimeElapsed: '00:00', currentPhase: 'First Half' };
-    const lastEvent = events[0]; // Events zaten timestamp'e göre sıralı olduğu için ilk event en son event
+  const { lastTimeElapsed, currentPhase, displayPhase } = useMemo(() => {
+    if (events.length === 0) return { lastTimeElapsed: '00:00', currentPhase: 'FirstHalf', displayPhase: 'First Half' };
+    
+    // First check for phase change events to get the most accurate current phase
+    const phaseChangeEvents = events.filter(event => event.type === 'phaseChange');
+    
+    // If we have phase change events, use the most recent one to determine the current phase
+    if (phaseChangeEvents.length > 0) {
+      const latestPhaseChange = phaseChangeEvents[0]; // Events are already sorted by timestamp
+      
+      // Handle transition to PostMatch (match completely finished)
+      if (latestPhaseChange.phase === 'PostMatch') {
+        // Find the last regular event before the phase change to get the last elapsed time
+        const regularEvents = events.filter(event => 
+          event.team !== 'System' && 
+          event.type !== 'bookingState' && 
+          event.type !== 'phaseChange' && 
+          event.type !== 'stoppageTime' &&
+          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
+        );
+        
+        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        
+        return { 
+          lastTimeElapsed: lastTimeFromEvents, 
+          currentPhase: 'PostMatch', 
+          displayPhase: 'Match Complete' 
+        };
+      }
+      
+      // Handle transition to FullTimeNormalTime (second half finished, going to extra time)
+      if (latestPhaseChange.phase === 'FullTimeNormalTime' && latestPhaseChange.details.previousPhase === 'SecondHalf') {
+        const regularEvents = events.filter(event => 
+          event.team !== 'System' && 
+          event.type !== 'bookingState' && 
+          event.type !== 'phaseChange' && 
+          event.type !== 'stoppageTime' &&
+          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
+        );
+        
+        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        
+        return { 
+          lastTimeElapsed: lastTimeFromEvents, 
+          currentPhase: 'FullTimeNormalTime', 
+          displayPhase: 'Full Time Normal Time' 
+        };
+      }
+      
+      // Handle transition to ExtraTimeHalfTime (extra time first half finished)
+      if (latestPhaseChange.phase === 'ExtraTimeHalfTime' && latestPhaseChange.details.previousPhase === 'FullTimeExtraTime') {
+        const regularEvents = events.filter(event => 
+          event.team !== 'System' && 
+          event.type !== 'bookingState' && 
+          event.type !== 'phaseChange' && 
+          event.type !== 'stoppageTime' &&
+          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
+        );
+        
+        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        
+        return { 
+          lastTimeElapsed: lastTimeFromEvents, 
+          currentPhase: 'ExtraTimeHalfTime', 
+          displayPhase: 'Extra Time Half Time' 
+        };
+      }
+      
+      // Handle transition to Penalties (extra time second half finished)
+      if (latestPhaseChange.phase === 'Penalties' && latestPhaseChange.details.previousPhase === 'ExtraTimeSecondHalf') {
+        const regularEvents = events.filter(event => 
+          event.team !== 'System' && 
+          event.type !== 'bookingState' && 
+          event.type !== 'phaseChange' && 
+          event.type !== 'stoppageTime' &&
+          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
+        );
+        
+        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        
+        return { 
+          lastTimeElapsed: lastTimeFromEvents, 
+          currentPhase: 'Penalties', 
+          displayPhase: 'Penalties' 
+        };
+      }
+    }
+    
+    // Filter out system messages, booking states, phase changes, and stoppage time events
+    const filteredEvents = events.filter(event => 
+      event.team !== 'System' && 
+      event.type !== 'bookingState' && 
+      event.type !== 'phaseChange' && 
+      event.type !== 'stoppageTime'
+    );
+
+    // If no valid events found after filtering, return default values
+    if (filteredEvents.length === 0) return { lastTimeElapsed: '00:00', currentPhase: 'FirstHalf', displayPhase: 'First Half' };
+
+    // Get the last valid event
+    const lastEvent = filteredEvents[0]; // Events are already sorted by timestamp
     
     // Phase'e göre periyot metnini belirle
-    let phase = 'First Half';
+    let displayPhase = 'First Half';
     switch (lastEvent.phase) {
       case 'SecondHalf':
-        phase = 'Second Half';
+        displayPhase = 'Second Half';
         break;
       case 'HalfTime':
-        phase = 'Half Time';
+        displayPhase = 'Half Time';
         break;
       case 'FullTime':
-        phase = 'Full Time';
+        displayPhase = '2nd Half Complete';
+        return { lastTimeElapsed: lastEvent.timeElapsed, currentPhase: lastEvent.phase, displayPhase };
+      case 'FullTimeNormalTime':
+        displayPhase = 'Full Time Normal Time';
         break;
       case 'FullTimeExtraTime':
-        phase = 'Extra Time';
+        displayPhase = 'Extra Time First Half';
+        break;
+      case 'ExtraTimeHalfTime':
+        displayPhase = 'Extra Time Half Time';
+        break;
+      case 'ExtraTimeSecondHalf':
+        displayPhase = 'Extra Time Second Half';
         break;
       case 'Penalties':
-        phase = 'Penalties';
+        displayPhase = 'Penalties';
         break;
       case 'PostMatch':
-        phase = 'Match Complete';
+        displayPhase = 'Match Complete';
         break;
       default:
-        phase = 'First Half';
+        displayPhase = 'First Half';
     }
     
     return {
       lastTimeElapsed: lastEvent.timeElapsed,
-      currentPhase: lastEvent.phase
+      currentPhase: lastEvent.phase,
+      displayPhase
     };
   }, [events]);
 
   useEffect(() => {
-    setMatchPeriod(currentPhase);
-  }, [currentPhase]);
+    setMatchPeriod(displayPhase);
+  }, [displayPhase]);
 
   // Uzatma süresini takip et
   useEffect(() => {
@@ -309,8 +416,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 awayTeam={awayTeam} 
                 currentTime={currentTime}
                 matchPeriod={matchPeriod}
-                homeRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Home').length}
-                awayRedCards={events.filter(e => e.type === 'redCard' && e.team === 'Away').length}
+                homeRedCards={events.filter(e => (e.type === 'redCard' || e.type === 'secondYellow') && e.team === 'Home').length}
+                awayRedCards={events.filter(e => (e.type === 'redCard' || e.type === 'secondYellow') && e.team === 'Away').length}
                 matchTimeElapsed={lastTimeElapsed}
                 homeScore={homeGoals}
                 awayScore={awayGoals}
@@ -365,7 +472,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         </div>
 
         <div className="w-[300px] border-l border-gray-100 dark:border-gray-700">
-          <div className="border-b border-gray-100 dark:border-gray-700 p-2">
+          <div className="border-b border-gray-100 dark:border-gray-700 p-2 py-[21.6px]">
             <h2 className="text-sm font-normal flex items-center gap-2">
               <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
               Match Details
