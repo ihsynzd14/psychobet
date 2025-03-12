@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import { FeedTable } from './feed-table';
 import { api } from '@/lib/api';
 import { useState } from 'react';
+import { ThemeToggle } from './theme-toggle';
 
 export function FeedManagement() {
   const { toast } = useToast();
@@ -117,7 +118,9 @@ export function FeedManagement() {
               </p>
             </div>
           </div>
+          
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Button
               variant="destructive"
               onClick={() => stopAllFeedsMutation.mutate()}
@@ -199,6 +202,7 @@ export function FeedManagement() {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <Button
             variant="destructive"
             onClick={() => stopAllFeedsMutation.mutate()}
