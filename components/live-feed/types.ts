@@ -1,6 +1,6 @@
 export type DangerState = 'Safe' | 'Attack' | 'DangerousAttack' | 'FreeKick' | 'AttackingFreeKick' | 'DangerousFreeKick' | 'CornerDanger' | 'Penalty' | 'Corner' | 'Goal' | 'FoulGiven';
 
-export type ThrowInState = 'Dangerous' | 'Attack' | 'Safe' | null;
+export type ThrowInState = 'Dangerous Attack' | 'Attack' | 'Safe' | null;
 
 export type BookingState = 'YellowCardDanger' | 'RedCardDanger' | 'Safe';
 
