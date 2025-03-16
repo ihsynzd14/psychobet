@@ -64,7 +64,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
   // Throw In Types
   if (type === 'throwIn') {
     const throwInState = event?.details.throwInState;
-    if (throwInState === 'Dangerous') {
+    if (throwInState === 'Dangerous Attack') {
       return 'text-red-600 dark:text-red-400';
     } else if (throwInState === 'Attack') {
       return 'text-orange-600 dark:text-orange-400';
@@ -338,7 +338,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
   // Throw In Types
   if (type === 'throwIn') {
     const throwInState = event?.details.throwInState;
-    if (throwInState === 'Dangerous') {
+    if (throwInState === 'Dangerous Attack') {
       return 'bg-red-200 dark:bg-red-900';
     } else if (throwInState === 'Attack') {
       return 'bg-orange-200 dark:bg-orange-900';
@@ -454,7 +454,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   // Throw In Types
   if (event.type === 'throwIn') {
     const throwInState = event.details.throwInState;
-    if (throwInState === 'Dangerous') {
+    if (throwInState === 'Dangerous Attack') {
       return 'bg-gradient-to-r from-white to-red-200 dark:from-gray-900 dark:to-red-950';
     } else if (throwInState === 'Attack') {
       return 'bg-gradient-to-r from-white to-orange-200 dark:from-gray-900 dark:to-orange-950';
@@ -572,7 +572,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
   // Throw In Types
   if (event.type === 'throwIn') {
     const throwInState = event.details.throwInState;
-    if (throwInState === 'Dangerous') {
+    if (throwInState === 'Dangerous Attack') {
       return 'border-red-200 dark:border-red-800';
     } else if (throwInState === 'Attack') {
       return 'border-orange-200 dark:border-orange-800';
