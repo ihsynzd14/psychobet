@@ -158,6 +158,26 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         };
       }
       
+      // Handle transition to HalfTime (first half finished)
+      if (latestPhaseChange.phase === 'HalfTime' && latestPhaseChange.details.previousPhase === 'FirstHalf') {
+        // Find the last regular event before the phase change to get the last elapsed time
+        const regularEvents = events.filter(event => 
+          event.team !== 'System' && 
+          event.type !== 'bookingState' && 
+          event.type !== 'phaseChange' && 
+          event.type !== 'stoppageTime' &&
+          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
+        );
+        
+        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        
+        return { 
+          lastTimeElapsed: lastTimeFromEvents, 
+          currentPhase: 'HalfTime', 
+          displayPhase: '1st Half Complete' 
+        };
+      }
+      
       // Handle transition to FullTimeNormalTime (second half finished, going to extra time)
       if (latestPhaseChange.phase === 'FullTimeNormalTime' && latestPhaseChange.details.previousPhase === 'SecondHalf') {
         const regularEvents = events.filter(event => 
@@ -238,7 +258,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         break;
       case 'HalfTime':
         displayPhase = 'Half Time';
-        break;
+        return { lastTimeElapsed: lastEvent.timeElapsed, currentPhase: lastEvent.phase, displayPhase };
       case 'FullTime':
         displayPhase = '2nd Half Complete';
         return { lastTimeElapsed: lastEvent.timeElapsed, currentPhase: lastEvent.phase, displayPhase };
@@ -376,6 +396,42 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       clearTimeout(timer);
     };
   }, [fixtureId, updateEvents, updateTeams, updateLineups, updatePossession, competitionName, matchName, startDateUtc]);
+
+  // Add a new effect to handle substitution events
+  useEffect(() => {
+    // Check for substitution events that have been updated with player data
+    const substitutionEvents = events.filter(e => 
+      e.type === 'substitution' && 
+      (e.details.playerOn !== null || e.details.playerOff !== null)
+    );
+    
+    if (substitutionEvents.length > 0) {
+      // Force a re-render of the lineup component by creating a shallow copy
+      if (homeTeamLineup) {
+        setHomeTeamLineup({...homeTeamLineup});
+      }
+      if (awayTeamLineup) {
+        setAwayTeamLineup({...awayTeamLineup});
+      }
+    }
+  }, [events, homeTeamLineup, awayTeamLineup]);
+
+  // Add a new effect to handle yellow card player updates
+  useEffect(() => {
+    // Get all yellow card events
+    const yellowCardEvents = events.filter(e => 
+      (e.type === 'yellowCard' || e.type === 'secondYellow' || e.type === 'redCard')
+    );
+
+    // Check if any have updated player data
+    const hasPlayerUpdates = yellowCardEvents.some(e => e.details.player?.sourceName);
+
+    if (hasPlayerUpdates && (homeTeamLineup || awayTeamLineup)) {
+      // Force an update to the events list by creating a new array with the same items
+      // This causes the EventView components to re-render with the updated player names
+      setEvents(prevEvents => [...prevEvents]);
+    }
+  }, [events, homeTeamLineup, awayTeamLineup]);
 
   useEffect(() => {
     const timer = setInterval(() => {

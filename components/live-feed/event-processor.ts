@@ -9,12 +9,13 @@ let lineupCache: {
 
 // Lineup verilerini işle ve cache'e al
 const processLineupData = (lineupUpdates: LineupUpdate[]) => {
-  if (lineupCache) return; // Cache zaten varsa tekrar işleme
-
-  lineupCache = {
-    home: new Map(),
-    away: new Map()
-  };
+  // Initialize cache if it doesn't exist
+  if (!lineupCache) {
+    lineupCache = {
+      home: new Map(),
+      away: new Map()
+    };
+  }
 
   // Her takım için son lineup güncellemesini bul
   const homeUpdate = lineupUpdates.filter(u => u.team === 'Home').pop();
@@ -105,19 +106,24 @@ const eventProcessors = {
   },
 
   substitutions: (subs: any[]): MatchEvent[] => {
-    return subs?.map((sub) => ({
-      id: sub.id,
-      type: 'substitution',
-      timestamp: sub.timestampUtc,
-      phase: sub.phase,
-      timeElapsed: sub.timeElapsedInPhase,
-      team: sub.team,
-      details: {
-        playerOn: getPlayerInfo(sub.playerOnInternalId, sub.team),
-        playerOff: getPlayerInfo(sub.playerOffInternalId, sub.team),
-        isConfirmed: sub.isConfirmed
-      }
-    })) || [];
+    return subs?.map((sub) => {
+      // Create the basic substitution event
+      const event: MatchEvent = {
+        id: sub.id,
+        type: 'substitution',
+        timestamp: sub.timestampUtc,
+        phase: sub.phase,
+        timeElapsed: sub.timeElapsedInPhase,
+        team: sub.team,
+        details: {
+          playerOn: getPlayerInfo(sub.playerOnInternalId, sub.team),
+          playerOff: getPlayerInfo(sub.playerOffInternalId, sub.team),
+          isConfirmed: sub.isConfirmed
+        }
+      };
+      
+      return event;
+    }) || [];
   },
 
   shotsOnTarget: (shots: any[]): MatchEvent[] => {
@@ -415,7 +421,7 @@ const eventProcessors = {
     })) || [];
   },
 
-  dangerStateChanges: (dangers: any[]): MatchEvent[] => {
+  dangerStateChanges: (dangers: any[], allEvents: any): MatchEvent[] => {
     if (!dangers) return [];
     
     // Tek seferde map işlemi
@@ -426,6 +432,42 @@ const eventProcessors = {
       })
       .map(event => {
         const team = event.dangerState.startsWith('Away') ? 'Away' : 'Home';
+        const dangerState = event.dangerState.replace(team, '') as DangerState;
+        
+        // For Goal events, try to find the corresponding goal event to get scorer and assist info
+        if (dangerState === 'Goal') {
+          // Try to find a matching goal event with the same timestamp or very close
+          const goalEvents = allEvents.goals?.goals || [];
+          const matchingGoal = goalEvents.find((goal: any) => {
+            // Check if timestamps are close (within 5 seconds)
+            const eventTime = new Date(event.timestampUtc).getTime();
+            const goalTime = new Date(goal.timestampUtc).getTime();
+            const timeDiff = Math.abs(eventTime - goalTime);
+            return goal.team === team && timeDiff < 5000; // 5 seconds threshold
+          });
+          
+          if (matchingGoal) {
+            return {
+              id: event.id,
+              type: 'dangerState',
+              timestamp: event.timestampUtc,
+              phase: event.phase,
+              timeElapsed: event.timeElapsedInPhase,
+              team,
+              details: {
+                dangerState,
+                isConfirmed: event.isConfirmed,
+                // Add goal details from the matching goal event
+                isOwnGoal: matchingGoal.isOwnGoal,
+                wasPenalty: matchingGoal.wasScoredFromPenalty,
+                scoredBy: getPlayerInfo(matchingGoal.scoredByInternalId, team),
+                assistBy: getPlayerInfo(matchingGoal.assistByInternalId, team)
+              }
+            };
+          }
+        }
+        
+        // Default return for non-goal events or when no matching goal event is found
         return {
           id: event.id,
           type: 'dangerState',
@@ -434,7 +476,7 @@ const eventProcessors = {
           timeElapsed: event.timeElapsedInPhase,
           team,
           details: {
-            dangerState: event.dangerState.replace(team, '') as DangerState,
+            dangerState,
             isConfirmed: event.isConfirmed
           }
         };
@@ -724,7 +766,7 @@ export const processMatchActions = (data: any): MatchEvent[] => {
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
-    ['dangerStateChanges.dangerStateChanges', (events) => eventProcessors.dangerStateChanges(events).map(event => ({
+    ['dangerStateChanges.dangerStateChanges', (events, extra) => eventProcessors.dangerStateChanges(events, extra).map(event => ({
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
@@ -776,6 +818,54 @@ export const processMatchActions = (data: any): MatchEvent[] => {
     if (events) {
       newEvents.push(...processor(events, actions));
     }
+  }
+
+  // Update substitution events with player data if available
+  if (lineupCache) {
+    for (let i = 0; i < newEvents.length; i++) {
+      const event = newEvents[i];
+      if (event.type === 'substitution') {
+        // If player data is missing, try to get it from the lineup cache
+        if (!event.details.playerOn && event.team && (event.team === 'Home' || event.team === 'Away')) {
+          const sub = actions.substitutions?.substitutions?.find((s: any) => s.id === event.id);
+          if (sub && sub.playerOnInternalId) {
+            event.details.playerOn = getPlayerInfo(sub.playerOnInternalId, event.team);
+          }
+        }
+        
+        if (!event.details.playerOff && event.team && (event.team === 'Home' || event.team === 'Away')) {
+          const sub = actions.substitutions?.substitutions?.find((s: any) => s.id === event.id);
+          if (sub && sub.playerOffInternalId) {
+            event.details.playerOff = getPlayerInfo(sub.playerOffInternalId, event.team);
+          }
+        }
+      }
+    }
+  }
+
+  // Process goal events to update dangerState Goal events with scorer information
+  const goalEvents = newEvents.filter(e => e.type === 'goal');
+  const dangerStateGoalEvents = newEvents.filter(e => e.type === 'dangerState' && e.details.dangerState === 'Goal');
+  
+  if (goalEvents.length > 0 && dangerStateGoalEvents.length > 0) {
+    // For each dangerState Goal event, try to find a matching goal event
+    dangerStateGoalEvents.forEach(dangerEvent => {
+      // Find a goal event for the same team with a close timestamp
+      const matchingGoal = goalEvents.find(goalEvent => {
+        const dangerTime = new Date(dangerEvent.timestamp).getTime();
+        const goalTime = new Date(goalEvent.timestamp).getTime();
+        const timeDiff = Math.abs(dangerTime - goalTime);
+        return goalEvent.team === dangerEvent.team && timeDiff < 10000; // 10 seconds threshold
+      });
+      
+      // If we found a matching goal event, update the dangerState event with scorer info
+      if (matchingGoal && matchingGoal.details.scoredBy) {
+        dangerEvent.details.scoredBy = matchingGoal.details.scoredBy;
+        dangerEvent.details.assistBy = matchingGoal.details.assistBy;
+        dangerEvent.details.isOwnGoal = matchingGoal.details.isOwnGoal;
+        dangerEvent.details.wasPenalty = matchingGoal.details.wasPenalty;
+      }
+    });
   }
 
   // Son sıralama işlemi

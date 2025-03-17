@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { TeamLineup } from './types';
 
 interface MatchLineupsProps {
@@ -35,7 +35,7 @@ const TeamLineupSection = memo(({ lineup, isHome, type }: { lineup: TeamLineup; 
     <div className={`flex-1 ${isHome ? 'pr-1' : 'pl-1'}`}>
       <div className={`flex flex-col ${isHome ? 'items-start' : 'items-end'}`}>
         {players.map((player) => (
-          <PlayerRow key={player.internalId} player={player} isHome={isHome} />
+          <PlayerRow key={`${player.internalId}-${player.position}`} player={player} isHome={isHome} />
         ))}
       </div>
     </div>
@@ -45,8 +45,16 @@ const TeamLineupSection = memo(({ lineup, isHome, type }: { lineup: TeamLineup; 
 TeamLineupSection.displayName = 'TeamLineupSection';
 
 export const MatchLineups = memo(function MatchLineups({ homeTeamLineup, awayTeamLineup }: MatchLineupsProps) {
+  // Generate a unique key for the lineup data to force re-renders when it changes
+  const [lineupKey, setLineupKey] = useState<number>(0);
+  
+  // Update the key when lineup data changes to force a re-render
+  useEffect(() => {
+    setLineupKey(prev => prev + 1);
+  }, [homeTeamLineup, awayTeamLineup]);
+
   return (
-    <div className="flex flex-col gap-3 px-2">
+    <div className="flex flex-col gap-3 px-2" key={lineupKey}>
       <div>
         <div className="flex items-start mb-1">
           <div className="text-[10px] font-medium text-gray-500 uppercase flex-1">Starting XI</div>

@@ -98,9 +98,15 @@ export const MatchHeader = memo<MatchHeaderProps>(({
 
   // Update scores when props change (including when VAR cancels a goal)
   useEffect(() => {
-    setDisplayHomeScore(homeScore);
-    setDisplayAwayScore(awayScore);
-  }, [homeScore, awayScore]);
+    // Force update the displayed scores when props change
+    if (homeScore !== displayHomeScore) {
+      setDisplayHomeScore(homeScore);
+    }
+    
+    if (awayScore !== displayAwayScore) {
+      setDisplayAwayScore(awayScore);
+    }
+  }, [homeScore, awayScore, displayHomeScore, displayAwayScore]);
 
   useEffect(() => {
     // Debug log to help identify why timer might still be running
@@ -134,6 +140,15 @@ export const MatchHeader = memo<MatchHeaderProps>(({
       }, 1000);
       
       return () => clearInterval(timer);
+    }
+    
+    // 1ST HALF COMPLETE - Stop the timer and show the last time
+    if (matchPeriod === '1st Half Complete') {
+      // Preserve the final time of first half
+      if (prevMatchPeriod !== '1st Half Complete') {
+        setDisplayTime(matchTimeElapsed);
+      }
+      return; // Stop timer
     }
     
     // HALF TIME - Show last time from first half and stop timer
@@ -251,10 +266,12 @@ export const MatchHeader = memo<MatchHeaderProps>(({
     
     // POST MATCH - Show last time and stop timer
     if (currentPhase === 'PostMatch' || matchPeriod === 'Match Complete' || 
-        matchPeriod === '2nd Half Complete' || matchPeriod === 'Full Time') {
+        matchPeriod === '2nd Half Complete' || matchPeriod === 'Full Time' ||
+        matchPeriod === '1st Half Complete') {
       // Preserve the final time
       if (prevMatchPeriod !== 'Match Complete' && prevMatchPeriod !== 'PostMatch' && 
-          prevMatchPeriod !== '2nd Half Complete' && prevMatchPeriod !== 'Full Time') {
+          prevMatchPeriod !== '2nd Half Complete' && prevMatchPeriod !== 'Full Time' &&
+          prevMatchPeriod !== '1st Half Complete') {
         setDisplayTime(matchTimeElapsed);
       }
       return; // Stop timer
@@ -305,7 +322,7 @@ export const MatchHeader = memo<MatchHeaderProps>(({
 
         {/* Score and Match Time */}
         <div className="flex items-center gap-4">
-          <ScoreDisplay score={displayHomeScore} />
+          <ScoreDisplay key={`home-score-${homeScore}`} score={displayHomeScore} />
           <div className="flex flex-col items-center min-w-[80px]">
             <span className="text-lg font-bold text-gray-900 dark:text-white">
               {displayTime}
@@ -317,7 +334,7 @@ export const MatchHeader = memo<MatchHeaderProps>(({
               {matchPeriod === 'Half Time' ? 'Half Time - Break' : matchPeriod}
             </span>
           </div>
-          <ScoreDisplay score={displayAwayScore} />
+          <ScoreDisplay key={`away-score-${awayScore}`} score={displayAwayScore} />
         </div>
 
         {/* Away Team */}

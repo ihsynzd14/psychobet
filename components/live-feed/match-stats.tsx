@@ -143,8 +143,17 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
             stats.corners++;
           }
           break;
-        case 'penalty': stats.penalties++; break;
-        case 'missedPenalty': stats.missedPenalties++; break;
+        case 'penalty': 
+          if (event.details.state === 'awarded') {
+            stats.penalties++;
+          } 
+          else if (event.details.state === 'outcome' && 
+                  (event.details.outcome === 'Missed' || 
+                   event.details.outcome === 'Saved' || 
+                   event.details.outcome === 'HitPost')) {
+            stats.missedPenalties++;
+          }
+          break;
         case 'yellowCard': stats.yellowCards++; break;
         case 'redCard': stats.redCards++; break;
         case 'secondYellow': stats.redCards++; break;

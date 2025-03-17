@@ -27,6 +27,12 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
   // Danger States
   if (type === 'dangerState') {
     const dangerState = event?.details.dangerState;
+    
+    // Special handling for Goal dangerState to match goal event styling
+    if (dangerState === 'Goal') {
+      return 'text-emerald-600 dark:text-emerald-400';
+    }
+    
     if (dangerState === 'Safe' || 
         dangerState === 'Attack' || 
         dangerState === 'DangerousAttack') {
@@ -129,7 +135,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
 const getEventIcon = (type: string, event?: MatchEvent) => {
   switch (type) {
     case 'goal':
-      return <Goal className="w-5 h-5" />;
+      return <Goal className="w-5 h-5 animate-pulse" />;
     case 'yellowCard':
       return <LucideRectangleVertical className="w-5 h-5" />;
     case 'secondYellow':
@@ -159,6 +165,10 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       return <Target className="w-5 h-5" />;
     }
     case 'dangerState':
+      // Use the same icon as 'goal' for dangerState with 'Goal' state
+      if (event?.details.dangerState === 'Goal') {
+        return <Goal className="w-5 h-5 animate-pulse" />;
+      }
      
       if (event?.details.dangerState === 'Safe' || 
           event?.details.dangerState === 'Attack' ||
@@ -220,6 +230,9 @@ const getEventTitle = (event: MatchEvent): string => {
       }
       return 'Yellow Card Risk Ended';
     case 'substitution':
+      if (event.details.playerOn === null && event.details.playerOff === null) {
+        return 'Substitution (Waiting for player data)';
+      }
       return `Substitution${event.details.playerOn?.sourceName && event.details.playerOff?.sourceName ? `: <span class="text-red-600 dark:text-red-400">${event.details.playerOff.sourceName}</span> ➔ <span class="text-green-600 dark:text-green-400">${event.details.playerOn.sourceName}</span>` : ''}`;
     case 'shotOnTarget':
       return `Shot on Target${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}${event.details.savedBy?.sourceName ? ` (Saved by: ${event.details.savedBy.sourceName})` : ''}`;
@@ -265,6 +278,17 @@ const getEventTitle = (event: MatchEvent): string => {
         'Penalty': 'Penalty Risk',
         'Goal': 'Goal',
       };
+      
+      // Special handling for Goal dangerState to show scorer information
+      if (event.details.dangerState === 'Goal') {
+        // Check if we have scorer information in the details
+        if (event.details.scoredBy || event.details.assistBy) {
+          return `GOAL! ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''} ${event.details.scoredBy?.sourceName ? `- ${event.details.scoredBy.sourceName}` : ''}${event.details.assistBy?.sourceName ? ` (Assist: ${event.details.assistBy.sourceName})` : ''}`;
+        }
+        // If no scorer info in this event, just show "GOAL!"
+        return 'GOAL!';
+      }
+      
       return `${dangerTexts[event.details.dangerState || 'Safe']}`;
     }
     case 'foul':
@@ -301,6 +325,12 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
   // Danger States
   if (type === 'dangerState') {
     const dangerState = event?.details.dangerState;
+    
+    // Special handling for Goal dangerState to match goal event styling
+    if (dangerState === 'Goal') {
+      return 'bg-emerald-200 dark:bg-emerald-900';
+    }
+    
     if (dangerState === 'Safe' || 
         dangerState === 'Attack' || 
         dangerState === 'DangerousAttack') {
@@ -417,6 +447,12 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   // Danger States
   if (event.type === 'dangerState') {
     const dangerState = event.details.dangerState;
+    
+    // Special handling for Goal dangerState to match goal event styling
+    if (dangerState === 'Goal') {
+      return 'bg-emerald-50 dark:bg-emerald-950';
+    }
+    
     if (dangerState === 'Safe' || 
         dangerState === 'Attack' || 
         dangerState === 'DangerousAttack') {
@@ -533,6 +569,12 @@ const getEventBorderColor = (event: MatchEvent): string => {
   // Danger States
   if (event.type === 'dangerState') {
     const dangerState = event.details.dangerState;
+    
+    // Special handling for Goal dangerState to match goal event styling
+    if (dangerState === 'Goal') {
+      return 'border-emerald-200 dark:border-emerald-800';
+    }
+    
     if (dangerState === 'Safe') {
       return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-3 before:bg-green-500 dark:before:bg-green-600 border-gray-200 dark:border-gray-700';
     } else if (dangerState === 'Attack') {
