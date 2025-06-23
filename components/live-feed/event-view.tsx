@@ -257,7 +257,7 @@ const getEventTitle = (event: MatchEvent): string => {
       };
       return `${outcomeTexts[event.details.outcome || 'NotTaken']}${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'var':
-      return `${event.details.stateText || 'VAR Review'} - ${event.details.reason || ''}${event.details.outcome ? ` - ${event.details.outcome}` : ''}`;
+      return event.details.stateText || 'VAR Review';
     case 'phaseChange':
       return `${event.details.phaseTitle}`;
     case 'throwIn':

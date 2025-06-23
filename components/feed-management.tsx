@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Activity, AlertCircle, StopCircle, LayoutGrid, Table as TableIcon, Clock } from 'lucide-react';
+import { Activity, AlertCircle, StopCircle, LayoutGrid, Table as TableIcon, Clock, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -9,10 +9,12 @@ import { FeedTable } from './feed-table';
 import { api } from '@/lib/api';
 import { useState } from 'react';
 import { ThemeToggle } from './theme-toggle';
+import { useRouter } from 'next/navigation';
 
 export function FeedManagement() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [activeFeeds, setActiveFeeds] = useState<Set<string>>(new Set());
 
@@ -122,6 +124,14 @@ export function FeedManagement() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <Button
+              variant="outline"
+              onClick={() => router.push('/feed-table-v2')}
+              className="shadow-md hover:shadow-lg transition-all hover:scale-105 bg-blue-500 text-white hover:bg-blue-600"
+            >
+              <ExternalLink className="w-4 h-4 mr-1" />
+              Go to V2
+            </Button>
+            <Button
               variant="destructive"
               onClick={() => stopAllFeedsMutation.mutate()}
               disabled={stopAllFeedsMutation.isPending}
@@ -203,6 +213,14 @@ export function FeedManagement() {
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />
+          <Button
+            variant="outline"
+            onClick={() => router.push('/feed-table-v2')}
+            className="shadow-md hover:shadow-lg transition-all hover:scale-105 bg-blue-500 text-white hover:bg-blue-600"
+          >
+            <ExternalLink className="w-4 h-4 mr-1" />
+            Go to V2
+          </Button>
           <Button
             variant="destructive"
             onClick={() => stopAllFeedsMutation.mutate()}

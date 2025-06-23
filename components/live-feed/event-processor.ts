@@ -275,7 +275,7 @@ const eventProcessors = {
     };
 
     const getVarTitle = (reason: string): string => {
-      if (!reason || reason === 'NotSet' || reason === 'Unknown') return 'VAR Check';
+      if (!reason || reason === 'NotSet' || reason === 'Unknown') return '';  // Return empty string instead of 'VAR Check'
 
       // Remove team prefix for mapping
       const cleanReason = reason.replace(/^(Home|Away)/, '');
@@ -340,20 +340,32 @@ const eventProcessors = {
     };
 
     return var_.map((v) => {
-      // Determine team based on reason or outcome with V2 priority
-      const team = v.varReasonV2?.startsWith('Home') || v.varOutcomeV2?.startsWith('Home') 
-        ? 'Home' 
-        : v.varReasonV2?.startsWith('Away') || v.varOutcomeV2?.startsWith('Away')
-        ? 'Away' 
-        : v.varReason?.startsWith('Home') || v.varOutcome?.startsWith('Home')
-        ? 'Home'
-        : v.varReason?.startsWith('Away') || v.varOutcome?.startsWith('Away')
-        ? 'Away'
-        : 'System';
+      // Determine team based on VAR state and reason/outcome
+      const team = v.varState === 'Danger' 
+        ? 'System'  // Always center for initial VAR check
+        : v.varState === 'InProgress'
+        ? (v.varReasonV2?.startsWith('Home') || v.varReason?.startsWith('Home') ? 'Home' : 'Away')
+        : v.varState === 'Safe' && v.varOutcomeV2 === 'NotSet'
+        ? 'System'  // Center for VAR not given
+        : (v.varOutcomeV2?.startsWith('Home') || v.varOutcome?.startsWith('Home') ? 'Home' : 'Away');
 
       const reason = v.varReasonV2 || v.varReason;
       const outcome = v.varOutcomeV2 || v.varOutcome;
       const state = v.varState || 'Safe';
+
+      // Determine display text based on state
+      let display = varStateMapping[state] || 'VAR Check';
+
+      // VAR durumuna göre mesajı oluştur
+      if (state === 'Danger') {
+        display = 'Possible VAR';
+      } else if (state === 'InProgress' && reason && reason !== 'NotSet') {
+        display = `VAR - ${getVarTitle(reason)}`;
+      } else if (state === 'Safe' && outcome && outcome !== 'NotSet') {
+        display = `VAR Ended - ${getVarOutcomeText(outcome, state)}`;
+      } else if (state === 'Safe' && outcome === 'NotSet') {
+        display = 'No VAR';  // Just the message without any additional text
+      }
 
       return {
         id: v.id,
@@ -364,7 +376,7 @@ const eventProcessors = {
         team,
         details: {
           state,
-          stateText: varStateMapping[state] || 'VAR Check',
+          stateText: display,
           stateColor: getVarStateColor(state),
           reason: getVarTitle(reason),
           outcome: getVarOutcomeText(outcome, state),
