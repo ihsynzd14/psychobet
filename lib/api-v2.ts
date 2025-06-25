@@ -68,11 +68,16 @@ export interface FixturesResponse {
 }
 
 export const apiV2 = {
-  // Get recent fixtures with efficient pagination
-  getRecentFixtures: async (page = 1, limit = 20): Promise<FixturesResponse> => {
+  // Get recent fixtures with efficient pagination and search
+  getRecentFixtures: async (page = 1, limit = 20, search?: string): Promise<FixturesResponse> => {
     try {
+      const params: { page: number; limit: number; search?: string } = { page, limit };
+      if (search && search.trim()) {
+        params.search = search.trim();
+      }
+      
       const { data } = await axiosInstance.get<FixturesResponse>('/v2/fixtures/recent', {
-        params: { page, limit }
+        params
       });
       return data;
     } catch (error) {

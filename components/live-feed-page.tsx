@@ -328,18 +328,31 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     // VAR kararlarını bul - sadece gol ile ilgili ve "No Goal" kararı verilmiş olanlar
     const cancelledGoals = events.filter(e => 
       e.type === 'var' && 
-      e.details.reason?.includes('Goal') && 
-      e.details.outcome?.includes('No Goal') &&
-      e.details.state === 'Safe' // Sadece tamamlanmış VAR kararlarını dikkate al
+      e.details.state === 'Safe' && // Sadece tamamlanmış VAR kararlarını dikkate al
+      (
+        // Check both reason and originalReason for goal-related VAR
+        (e.details.reason?.includes('Goal') && e.details.outcome?.includes('No Goal')) ||
+        // Check originalOutcome for goal cancellations
+        (e.details.originalOutcome?.includes('NoGoal')) ||
+        // Also check for outcome text patterns
+        (e.details.outcome === 'No Goal')
+      )
     );
     
     // Ev sahibi ve deplasman takımlarının gol sayılarını hesapla
     const homeTeamGoals = dangerStateGoals.filter(e => e.team === 'Home').length;
     const awayTeamGoals = dangerStateGoals.filter(e => e.team === 'Away').length;
     
-    // İptal edilen golleri takımlara göre say
-    const cancelledHomeGoals = cancelledGoals.filter(e => e.team === 'Home').length;
-    const cancelledAwayGoals = cancelledGoals.filter(e => e.team === 'Away').length;
+    // İptal edilen golleri takımlara göre say - originalOutcome'a göre takım belirleme
+    const cancelledHomeGoals = cancelledGoals.filter(e => {
+      // Check team assignment or originalOutcome for team identification
+      return e.team === 'Home' || e.details.originalOutcome?.includes('Home');
+    }).length;
+    
+    const cancelledAwayGoals = cancelledGoals.filter(e => {
+      // Check team assignment or originalOutcome for team identification  
+      return e.team === 'Away' || e.details.originalOutcome?.includes('Away');
+    }).length;
     
     // Net gol sayısını hesapla
     // Tehlike durumu olaylarından gelen goller - VAR ile iptal edilen goller

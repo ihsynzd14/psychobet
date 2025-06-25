@@ -257,7 +257,21 @@ const getEventTitle = (event: MatchEvent): string => {
       };
       return `${outcomeTexts[event.details.outcome || 'NotTaken']}${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'var':
-      return event.details.stateText || 'VAR Review';
+      // Show reason when available and meaningful, but avoid duplication
+      const baseText = event.details.stateText || 'VAR Review';
+      const reason = event.details.reason;
+      
+      // Special case: "Possible VAR" (with or without reason) should be shown as-is
+      if (baseText.startsWith('Possible VAR')) {
+        return baseText;
+      }
+      
+      // Only add reason if it's not already included in the stateText
+      if (reason && reason.trim() !== '' && !baseText.includes(reason)) {
+        return `${baseText} - ${reason}`;
+      }
+      
+      return baseText;
     case 'phaseChange':
       return `${event.details.phaseTitle}`;
     case 'throwIn':

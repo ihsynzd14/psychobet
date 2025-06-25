@@ -275,18 +275,24 @@ const eventProcessors = {
     };
 
     const getVarTitle = (reason: string): string => {
-      if (!reason || reason === 'NotSet' || reason === 'Unknown') return '';  // Return empty string instead of 'VAR Check'
+      if (!reason || reason === 'NotSet') return '';  // Return empty string for NotSet only
+
+      // Handle team-specific reasons first (before removing team prefix)
+      if (reason === 'HomeUnknown') return 'Home Team Incident';
+      if (reason === 'AwayUnknown') return 'Away Team Incident';
+      if (reason === 'HomeGoal') return 'Home Goal';
+      if (reason === 'AwayGoal') return 'Away Goal';
 
       // Remove team prefix for mapping
       const cleanReason = reason.replace(/^(Home|Away)/, '');
 
       const reasonMapping: Record<string, string> = {
-        'Goal': 'Goal Check',
+        'Goal': reason.startsWith('Home') ? 'Home Goal' : reason.startsWith('Away') ? 'Away Goal' : 'Goal Check',
         'Penalty': 'Penalty Check',
         'RedCard': 'Red Card Check',
         'MistakenIdentity': 'Player Identity Check',
         'PenaltyRetake': 'Penalty Retake Check',
-        'Unknown': 'VAR Check'
+        'Unknown': ''
       };
 
       return reasonMapping[cleanReason] || 'VAR Check';
@@ -358,7 +364,8 @@ const eventProcessors = {
 
       // VAR durumuna göre mesajı oluştur
       if (state === 'Danger') {
-        display = 'Possible VAR';
+        const reasonText = getVarTitle(reason);
+        display = reasonText ? `Possible VAR - ${reasonText}` : 'Possible VAR';
       } else if (state === 'InProgress' && reason && reason !== 'NotSet') {
         display = `VAR - ${getVarTitle(reason)}`;
       } else if (state === 'Safe' && outcome && outcome !== 'NotSet') {

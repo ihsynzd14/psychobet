@@ -11,13 +11,16 @@ import {
   Info,
   AlertTriangle,
   ChevronDown,
-  ListFilter
+  ListFilter,
+  Search,
+  X
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { 
   Tooltip, 
   TooltipContent, 
@@ -48,17 +51,32 @@ export default function FeedTableV2() {
   const [pageSize, setPageSize] = useState(25); // Default page size
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  // Debounce search input for better performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      // Reset to first page when search changes
+      if (search !== debouncedSearch) {
+        setCurrentPage(1);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search, debouncedSearch]);
 
   // Prefetch next page for smoother pagination
-  const prefetchNextPage = useCallback((page: number, size: number) => {
+  const prefetchNextPage = useCallback((page: number, size: number, searchTerm: string) => {
     if (page < 1) return; 
     
     // Only prefetch if we're not already loading this page
-    const queryKey = ['fixturesV2', page, size];
+    const queryKey = ['fixturesV2', page, size, searchTerm];
     if (!queryClient.getQueryData(queryKey)) {
       queryClient.prefetchQuery({
         queryKey,
-        queryFn: () => apiV2.getRecentFixtures(page, size),
+        queryFn: () => apiV2.getRecentFixtures(page, size, searchTerm),
         staleTime: 30000,
       });
     }
@@ -72,8 +90,8 @@ export default function FeedTableV2() {
     refetch,
     isFetching
   } = useQuery<FixturesResponse>({
-    queryKey: ['fixturesV2', currentPage, pageSize],
-    queryFn: () => apiV2.getRecentFixtures(currentPage, pageSize),
+    queryKey: ['fixturesV2', currentPage, pageSize, debouncedSearch],
+    queryFn: () => apiV2.getRecentFixtures(currentPage, pageSize, debouncedSearch),
     refetchInterval: 60000, // Auto-refresh every minute
     staleTime: 30000,      // Consider data fresh for 30 seconds
     placeholderData: keepPreviousData, // Use the imported helper function from react-query
@@ -84,10 +102,10 @@ export default function FeedTableV2() {
     if (fixturesData) {
       const totalPages = Math.ceil((fixturesData?.totalItems ?? 0) / pageSize);
       if (currentPage < totalPages) {
-        prefetchNextPage(currentPage + 1, pageSize);
+        prefetchNextPage(currentPage + 1, pageSize, debouncedSearch);
       }
     }
-  }, [fixturesData, currentPage, pageSize, prefetchNextPage]);
+  }, [fixturesData, currentPage, pageSize, prefetchNextPage, debouncedSearch]);
 
   // Handle refresh with smooth transition
   const handleRefresh = useCallback(async () => {
@@ -126,6 +144,16 @@ export default function FeedTableV2() {
     });
   }, []);
 
+  // Handle search input change
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+  }, []);
+
+  // Handle search clear
+  const handleSearchClear = useCallback(() => {
+    setSearch('');
+  }, []);
+
   // Animation variants - more performant versions
   const pageTransitionVariants = {
     hidden: { opacity: 0 },
@@ -162,14 +190,39 @@ export default function FeedTableV2() {
     <Card className="border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/10">
       <CardContent className="flex flex-col items-center justify-center p-4 sm:p-8 text-center">
         <MatchStateIllustration type="noMatches" className="mb-3 sm:mb-4 w-32 sm:w-40 h-32 sm:h-40" />
-        <h2 className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mb-1 sm:mb-2">No Fixtures Available</h2>
-        <p className="text-sm text-blue-600 dark:text-blue-300 mb-3 max-w-md">
-          There are currently no live or upcoming fixtures. Check back later for updates.
-        </p>
-        <Button onClick={handleRefresh} className="bg-blue-500 hover:bg-blue-600 text-white text-sm">
-          <RefreshCcw className="h-3.5 w-3.5 mr-1.5" />
-          Refresh Data
-        </Button>
+        {debouncedSearch ? (
+          <>
+            <h2 className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mb-1 sm:mb-2">
+              No Results Found
+            </h2>
+            <p className="text-sm text-blue-600 dark:text-blue-300 mb-3 max-w-md">
+              No fixtures found for "{debouncedSearch}". Try a different search term or clear the search to see all fixtures.
+            </p>
+            <div className="flex gap-2">
+              <Button onClick={handleSearchClear} className="bg-blue-500 hover:bg-blue-600 text-white text-sm">
+                <X className="h-3.5 w-3.5 mr-1.5" />
+                Clear Search
+              </Button>
+              <Button onClick={handleRefresh} variant="outline" className="text-sm">
+                <RefreshCcw className="h-3.5 w-3.5 mr-1.5" />
+                Refresh
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mb-1 sm:mb-2">
+              No Fixtures Available
+            </h2>
+            <p className="text-sm text-blue-600 dark:text-blue-300 mb-3 max-w-md">
+              There are currently no live or upcoming fixtures. Check back later for updates.
+            </p>
+            <Button onClick={handleRefresh} className="bg-blue-500 hover:bg-blue-600 text-white text-sm">
+              <RefreshCcw className="h-3.5 w-3.5 mr-1.5" />
+              Refresh Data
+            </Button>
+          </>
+        )}
       </CardContent>
     </Card>
   );
@@ -214,6 +267,31 @@ export default function FeedTableV2() {
                   Enhanced V2 Experience
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* Search input */}
+          <div className="flex-1 max-w-md mx-4 sm:mx-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search teams..."
+                value={search}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="pl-10 pr-10 h-8 sm:h-9 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 text-sm"
+              />
+              {search && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleSearchClear}
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <X className="h-3 w-3 text-gray-400" />
+                  <span className="sr-only">Clear search</span>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -288,8 +366,17 @@ export default function FeedTableV2() {
               variant="outline" 
               className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700"
             >
-              {fixturesData?.totalItems ?? 0} Total Fixtures
+              {fixturesData?.totalItems ?? 0} {debouncedSearch ? 'Results' : 'Total Fixtures'}
             </Badge>
+            
+            {debouncedSearch && (
+              <Badge 
+                variant="secondary" 
+                className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
+              >
+                Search: "{debouncedSearch}"
+              </Badge>
+            )}
             
             <div className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
               <div className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 relative">
@@ -358,7 +445,7 @@ export default function FeedTableV2() {
               ) : (
                 // Success state with fixtures
                 <motion.div
-                  key={`fixtures-page-${currentPage}-${pageSize}`}
+                  key={`fixtures-page-${currentPage}-${pageSize}-${debouncedSearch}`}
                   variants={pageTransitionVariants}
                   initial="hidden"
                   animate="visible"
