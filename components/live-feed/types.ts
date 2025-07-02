@@ -78,6 +78,10 @@ export interface MatchEventDetails {
 
   // Stoppage time details
   addedMinutes?: number;
+
+  // Clock action details
+  activityType?: string;
+  isClockRunning?: boolean;
 }
 
 export interface MatchEvent {

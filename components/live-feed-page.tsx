@@ -41,6 +41,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const [possession, setPossession] = useState<{ home: number; away: number }>({ home: 0, away: 0 });
   const [matchPeriod, setMatchPeriod] = useState<string>('First Half');
   const [stoppageTime, setStoppageTime] = useState<number | null>(null);
+  const [isClockRunning, setIsClockRunning] = useState<boolean>(true);
   const parentRef = useRef<HTMLDivElement>(null);
 
   // Optimize event update function
@@ -320,6 +321,24 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     }
   }, [events, currentPhase]);
 
+  // Track clock running status from clock action events
+  useEffect(() => {
+    // Find the most recent clock action event
+    const clockActionEvents = events.filter(e => e.type === 'clockAction');
+    
+    if (clockActionEvents.length > 0) {
+      // Get the latest clock action event (events are already sorted by timestamp)
+      const latestClockAction = clockActionEvents[0];
+      const newIsClockRunning = latestClockAction.details.isClockRunning ?? true;
+      
+      // Only update if the value has changed
+      if (newIsClockRunning !== isClockRunning) {
+        setIsClockRunning(newIsClockRunning);
+        console.log('Clock status changed:', newIsClockRunning);
+      }
+    }
+  }, [events, isClockRunning]);
+
   // Gol sayılarını hesapla
   const { homeGoals, awayGoals } = useMemo(() => {
     // Tüm gol olaylarını bul (dangerState tipindeki Goal olayları)
@@ -339,20 +358,82 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       )
     );
     
+    // Debug logging to track VAR decisions
+    if (cancelledGoals.length > 0) {
+      console.log('Cancelled goals found:', cancelledGoals.map(g => ({
+        id: g.id,
+        team: g.team,
+        reason: g.details.reason,
+        outcome: g.details.outcome,
+        originalReason: g.details.originalReason,
+        originalOutcome: g.details.originalOutcome
+      })));
+    }
+    
     // Ev sahibi ve deplasman takımlarının gol sayılarını hesapla
     const homeTeamGoals = dangerStateGoals.filter(e => e.team === 'Home').length;
     const awayTeamGoals = dangerStateGoals.filter(e => e.team === 'Away').length;
     
-    // İptal edilen golleri takımlara göre say - originalOutcome'a göre takım belirleme
+    // İptal edilen golleri takımlara göre say - improved team identification
     const cancelledHomeGoals = cancelledGoals.filter(e => {
-      // Check team assignment or originalOutcome for team identification
-      return e.team === 'Home' || e.details.originalOutcome?.includes('Home');
+      // First check the VAR event's team assignment
+      if (e.team === 'Home') return true;
+      
+      // Then check the original reason for team identification
+      if (e.details.originalReason?.includes('Home')) return true;
+      
+      // Check if the outcome mentions Home team
+      if (e.details.originalOutcome?.includes('Home')) return true;
+      
+      // For "No Goal" outcomes, try to match with recent goal events by timestamp
+      if (e.details.outcome === 'No Goal') {
+        // Find a recent goal event within 2 minutes that could be related
+        const eventTime = new Date(e.timestamp).getTime();
+        const recentGoal = dangerStateGoals.find(goal => {
+          const goalTime = new Date(goal.timestamp).getTime();
+          const timeDiff = Math.abs(eventTime - goalTime);
+          return goal.team === 'Home' && timeDiff < 120000; // 2 minutes threshold
+        });
+        if (recentGoal) return true;
+      }
+      
+      return false;
     }).length;
     
     const cancelledAwayGoals = cancelledGoals.filter(e => {
-      // Check team assignment or originalOutcome for team identification  
-      return e.team === 'Away' || e.details.originalOutcome?.includes('Away');
+      // First check the VAR event's team assignment
+      if (e.team === 'Away') return true;
+      
+      // Then check the original reason for team identification
+      if (e.details.originalReason?.includes('Away')) return true;
+      
+      // Check if the outcome mentions Away team
+      if (e.details.originalOutcome?.includes('Away')) return true;
+      
+      // For "No Goal" outcomes, try to match with recent goal events by timestamp
+      if (e.details.outcome === 'No Goal') {
+        // Find a recent goal event within 2 minutes that could be related
+        const eventTime = new Date(e.timestamp).getTime();
+        const recentGoal = dangerStateGoals.find(goal => {
+          const goalTime = new Date(goal.timestamp).getTime();
+          const timeDiff = Math.abs(eventTime - goalTime);
+          return goal.team === 'Away' && timeDiff < 120000; // 2 minutes threshold
+        });
+        if (recentGoal) return true;
+      }
+      
+      return false;
     }).length;
+    
+    // Debug logging for final calculation
+    console.log('Goal calculation:', {
+      homeTeamGoals,
+      awayTeamGoals,
+      cancelledHomeGoals,
+      cancelledAwayGoals,
+      finalHome: Math.max(0, homeTeamGoals - cancelledHomeGoals),
+      finalAway: Math.max(0, awayTeamGoals - cancelledAwayGoals)
+    });
     
     // Net gol sayısını hesapla
     // Tehlike durumu olaylarından gelen goller - VAR ile iptal edilen goller
@@ -361,6 +442,11 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       awayGoals: Math.max(0, awayTeamGoals - cancelledAwayGoals)
     };
   }, [events]);
+
+  // Debug effect to track score changes
+  useEffect(() => {
+    console.log('Score values changed:', { homeGoals, awayGoals });
+  }, [homeGoals, awayGoals]);
 
   useEffect(() => {
     const unsubscribe = api.subscribeToFixture(fixtureId, (data) => {
@@ -492,6 +578,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 awayScore={awayGoals}
                 stoppageTime={stoppageTime}
                 currentPhase={currentPhase}
+                isClockRunning={isClockRunning}
               />
             </>
           )}
@@ -516,7 +603,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                         key={event.id}
                         data-index={virtualRow.index}
                         ref={rowVirtualizer.measureElement}
-                        className="absolute top-0 left-0 w-full p-2 border-t border-b border-gray-100 dark:border-gray-800"
+                        className="absolute top-0 left-0 w-full border-t border-b border-gray-100 dark:border-gray-800"
                         style={{
                           transform: `translateY(${virtualRow.start}px)`,
                         }}

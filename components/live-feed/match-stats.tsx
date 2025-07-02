@@ -221,7 +221,7 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
           <div className="h-full">
             {isLineupsLoading ? (
               <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-                Kadrolar yükleniyor...
+               Lineups are loading...
               </div>
             ) : homeTeamLineup && awayTeamLineup ? (
               <MatchLineups
@@ -230,7 +230,7 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
               />
             ) : (
               <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-                Bu maç için kadro bilgisi bulunmuyor
+                No lineup data available for this match
               </div>
             )}
           </div>

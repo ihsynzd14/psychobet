@@ -127,6 +127,8 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-orange-600 dark:text-orange-400';
     case 'stoppageTime':
       return 'text-blue-600 dark:text-blue-400';
+    case 'clockAction':
+      return 'text-purple-600 dark:text-purple-400';
     default:
       return 'text-gray-600 dark:text-gray-400';
   }
@@ -198,6 +200,8 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       return <Timer className="w-5 h-5" />;
     case 'shotOffWoodwork':
       return <Target className="w-5 h-5" />;
+    case 'clockAction':
+      return <Info className="w-5 h-5" />;
     default:
       return <Activity className="w-5 h-5" />;
   }
@@ -316,9 +320,11 @@ const getEventTitle = (event: MatchEvent): string => {
     case 'systemMessage':
       return event.details.message || 'System Message';
     case 'stoppageTime':
-      return `Stoppage Time - ${event.details.addedMinutes} min`;
+      return `Added Time: ${event.details.addedMinutes} minutes`;
     case 'shotOffWoodwork':
       return `Shot Hit Woodwork${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}${event.details.ballReturnedToPlay ? ' - Ball In Play' : ''}`;
+    case 'clockAction':
+      return `Clock ${event.details.activityType}: ${event.details.isClockRunning ? 'Running' : 'Stopped'}`;
     default:
       return event.type;
   }
@@ -441,6 +447,8 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-orange-200 dark:bg-orange-900';
     case 'stoppageTime':
       return 'bg-blue-200 dark:bg-blue-900';
+    case 'clockAction':
+      return 'bg-purple-200 dark:bg-purple-900';
     default:
       return 'bg-gray-200 dark:bg-gray-700';
   }
@@ -563,6 +571,8 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-orange-50 dark:bg-orange-950';
     case 'stoppageTime':
       return 'bg-white dark:bg-blue-950';
+    case 'clockAction':
+      return 'bg-purple-50 dark:bg-purple-950';
     default:
       return 'bg-gray-50 dark:bg-gray-900';
   }
@@ -687,6 +697,8 @@ const getEventBorderColor = (event: MatchEvent): string => {
       return 'border-orange-200 dark:border-orange-800';
     case 'stoppageTime':
       return 'border-blue-200 dark:border-blue-800';
+    case 'clockAction':
+      return 'border-purple-200 dark:border-purple-800';
     default:
       return 'border-gray-200 dark:border-gray-700';
   }
@@ -716,6 +728,8 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
     event.details?.throwInState
   ]);
 
+  const hasIcon = getEventIcon(event.type, event) !== null;
+
   return (
     <div className={`flex w-full p-2 ${
       isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'py-0.5 justify-center' : 'py-1.5'
@@ -723,32 +737,35 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
       isHomeTeam ? 'justify-start' : isAwayTeam ? 'justify-end' : ''
     }`}>
       <div className={`
-        flex items-start gap-2 relative
-        ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'w-[28%] py-1' : 'w-[36%] p-2'}
-        ${isAwayTeam && !isSystemMessage && !isBookingState && !isPhaseChange && !isStoppageTime ? 'flex-row text-right' : 'flex-row'}
-        ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'justify-center text-center' : ''}
+        flex items-center ${hasIcon ? 'gap-2' : 'gap-0'} relative
+        ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'w-[28%] py-1' : 'w-[36%]'}
+        ${hasIcon ? 'p-2' : 'py-2 px-2'}
         ${colors.background}
         rounded-md border-2 ${colors.border}
         ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'bg-opacity-80' : ''}
         ${!isConfirmed ? 'opacity-50' : ''}
         overflow-hidden
+        min-h-[44px]
       `}>
-        <div className={`
-          ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'p-1' : 'p-1.5'} 
-          rounded-md shrink-0
-          ${colors.iconBg}
-          ${colors.icon}
-        `}>
-          {getEventIcon(event.type, event)}
-        </div>
+        {hasIcon && (
+          <div className={`
+            w-8 h-8 flex items-center justify-center
+            ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'p-1' : 'p-1.5'} 
+            rounded-md shrink-0
+            ${colors.iconBg}
+            ${colors.icon}
+          `}>
+            {getEventIcon(event.type, event)}
+          </div>
+        )}
         
-        <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'flex flex-col items-center justify-center gap-0.5' : ''}`}>
-          <div className={`flex items-center gap-1 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs' : 'mb-0.5 text-sm'} font-medium text-gray-900 dark:text-white ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'justify-center' : isAwayTeam ? 'justify-start' : 'justify-start'}`}>
+        <div className="flex-1 min-w-0 flex items-center justify-between">
+          <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs text-center' : 'text-sm'} font-medium text-gray-900 dark:text-white px-4`}>
             <div dangerouslySetInnerHTML={{ __html: getEventTitle(event) }} />
           </div>
-            <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-center justify-center mr-4' : isAwayTeam ? 'text-right' : 'text-right'}`}>
-              {event.timeElapsed}
-            </div>
+          <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ml-2 shrink-0`}>
+            {event.timeElapsed}
+          </div>
         </div>
       </div>
     </div>

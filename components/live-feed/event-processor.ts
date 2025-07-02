@@ -282,16 +282,20 @@ const eventProcessors = {
       if (reason === 'AwayUnknown') return 'Away Team Incident';
       if (reason === 'HomeGoal') return 'Home Goal';
       if (reason === 'AwayGoal') return 'Away Goal';
+      if (reason === 'HomePenalty') return 'Home Penalty';
+      if (reason === 'AwayPenalty') return 'Away Penalty';
+      if (reason === 'HomeRedCard') return 'Home Red Card';
+      if (reason === 'AwayRedCard') return 'Away Red Card';
 
       // Remove team prefix for mapping
       const cleanReason = reason.replace(/^(Home|Away)/, '');
 
       const reasonMapping: Record<string, string> = {
         'Goal': reason.startsWith('Home') ? 'Home Goal' : reason.startsWith('Away') ? 'Away Goal' : 'Goal Check',
-        'Penalty': 'Penalty Check',
-        'RedCard': 'Red Card Check',
-        'MistakenIdentity': 'Player Identity Check',
-        'PenaltyRetake': 'Penalty Retake Check',
+        'Penalty': reason.startsWith('Home') ? 'Home Penalty' : reason.startsWith('Away') ? 'Away Penalty' : 'Penalty',
+        'RedCard': reason.startsWith('Home') ? 'Home Red Card' : reason.startsWith('Away') ? 'Away Red Card' : 'Red Card',
+        'MistakenIdentity': 'Player Identity',
+        'PenaltyRetake': 'Penalty Retake',
         'Unknown': ''
       };
 
@@ -718,6 +722,22 @@ const eventProcessors = {
     })) || [];
   },
 
+  clockActions: (clockActions: any[]): MatchEvent[] => {
+    return clockActions?.map((clockAction) => ({
+      id: clockAction.id,
+      type: 'clockAction',
+      timestamp: clockAction.timestampUtc,
+      phase: clockAction.phase,
+      timeElapsed: clockAction.timeElapsedInPhase,
+      team: 'System',
+      details: {
+        activityType: clockAction.activityType,
+        isClockRunning: clockAction.isClockRunning,
+        isConfirmed: clockAction.isConfirmed
+      }
+    })) || [];
+  },
+
   // Remove the missedPenalties processor since it's now handled in the penalties processor
   missedPenalties: (penalties: any[]): MatchEvent[] => {
     // Return empty array since missed penalties are now handled in the penalties processor
@@ -825,6 +845,10 @@ export const processMatchActions = (data: any): MatchEvent[] => {
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
     }))],
+    ['clockActions.clockActions', (events) => eventProcessors.clockActions(events).map(event => ({
+      ...event,
+      timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
+    }))],
     ['missedPenalties.matchActions', (events) => eventProcessors.missedPenalties(events).map(event => ({
       ...event,
       timeElapsed: formatTimeElapsed(event.phase, event.timeElapsed)
@@ -921,13 +945,33 @@ const formatTimeElapsed = (phase: string, timeElapsed: string): string => {
   // HH:MM:SS formatını kontrol et
   if (timeElapsed.split(':').length === 3) {
     const [hours, minutes, seconds] = timeElapsed.split(':').map(Number);
-    const totalMinutes = (phase === 'SecondHalf' ? 45 : 0) + (hours * 60) + minutes;
+    let totalMinutes = (hours * 60) + minutes;
+    
+    // Add base minutes based on phase
+    if (phase === 'SecondHalf') {
+      totalMinutes += 45;
+    } else if (phase === 'ExtraTimeFirstHalf') {
+      totalMinutes += 90; // 90 minutes for extra time first half
+    } else if (phase === 'ExtraTimeSecondHalf') {
+      totalMinutes += 105; // 105 minutes for extra time second half
+    }
+    
     return `${totalMinutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
   // MM:SS formatı için
   const [minutes, seconds] = timeElapsed.split(':').map(Number);
-  const totalMinutes = (phase === 'SecondHalf' ? 45 : 0) + minutes;
+  let totalMinutes = minutes;
+  
+  // Add base minutes based on phase
+  if (phase === 'SecondHalf') {
+    totalMinutes += 45;
+  } else if (phase === 'ExtraTimeFirstHalf') {
+    totalMinutes += 90; // 90 minutes for extra time first half
+  } else if (phase === 'ExtraTimeSecondHalf') {
+    totalMinutes += 105; // 105 minutes for extra time second half
+  }
+  
   return `${totalMinutes}:${seconds.toString().padStart(2, '0')}`;
 };
 

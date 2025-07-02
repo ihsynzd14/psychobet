@@ -32,6 +32,7 @@ interface MatchHeaderProps {
   awayScore?: number;
   stoppageTime?: number | null;
   currentPhase?: string;
+  isClockRunning?: boolean;
 }
 
 const RedCards = memo(({ count }: { count: number }) => {
@@ -87,26 +88,25 @@ export const MatchHeader = memo<MatchHeaderProps>(({
   homeScore = 0,
   awayScore = 0,
   stoppageTime = null,
-  currentPhase = 'FirstHalf'
+  currentPhase = 'FirstHalf',
+  isClockRunning = true
 }) => {
   const [displayTime, setDisplayTime] = useState(matchTimeElapsed);
   const [lastTimeElapsed, setLastTimeElapsed] = useState(matchTimeElapsed);
   const [halfTimeEndTime, setHalfTimeEndTime] = useState('45:00');
   const [prevMatchPeriod, setPrevMatchPeriod] = useState(matchPeriod);
-  const [displayHomeScore, setDisplayHomeScore] = useState(homeScore);
-  const [displayAwayScore, setDisplayAwayScore] = useState(awayScore);
 
-  // Update scores when props change (including when VAR cancels a goal)
+  // Use props directly for scores to ensure immediate updates
+  const displayHomeScore = homeScore;
+  const displayAwayScore = awayScore;
+
+  // Log score changes for debugging
   useEffect(() => {
-    // Force update the displayed scores when props change
-    if (homeScore !== displayHomeScore) {
-      setDisplayHomeScore(homeScore);
-    }
-    
-    if (awayScore !== displayAwayScore) {
-      setDisplayAwayScore(awayScore);
-    }
-  }, [homeScore, awayScore, displayHomeScore, displayAwayScore]);
+    console.log('MatchHeader score props changed:', { 
+      homeScore, 
+      awayScore
+    });
+  }, [homeScore, awayScore]);
 
   useEffect(() => {
     // Debug log to help identify why timer might still be running
@@ -115,6 +115,7 @@ export const MatchHeader = memo<MatchHeaderProps>(({
       currentPhase, 
       displayTime,
       matchTimeElapsed,
+      isClockRunning,
       shouldStopTimer: currentPhase === 'PostMatch'
     });
 
@@ -123,7 +124,22 @@ export const MatchHeader = memo<MatchHeaderProps>(({
       setPrevMatchPeriod(matchPeriod);
     }
 
-    // FIRST HALF - Timer runs normally
+    // PRE-MATCH - Before the match starts, don't run timer
+    if (currentPhase !== 'FirstHalf' && 
+        currentPhase !== 'SecondHalf' && 
+        currentPhase !== 'ExtraTimeFirstHalf' && 
+        currentPhase !== 'ExtraTimeSecondHalf' &&
+        currentPhase !== 'HalfTime' &&
+        currentPhase !== 'FullTimeNormalTime' &&
+        currentPhase !== 'ExtraTimeHalfTime' &&
+        currentPhase !== 'Penalties' &&
+        currentPhase !== 'PostMatch') {
+      // Match hasn't started yet, show 00:00 and don't run timer
+      setDisplayTime('00:00');
+      return; // Stop timer
+    }
+
+    // FIRST HALF - Timer runs normally (when clock is running)
     if (currentPhase === 'FirstHalf') {
       // Update time if we get a new time from events
       if (matchTimeElapsed !== lastTimeElapsed) {
@@ -131,15 +147,20 @@ export const MatchHeader = memo<MatchHeaderProps>(({
         setLastTimeElapsed(matchTimeElapsed);
       }
       
-      // Start the timer
-      const timer = setInterval(() => {
-        setDisplayTime(prevTime => {
-          const seconds = timeElapsedToSeconds(prevTime);
-          return secondsToTimeElapsed(seconds + 1);
-        });
-      }, 1000);
+      // Only start the timer if the clock is running
+      if (isClockRunning) {
+        const timer = setInterval(() => {
+          setDisplayTime(prevTime => {
+            const seconds = timeElapsedToSeconds(prevTime);
+            return secondsToTimeElapsed(seconds + 1);
+          });
+        }, 1000);
+        
+        return () => clearInterval(timer);
+      }
       
-      return () => clearInterval(timer);
+      // If clock is not running, don't start timer
+      return;
     }
     
     // 1ST HALF COMPLETE - Stop the timer and show the last time
@@ -176,15 +197,20 @@ export const MatchHeader = memo<MatchHeaderProps>(({
         setLastTimeElapsed(matchTimeElapsed);
       }
       
-      // Start the timer
-      const timer = setInterval(() => {
-        setDisplayTime(prevTime => {
-          const seconds = timeElapsedToSeconds(prevTime);
-          return secondsToTimeElapsed(seconds + 1);
-        });
-      }, 1000);
+      // Only start the timer if the clock is running
+      if (isClockRunning) {
+        const timer = setInterval(() => {
+          setDisplayTime(prevTime => {
+            const seconds = timeElapsedToSeconds(prevTime);
+            return secondsToTimeElapsed(seconds + 1);
+          });
+        }, 1000);
+        
+        return () => clearInterval(timer);
+      }
       
-      return () => clearInterval(timer);
+      // If clock is not running, don't start timer
+      return;
     }
     
     // FULL TIME NORMAL TIME - Show last time from second half and stop timer
@@ -197,10 +223,10 @@ export const MatchHeader = memo<MatchHeaderProps>(({
     }
     
     // EXTRA TIME FIRST HALF - Timer starts from 90:00
-    if (currentPhase === 'FullTimeExtraTime' || matchPeriod === 'Extra Time First Half') {
+    if (currentPhase === 'ExtraTimeFirstHalf' || matchPeriod === 'Extra Time First Half') {
       // If we're just starting extra time, set time to 90:00
       if (prevMatchPeriod === 'Full Time Normal Time' && 
-          (matchPeriod === 'Extra Time First Half' || currentPhase === 'FullTimeExtraTime')) {
+          (matchPeriod === 'Extra Time First Half' || currentPhase === 'ExtraTimeFirstHalf')) {
         setDisplayTime('90:00');
       }
       
@@ -210,15 +236,20 @@ export const MatchHeader = memo<MatchHeaderProps>(({
         setLastTimeElapsed(matchTimeElapsed);
       }
       
-      // Start the timer
-      const timer = setInterval(() => {
-        setDisplayTime(prevTime => {
-          const seconds = timeElapsedToSeconds(prevTime);
-          return secondsToTimeElapsed(seconds + 1);
-        });
-      }, 1000);
+      // Only start the timer if the clock is running
+      if (isClockRunning) {
+        const timer = setInterval(() => {
+          setDisplayTime(prevTime => {
+            const seconds = timeElapsedToSeconds(prevTime);
+            return secondsToTimeElapsed(seconds + 1);
+          });
+        }, 1000);
+        
+        return () => clearInterval(timer);
+      }
       
-      return () => clearInterval(timer);
+      // If clock is not running, don't start timer
+      return;
     }
     
     // EXTRA TIME HALF TIME - Show last time from extra time first half and stop timer
@@ -244,15 +275,20 @@ export const MatchHeader = memo<MatchHeaderProps>(({
         setLastTimeElapsed(matchTimeElapsed);
       }
       
-      // Start the timer
-      const timer = setInterval(() => {
-        setDisplayTime(prevTime => {
-          const seconds = timeElapsedToSeconds(prevTime);
-          return secondsToTimeElapsed(seconds + 1);
-        });
-      }, 1000);
+      // Only start the timer if the clock is running
+      if (isClockRunning) {
+        const timer = setInterval(() => {
+          setDisplayTime(prevTime => {
+            const seconds = timeElapsedToSeconds(prevTime);
+            return secondsToTimeElapsed(seconds + 1);
+          });
+        }, 1000);
+        
+        return () => clearInterval(timer);
+      }
       
-      return () => clearInterval(timer);
+      // If clock is not running, don't start timer
+      return;
     }
     
     // PENALTIES - Show last time from extra time second half and stop timer
@@ -282,12 +318,15 @@ export const MatchHeader = memo<MatchHeaderProps>(({
       setDisplayTime(matchTimeElapsed);
       setLastTimeElapsed(matchTimeElapsed);
     }
-  }, [matchTimeElapsed, lastTimeElapsed, matchPeriod, currentPhase, prevMatchPeriod, halfTimeEndTime, displayTime]);
+  }, [matchTimeElapsed, lastTimeElapsed, matchPeriod, currentPhase, prevMatchPeriod, halfTimeEndTime, displayTime, isClockRunning]);
 
   const showStoppageTime = useMemo(() => {
     return stoppageTime !== null && 
            stoppageTime > 0 && 
-           (currentPhase === 'FirstHalf' || currentPhase === 'SecondHalf');
+           (currentPhase === 'FirstHalf' || 
+            currentPhase === 'SecondHalf' || 
+            currentPhase === 'ExtraTimeFirstHalf' || 
+            currentPhase === 'ExtraTimeSecondHalf');
   }, [stoppageTime, currentPhase]);
 
   if (!homeTeam?.strip || !awayTeam?.strip) {
