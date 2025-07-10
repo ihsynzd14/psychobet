@@ -6,8 +6,8 @@ import { Activity, Clock, LucideAlignHorizontalJustifyStart, Users } from 'lucid
 import { api } from '@/lib/api';
 import { formatTime } from './live-feed/utils';
 import { EventView } from './live-feed/event-view';
-import { processMatchActions } from './live-feed/event-processor';
-import { LiveFeedPageProps, TeamLineup } from './live-feed/types';
+import { processMatchActions, calculateScores } from './live-feed/event-processor';
+import { LiveFeedPageProps, TeamLineup, Color } from './live-feed/types';
 import { MatchEvent } from './live-feed/types';
 import { MatchStats } from './live-feed/match-stats';
 import { MatchHeader } from './live-feed/match-header';
@@ -17,16 +17,8 @@ interface TeamInfo {
   sourceId: string;
   sourceName: string;
   strip: {
-    color1: {
-      r: number;
-      g: number;
-      b: number;
-    };
-    color2: {
-      r: number;
-      g: number;
-      b: number;
-    };
+    color1: Color | null;
+    color2: Color | null;
   };
 }
 
@@ -42,6 +34,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const [matchPeriod, setMatchPeriod] = useState<string>('First Half');
   const [stoppageTime, setStoppageTime] = useState<number | null>(null);
   const [isClockRunning, setIsClockRunning] = useState<boolean>(true);
+  const [homeScore, setHomeScore] = useState<number>(0);
+  const [awayScore, setAwayScore] = useState<number>(0);
   const parentRef = useRef<HTMLDivElement>(null);
 
   // Optimize event update function
@@ -81,30 +75,31 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     }
   }, []);
 
-  // Optimize lineup updates with memoization
+  // Update lineup data without caching - always use fresh data
   const updateLineups = useCallback((data: any) => {
     const updates = data.raw?.matchActions?.lineupUpdates?.updates;
     if (!updates?.length) return;
 
-    setHomeTeamLineup(prev => {
+    // Always update with the latest lineup data, don't fallback to previous
       const latestHomeUpdate = updates
         .filter((u: any) => u.team === 'Home')
         .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
       
-      const newLineup = latestHomeUpdate?.newLineup || prev;
-      if (newLineup) setIsLineupsLoading(false);
-      return newLineup;
-    });
-
-    setAwayTeamLineup(prev => {
       const latestAwayUpdate = updates
         .filter((u: any) => u.team === 'Away')
         .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
       
-      const newLineup = latestAwayUpdate?.newLineup || prev;
-      if (newLineup) setIsLineupsLoading(false);
-      return newLineup;
-    });
+    // Set home team lineup - use fresh data only
+    if (latestHomeUpdate?.newLineup) {
+      setHomeTeamLineup(latestHomeUpdate.newLineup);
+      setIsLineupsLoading(false);
+    }
+
+    // Set away team lineup - use fresh data only
+    if (latestAwayUpdate?.newLineup) {
+      setAwayTeamLineup(latestAwayUpdate.newLineup);
+      setIsLineupsLoading(false);
+    }
   }, []);
 
   // Optimize possession updates with memoization and deep comparison
@@ -123,6 +118,111 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         return prev;
       });
     }
+  }, []);
+
+  // Optimize scores update from raw data
+  const updateScores = useCallback((data: any) => {
+    const scores = calculateScores(data);
+    setHomeScore(prev => prev !== scores.homeScore ? scores.homeScore : prev);
+    setAwayScore(prev => prev !== scores.awayScore ? scores.awayScore : prev);
+  }, []);
+
+  // Process substitutions and update lineups in real-time
+  const processSubstitutions = useCallback((data: any) => {
+    const substitutions = data.raw?.matchActions?.substitutions?.substitutions;
+    if (!substitutions?.length) return;
+
+    // Get confirmed substitutions
+    const confirmedSubs = substitutions.filter((sub: any) => sub.isConfirmed);
+    if (!confirmedSubs.length) return;
+
+    // Update home team lineup
+    setHomeTeamLineup(prevLineup => {
+      if (!prevLineup) return prevLineup;
+      
+      const homeSubs = confirmedSubs.filter((sub: any) => sub.team === 'Home');
+      if (!homeSubs.length) return prevLineup;
+
+      let updatedLineup = { ...prevLineup };
+      
+      homeSubs.forEach((sub: any) => {
+        // Find player coming on (from bench)
+        const playerOnIndex = updatedLineup.startingBench.findIndex(
+          p => p.internalId === sub.playerOnInternalId
+        );
+        
+        // Find player going off (from starting XI)
+        const playerOffIndex = updatedLineup.startingOnPitch.findIndex(
+          p => p.internalId === sub.playerOffInternalId
+        );
+
+        if (playerOnIndex !== -1 && playerOffIndex !== -1) {
+          const playerOn = updatedLineup.startingBench[playerOnIndex];
+          const playerOff = updatedLineup.startingOnPitch[playerOffIndex];
+
+          // Create new arrays with the substitution
+          updatedLineup = {
+            ...updatedLineup,
+            startingOnPitch: [
+              ...updatedLineup.startingOnPitch.slice(0, playerOffIndex),
+              playerOn,
+              ...updatedLineup.startingOnPitch.slice(playerOffIndex + 1)
+            ],
+            startingBench: [
+              ...updatedLineup.startingBench.slice(0, playerOnIndex),
+              playerOff,
+              ...updatedLineup.startingBench.slice(playerOnIndex + 1)
+            ]
+          };
+        }
+      });
+
+      return updatedLineup;
+    });
+
+    // Update away team lineup
+    setAwayTeamLineup(prevLineup => {
+      if (!prevLineup) return prevLineup;
+      
+      const awaySubs = confirmedSubs.filter((sub: any) => sub.team === 'Away');
+      if (!awaySubs.length) return prevLineup;
+
+      let updatedLineup = { ...prevLineup };
+      
+      awaySubs.forEach((sub: any) => {
+        // Find player coming on (from bench)
+        const playerOnIndex = updatedLineup.startingBench.findIndex(
+          p => p.internalId === sub.playerOnInternalId
+        );
+        
+        // Find player going off (from starting XI)
+        const playerOffIndex = updatedLineup.startingOnPitch.findIndex(
+          p => p.internalId === sub.playerOffInternalId
+        );
+
+        if (playerOnIndex !== -1 && playerOffIndex !== -1) {
+          const playerOn = updatedLineup.startingBench[playerOnIndex];
+          const playerOff = updatedLineup.startingOnPitch[playerOffIndex];
+
+          // Create new arrays with the substitution
+          updatedLineup = {
+            ...updatedLineup,
+            startingOnPitch: [
+              ...updatedLineup.startingOnPitch.slice(0, playerOffIndex),
+              playerOn,
+              ...updatedLineup.startingOnPitch.slice(playerOffIndex + 1)
+            ],
+            startingBench: [
+              ...updatedLineup.startingBench.slice(0, playerOnIndex),
+              playerOff,
+              ...updatedLineup.startingBench.slice(playerOnIndex + 1)
+            ]
+          };
+        }
+      });
+
+      return updatedLineup;
+    });
   }, []);
 
   // Memoize possession data for MatchStats
@@ -455,6 +555,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       updateTeams(data);
       updateLineups(data);
       updatePossession(data);
+      updateScores(data);
+      processSubstitutions(data);
     });
 
     // Sayfa yenilendiğinde feed'in aktif olduğundan emin ol
@@ -494,26 +596,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       unsubscribe();
       clearTimeout(timer);
     };
-  }, [fixtureId, updateEvents, updateTeams, updateLineups, updatePossession, competitionName, matchName, startDateUtc]);
-
-  // Add a new effect to handle substitution events
-  useEffect(() => {
-    // Check for substitution events that have been updated with player data
-    const substitutionEvents = events.filter(e => 
-      e.type === 'substitution' && 
-      (e.details.playerOn !== null || e.details.playerOff !== null)
-    );
-    
-    if (substitutionEvents.length > 0) {
-      // Force a re-render of the lineup component by creating a shallow copy
-      if (homeTeamLineup) {
-        setHomeTeamLineup({...homeTeamLineup});
-      }
-      if (awayTeamLineup) {
-        setAwayTeamLineup({...awayTeamLineup});
-      }
-    }
-  }, [events, homeTeamLineup, awayTeamLineup]);
+  }, [fixtureId, updateEvents, updateTeams, updateLineups, updatePossession, updateScores, processSubstitutions, competitionName, matchName, startDateUtc]);
 
   // Add a new effect to handle yellow card player updates
   useEffect(() => {
@@ -530,7 +613,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       // This causes the EventView components to re-render with the updated player names
       setEvents(prevEvents => [...prevEvents]);
     }
-  }, [events, homeTeamLineup, awayTeamLineup]);
+  }, [events]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -574,8 +657,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 homeRedCards={events.filter(e => (e.type === 'redCard' || e.type === 'secondYellow') && e.team === 'Home').length}
                 awayRedCards={events.filter(e => (e.type === 'redCard' || e.type === 'secondYellow') && e.team === 'Away').length}
                 matchTimeElapsed={lastTimeElapsed}
-                homeScore={homeGoals}
-                awayScore={awayGoals}
+                homeScore={homeScore}
+                awayScore={awayScore}
                 stoppageTime={stoppageTime}
                 currentPhase={currentPhase}
                 isClockRunning={isClockRunning}

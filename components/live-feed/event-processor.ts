@@ -7,6 +7,66 @@ let lineupCache: {
   away: Map<string, Player>;
 } | null = null;
 
+// Reliability state tracking
+let lastReliabilityState: boolean | null = null;
+let reliabilityEventCounter = 1;
+
+// Reset reliability state (useful for match end/start)
+export const resetReliabilityState = () => {
+  lastReliabilityState = null;
+  reliabilityEventCounter = 1;
+};
+
+// Calculate scores from raw data - more efficient and reliable
+export const calculateScores = (data: any): { homeScore: number; awayScore: number } => {
+  const actions = data.raw.matchActions;
+  
+  // Get goals from raw data
+  const goals = actions?.goals?.goals || [];
+  
+  // Get VAR decisions - already sorted by sequenceId in raw data
+  const varDecisions = actions?.varStateChanges?.varStateChanges || [];
+  
+  // Fast goal cancellation detection - single pass
+  let homeGoalCancelled = false;
+  let awayGoalCancelled = false;
+  let lastDangerReason = '';
+  
+  // Single pass through VAR decisions (they're already sorted)
+  for (let i = 0, len = varDecisions.length; i < len; i++) {
+    const v = varDecisions[i];
+    
+    if (v.varState === 'Danger') {
+      lastDangerReason = v.varReasonV2 || v.varReason || '';
+    } else if (v.varState === 'Safe' && 
+               (v.varOutcomeV2 === 'NotSet' || v.varOutcome === 'NotSet')) {
+      if (lastDangerReason === 'HomeGoal') homeGoalCancelled = true;
+      else if (lastDangerReason === 'AwayGoal') awayGoalCancelled = true;
+      lastDangerReason = ''; // Reset
+    }
+  }
+  
+  // Count confirmed goals by team - single pass
+  let homeGoals = 0;
+  let awayGoals = 0;
+  for (let i = 0, len = goals.length; i < len; i++) {
+    const g = goals[i];
+    if (g.isConfirmed) {
+      if (g.team === 'Home') homeGoals++;
+      else if (g.team === 'Away') awayGoals++;
+    }
+  }
+  
+  // Apply cancellations
+  if (homeGoalCancelled) homeGoals = Math.max(0, homeGoals - 1);
+  if (awayGoalCancelled) awayGoals = Math.max(0, awayGoals - 1);
+  
+  return {
+    homeScore: homeGoals,
+    awayScore: awayGoals
+  };
+};
+
 // Lineup verilerini işle ve cache'e al
 const processLineupData = (lineupUpdates: LineupUpdate[]) => {
   // Initialize cache if it doesn't exist
@@ -42,7 +102,7 @@ const getPlayerInfo = (internalId: string | null, team: 'Home' | 'Away'): Player
 
 // Pre-define processors for better performance
 const eventProcessors = {
-  goals: (goals: any[]): MatchEvent[] => {
+  goals: (goals: any[], varEvents?: any[]): MatchEvent[] => {
     return goals?.map((goal) => ({
       id: goal.id,
       type: 'goal',
@@ -55,7 +115,8 @@ const eventProcessors = {
         wasPenalty: goal.wasScoredFromPenalty,
         scoredBy: getPlayerInfo(goal.scoredByInternalId, goal.team),
         assistBy: getPlayerInfo(goal.assistByInternalId, goal.team),
-        isConfirmed: goal.isConfirmed
+        isConfirmed: goal.isConfirmed,
+        isCancelled: false // Will be updated later if cancelled by VAR
       }
     })) || [];
   },
@@ -121,6 +182,18 @@ const eventProcessors = {
           isConfirmed: sub.isConfirmed
         }
       };
+      
+      // Update lineup cache if substitution is confirmed
+      if (sub.isConfirmed && lineupCache && sub.playerOnInternalId && sub.playerOffInternalId) {
+        const cacheKey = sub.team.toLowerCase() as 'home' | 'away';
+        const playerOn = lineupCache[cacheKey].get(sub.playerOnInternalId);
+        const playerOff = lineupCache[cacheKey].get(sub.playerOffInternalId);
+        
+        if (playerOn && playerOff) {
+          // Update the player statuses in cache
+          // This helps with future event processing
+        }
+      }
       
       return event;
     }) || [];
@@ -349,7 +422,24 @@ const eventProcessors = {
       }
     };
 
-    return var_.map((v) => {
+    // Pre-process to find goal cancellations - single pass
+    const goalCancellations = new Set<number>();
+    let lastDangerIndex = -1;
+    let lastDangerReason = '';
+    
+    for (let i = 0; i < var_.length; i++) {
+      const v = var_[i];
+      if (v.varState === 'Danger' && (v.varReasonV2 === 'HomeGoal' || v.varReasonV2 === 'AwayGoal' || v.varReason === 'HomeGoal' || v.varReason === 'AwayGoal')) {
+        lastDangerIndex = i;
+        lastDangerReason = v.varReasonV2 || v.varReason || '';
+      } else if (v.varState === 'Safe' && (v.varOutcomeV2 === 'NotSet' || v.varOutcome === 'NotSet') && lastDangerIndex >= 0 && (lastDangerReason === 'HomeGoal' || lastDangerReason === 'AwayGoal')) {
+        goalCancellations.add(i);
+        lastDangerIndex = -1;
+        lastDangerReason = '';
+      }
+    }
+
+    return var_.map((v, index) => {
       // Determine team based on VAR state and reason/outcome
       const team = v.varState === 'Danger' 
         ? 'System'  // Always center for initial VAR check
@@ -365,6 +455,7 @@ const eventProcessors = {
 
       // Determine display text based on state
       let display = varStateMapping[state] || 'VAR Check';
+      const isGoalCancelled = goalCancellations.has(index);
 
       // VAR durumuna göre mesajı oluştur
       if (state === 'Danger') {
@@ -375,7 +466,7 @@ const eventProcessors = {
       } else if (state === 'Safe' && outcome && outcome !== 'NotSet') {
         display = `VAR Ended - ${getVarOutcomeText(outcome, state)}`;
       } else if (state === 'Safe' && outcome === 'NotSet') {
-        display = 'No VAR';  // Just the message without any additional text
+        display = isGoalCancelled ? 'VAR - Goal Cancelled' : 'No VAR';
       }
 
       return {
@@ -394,7 +485,8 @@ const eventProcessors = {
           isConfirmed: v.isConfirmed,
           originalReason: reason,
           originalOutcome: outcome,
-          isInProgress: state === 'InProgress'
+          isInProgress: state === 'InProgress',
+          isGoalCancelled
         }
       };
     });
@@ -742,7 +834,59 @@ const eventProcessors = {
   missedPenalties: (penalties: any[]): MatchEvent[] => {
     // Return empty array since missed penalties are now handled in the penalties processor
     return [];
+  },
+
+  reliabilityChange: (currentReliability: boolean, reliabilityReasons: any, timestamp: string): MatchEvent[] => {
+    // Only create event if reliability state has changed
+    if (lastReliabilityState !== null && lastReliabilityState === currentReliability) {
+      return [];
+    }
+
+    lastReliabilityState = currentReliability;
+
+    const message = currentReliability 
+      ? 'Feed Reliable - Call center ok' 
+      : 'Feed Unreliable - Call center lost';
+
+    return [{
+      id: 999000000 + reliabilityEventCounter++, // More efficient unique ID
+      type: 'systemMessage',
+      timestamp: timestamp,
+      phase: 'FirstHalf', // Default phase
+      timeElapsed: '00:00',
+      team: 'System',
+      details: {
+        message,
+        messageType: currentReliability ? 'success' : 'warning',
+        isReliable: currentReliability,
+        reliabilityReasons,
+        isConfirmed: true
+      }
+    }];
   }
+};
+
+// Add this helper function near the top with other helpers
+const isGoalCancelledByVar = (goalEvent: MatchEvent, varEvents: MatchEvent[]): boolean => {
+  // Find VAR events that indicate goal cancellation
+  return varEvents.some(varEvent => {
+    // Check if this VAR event indicates a goal cancellation
+    const isGoalCancellation = varEvent.details.isGoalCancelled;
+    
+    if (!isGoalCancellation) return false;
+    
+    // Check if the VAR reason matches the goal team
+    const reason = varEvent.details.originalReason;
+    const reasonMatchesTeam = (goalEvent.team === 'Home' && reason === 'HomeGoal') || 
+                             (goalEvent.team === 'Away' && reason === 'AwayGoal');
+    
+    // Check if the VAR event happened after the goal (within reasonable time)
+    const varTime = new Date(varEvent.timestamp).getTime();
+    const goalTime = new Date(goalEvent.timestamp).getTime();
+    const isAfterGoal = varTime > goalTime && varTime - goalTime < 300000; // Within 5 minutes
+    
+    return reasonMatchesTeam && isAfterGoal;
+  });
 };
 
 export const processMatchActions = (data: any): MatchEvent[] => {
@@ -754,6 +898,15 @@ export const processMatchActions = (data: any): MatchEvent[] => {
   }
 
   const newEvents: MatchEvent[] = [];
+
+  // Check for reliability changes - early optimization
+  const currentReliability = data.raw.isReliable;
+  if (currentReliability !== undefined && lastReliabilityState !== currentReliability) {
+    const reliabilityReasons = data.raw.reliabilityReasons;
+    const timestamp = data.raw.messageTimestampUtc || new Date().toISOString();
+    const reliabilityEvents = eventProcessors.reliabilityChange(currentReliability, reliabilityReasons, timestamp);
+    newEvents.push(...reliabilityEvents);
+  }
 
   // Tüm event processorları için array oluştur
   const processors: [string, (events: any[], extra?: any) => MatchEvent[]][] = [
@@ -910,6 +1063,25 @@ export const processMatchActions = (data: any): MatchEvent[] => {
       }
     });
   }
+
+  // After all events are processed, update goal events with VAR cancellation status
+  const varEvents = newEvents.filter(e => e.type === 'var');
+  const goalEventsWithCancellation = newEvents.filter(e => e.type === 'goal');
+  const dangerStateGoalEventsWithCancellation = newEvents.filter(e => e.type === 'dangerState' && e.details.dangerState === 'Goal');
+
+  // Update goal events with cancellation status
+  goalEventsWithCancellation.forEach(goalEvent => {
+    if (isGoalCancelledByVar(goalEvent, varEvents)) {
+      goalEvent.details.isCancelled = true;
+    }
+  });
+
+  // Update dangerState goal events with cancellation status
+  dangerStateGoalEventsWithCancellation.forEach(dangerEvent => {
+    if (isGoalCancelledByVar(dangerEvent, varEvents)) {
+      dangerEvent.details.isCancelled = true;
+    }
+  });
 
   // Son sıralama işlemi
   return newEvents.sort((a, b) => {

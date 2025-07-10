@@ -2,21 +2,14 @@ import { memo, useMemo, useState, useEffect } from 'react';
 import { TeamJersey } from './jerseys';
 import { Square } from 'lucide-react';
 import Image from 'next/image';
+import { Color } from './types';
 
 interface TeamInfo {
   sourceId: string;
   sourceName: string;
   strip: {
-    color1: {
-      r: number;
-      g: number;
-      b: number;
-    };
-    color2: {
-      r: number;
-      g: number;
-      b: number;
-    };
+    color1: Color | null;
+    color2: Color | null;
   };
 }
 
@@ -329,7 +322,9 @@ export const MatchHeader = memo<MatchHeaderProps>(({
             currentPhase === 'ExtraTimeSecondHalf');
   }, [stoppageTime, currentPhase]);
 
-  if (!homeTeam?.strip || !awayTeam?.strip) {
+  if (!homeTeam?.strip || !awayTeam?.strip || 
+      !homeTeam?.strip?.color1 || !homeTeam?.strip?.color2 ||
+      !awayTeam?.strip?.color1 || !awayTeam?.strip?.color2) {
     return (
       <div className="flex flex-col border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
         <div className="flex items-center justify-center p-4">

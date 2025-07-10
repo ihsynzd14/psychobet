@@ -5,6 +5,10 @@ import { Activity, Goal, CreditCard, Repeat, Target, Ban, Flag, Timer,
   RectangleVerticalIcon,
   RectangleVertical,
   LucideRectangleVertical} from 'lucide-react';
+import { GiWhistle, GiGoalKeeper, GiThrowingBall, GiCornerFlag, GiSoccerKick, GiCelebrationFire } from 'react-icons/gi';
+import { TbTargetOff, TbTargetArrow, TbClockPlus } from 'react-icons/tb';
+import { GoShieldSlash, GoZap } from 'react-icons/go';
+import { GrFlag } from 'react-icons/gr';
 import { MatchEvent } from './types';
 import { useMemo } from 'react';
 
@@ -30,7 +34,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     
     // Special handling for Goal dangerState to match goal event styling
     if (dangerState === 'Goal') {
-      return 'text-emerald-600 dark:text-emerald-400';
+      return 'text-gray-700 dark:text-gray-300';
     }
     
     if (dangerState === 'Safe' || 
@@ -83,7 +87,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
   // Other Events
   switch (type) {
     case 'goal':
-      return 'text-emerald-600 dark:text-emerald-400';
+      return 'text-gray-700 dark:text-gray-300';
     case 'yellowCard':
       return 'text-yellow-600 dark:text-yellow-400';
     case 'redCard':
@@ -92,29 +96,32 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     case 'substitution':
       return 'text-blue-600 dark:text-blue-400';
     case 'shotOnTarget':
-      return 'text-purple-600 dark:text-purple-400';
+      return 'text-gray-700 dark:text-gray-300';
     case 'shotOffTarget':
+      return 'text-gray-700 dark:text-gray-300';
     case 'shotBlocked':
-      return 'text-gray-600 dark:text-gray-400';
+      return 'text-gray-700 dark:text-gray-300';
     case 'shotOffWoodwork':
       return 'text-orange-600 dark:text-orange-400';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'text-blue-600 dark:text-blue-400';
+      return 'text-green-700 dark:text-green-300';
     case 'penalty':
-      return 'text-red-600 dark:text-red-400';
+      return 'text-blue-700 dark:text-blue-300';
     case 'var':
-      return 'text-purple-600 dark:text-purple-400';
+      return 'text-purple-700 dark:text-purple-300';
     case 'phaseChange':
       return 'text-green-600 dark:text-green-400';
+    case 'foul':
+      return 'text-blue-700 dark:text-blue-300';
     case 'woodwork':
       return 'text-orange-600 dark:text-orange-400';
     case 'goalKick':
-      return 'text-green-600 dark:text-green-400';
+      return 'text-gray-700 dark:text-gray-300';
     case 'offsides':
-      return 'text-yellow-600 dark:text-yellow-400';
+      return 'text-gray-700 dark:text-gray-300';
     case 'kickOff':
-      return 'text-blue-600 dark:text-blue-400';
+      return 'text-gray-700 dark:text-gray-300';
     case 'systemMessage':
       const messageType = event?.details?.messageType;
       if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
@@ -123,6 +130,10 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
         } else if (event?.details?.message?.toLowerCase().includes('red')) {
           return 'text-red-600 dark:text-red-400';
         }
+      }
+      // Special styling for reliability messages
+      if (event?.details?.message?.includes('Feed Reliable') || event?.details?.message?.includes('Feed Unreliable')) {
+        return 'text-white';
       }
       return 'text-orange-600 dark:text-orange-400';
     case 'stoppageTime':
@@ -137,7 +148,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
 const getEventIcon = (type: string, event?: MatchEvent) => {
   switch (type) {
     case 'goal':
-      return <Goal className="w-5 h-5 animate-pulse" />;
+      return <GiCelebrationFire className="w-6 h-6 animate-pulse" />;
     case 'yellowCard':
       return <LucideRectangleVertical className="w-5 h-5" />;
     case 'secondYellow':
@@ -149,27 +160,29 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
     case 'substitution':
       return <Repeat className="w-5 h-5" />;
     case 'shotOnTarget':
-      return <Target className="w-5 h-5" />;
+      return <TbTargetArrow className="w-5 h-5" />;
     case 'shotOffTarget':
-      return <X className="w-5 h-5" />;
+      return <TbTargetOff className="w-5 h-5" />;
     case 'shotBlocked':
-      return <Shield className="w-5 h-5" />;
+      return <GoShieldSlash className="w-5 h-5" />;
     case 'cornerAwarded':
     case 'cornerTaken':
-      return <CornerUpRight className="w-5 h-5" />;
+      return <GiCornerFlag className="w-5 h-5" />;
     case 'penalty':
-      return <AlertTriangle className="w-5 h-5" />;
+      return <GoZap className="w-5 h-5" />;
     case 'var':
       return <Video className={`w-5 h-5 ${event?.details?.isInProgress ? 'animate-pulse' : ''}`} />;
     case 'phaseChange':
       return <RefreshCw className="w-5 h-5" />;
     case 'freeKick': {
-      return <Target className="w-5 h-5" />;
+      return <GiSoccerKick className="w-5 h-5" />;
     }
+    case 'foul':
+      return <GiWhistle className="w-5 h-5" />;
     case 'dangerState':
       // Use the same icon as 'goal' for dangerState with 'Goal' state
       if (event?.details.dangerState === 'Goal') {
-        return <Goal className="w-5 h-5 animate-pulse" />;
+        return <GiCelebrationFire className="w-6 h-6 animate-pulse" />;
       }
      
       if (event?.details.dangerState === 'Safe' || 
@@ -177,17 +190,17 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
           event?.details.dangerState === 'DangerousAttack') {
         return null;
       } else if ( event?.details.dangerState === 'DangerousFreeKick' || event?.details.dangerState === 'AttackingFreeKick') {
-        return <Target className="w-5 h-5" />;
+        return <GiSoccerKick className="w-5 h-5" />;
       }
       return <Flame className="w-5 h-5" />;
     case 'throwIn':
-      return <ArrowRight className="w-5 h-5" />;
+      return <GiThrowingBall className="w-5 h-5" />;
     case 'woodwork':
       return <Target className="w-5 h-5" />;
     case 'goalKick':
-      return <ArrowRight className="w-5 h-5" />;
+      return <GiGoalKeeper className="w-5 h-5" />;
     case 'offsides':
-      return <Flag className="w-5 h-5" />;
+      return <GrFlag className="w-5 h-5" />;
     case 'kickOff':
       return <Timer className="w-5 h-5" />;
     case 'systemMessage':
@@ -197,7 +210,7 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       if (messageType === 'success') return <Shield className="w-5 h-5" />;
       return <Info className="w-5 h-5" />;
     case 'stoppageTime':
-      return <Timer className="w-5 h-5" />;
+      return <TbClockPlus className="w-5 h-5" />;
     case 'shotOffWoodwork':
       return <Target className="w-5 h-5" />;
     case 'clockAction':
@@ -210,7 +223,11 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
 const getEventTitle = (event: MatchEvent): string => {
   switch (event.type) {
     case 'goal':
-      return `GOAL! ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''} ${event.details.scoredBy?.sourceName ? `- ${event.details.scoredBy.sourceName}` : ''}${event.details.assistBy?.sourceName ? ` (Assist: ${event.details.assistBy.sourceName})` : ''}`;
+      const goalText = event.details.isCancelled 
+        ? `<span class="text-red-600 dark:text-red-400 font-bold text-lg line-through">GOAL</span> - <span class="text-red-600 dark:text-red-400 font-bold">CANCELED</span>`
+        : `<span class="text-red-600 dark:text-red-400 font-bold text-lg">GOAL!</span>`;
+      
+      return `${goalText} ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''} ${event.details.scoredBy?.sourceName ? `- ${event.details.scoredBy.sourceName}` : ''}${event.details.assistBy?.sourceName ? ` (Assist: ${event.details.assistBy.sourceName})` : ''}`;
     case 'yellowCard':
       return `Yellow Card${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'secondYellow':
@@ -235,7 +252,7 @@ const getEventTitle = (event: MatchEvent): string => {
       return 'Yellow Card Risk Ended';
     case 'substitution':
       if (event.details.playerOn === null && event.details.playerOff === null) {
-        return 'Substitution (Waiting for player data)';
+        return 'Substitution';
       }
       return `Substitution${event.details.playerOn?.sourceName && event.details.playerOff?.sourceName ? `: <span class="text-red-600 dark:text-red-400">${event.details.playerOff.sourceName}</span> ➔ <span class="text-green-600 dark:text-green-400">${event.details.playerOn.sourceName}</span>` : ''}`;
     case 'shotOnTarget':
@@ -299,18 +316,23 @@ const getEventTitle = (event: MatchEvent): string => {
       
       // Special handling for Goal dangerState to show scorer information
       if (event.details.dangerState === 'Goal') {
+        // Check if the goal is cancelled
+        const goalText = event.details.isCancelled 
+          ? `<span class="text-red-600 dark:text-red-400 font-bold text-lg line-through">GOAL</span> - <span class="text-red-600 dark:text-red-400 font-bold">CANCELED</span>`
+          : `<span class="text-red-600 dark:text-red-400 font-bold text-lg">GOAL!</span>`;
+        
         // Check if we have scorer information in the details
         if (event.details.scoredBy || event.details.assistBy) {
-          return `GOAL! ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''} ${event.details.scoredBy?.sourceName ? `- ${event.details.scoredBy.sourceName}` : ''}${event.details.assistBy?.sourceName ? ` (Assist: ${event.details.assistBy.sourceName})` : ''}`;
+          return `${goalText} ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''} ${event.details.scoredBy?.sourceName ? `- ${event.details.scoredBy.sourceName}` : ''}${event.details.assistBy?.sourceName ? ` (Assist: ${event.details.assistBy.sourceName})` : ''}`;
         }
-        // If no scorer info in this event, just show "GOAL!"
-        return 'GOAL!';
+        // If no scorer info in this event, just show the goal text
+        return goalText;
       }
       
       return `${dangerTexts[event.details.dangerState || 'Safe']}`;
     }
     case 'foul':
-      return 'Foul Given';
+      return `Foul Given${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'goalKick':
       return `Goal Kick${event.details.player?.sourceName ? ` - ${event.details.player.sourceName}` : ''}`;
     case 'offsides':
@@ -401,7 +423,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
   // Other Events
   switch (type) {
     case 'goal':
-      return 'bg-emerald-200 dark:bg-emerald-900';
+      return 'bg-gray-200 dark:bg-gray-700';
     case 'yellowCard':
       return 'bg-yellow-200 dark:bg-yellow-900';
     case 'redCard':
@@ -410,31 +432,34 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     case 'substitution':
       return 'bg-blue-200 dark:bg-blue-900';
     case 'shotOnTarget':
-      return 'bg-purple-200 dark:bg-purple-900';
+      return 'bg-gray-200 dark:bg-gray-700';
     case 'shotOffTarget':
+      return 'bg-gray-300 dark:bg-gray-600';
     case 'shotBlocked':
       return 'bg-gray-200 dark:bg-gray-700';
     case 'shotOffWoodwork':
       return 'bg-orange-200 dark:bg-orange-900';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-blue-200 dark:bg-blue-900';
+      return 'bg-green-200 dark:bg-green-800';
     case 'penalty':
-      return 'bg-red-200 dark:bg-red-900';
+      return 'bg-blue-200 dark:bg-blue-800';
     case 'var':
-      return 'bg-purple-200 dark:bg-purple-900';
+      return 'bg-purple-300 dark:bg-purple-700';
     case 'phaseChange':
       return 'bg-green-200 dark:bg-green-900';
     case 'throwIn':
       return 'bg-blue-200 dark:bg-blue-900';
+    case 'foul':
+      return 'bg-blue-200 dark:bg-blue-800';
     case 'woodwork':
       return 'bg-orange-200 dark:bg-orange-900';
     case 'goalKick':
-      return 'bg-green-200 dark:bg-green-900';
+      return 'bg-gray-300 dark:bg-gray-600';
     case 'offsides':
-      return 'bg-yellow-200 dark:bg-yellow-900';
+      return 'bg-gray-300 dark:bg-gray-600';
     case 'kickOff':
-      return 'bg-blue-200 dark:bg-blue-900';
+      return 'bg-gray-200 dark:bg-gray-700';
     case 'systemMessage':
       const messageType = event?.details.messageType;
       if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
@@ -443,6 +468,10 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
         } else if (event?.details?.message?.toLowerCase().includes('red')) {
           return 'bg-red-200 dark:bg-red-900';
         }
+      }
+      // Special styling for reliability messages
+      if (event?.details?.message?.includes('Feed Reliable') || event?.details?.message?.includes('Feed Unreliable')) {
+        return 'bg-black dark:bg-black';
       }
       return 'bg-orange-200 dark:bg-orange-900';
     case 'stoppageTime':
@@ -455,6 +484,11 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
 };
 
 const getEventBackgroundColor = (event: MatchEvent): string => {
+  // Special handling for cancelled goals
+  if ((event.type === 'goal' || (event.type === 'dangerState' && event.details.dangerState === 'Goal')) && event.details.isCancelled) {
+    return 'bg-red-50 dark:bg-red-950';
+  }
+  
   // Booking States
   if (event.type === 'bookingState') {
     const state = event.details.bookingState;
@@ -472,7 +506,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     
     // Special handling for Goal dangerState to match goal event styling
     if (dangerState === 'Goal') {
-      return 'bg-emerald-50 dark:bg-emerald-950';
+      return 'bg-white dark:bg-gray-900';
     }
     
     if (dangerState === 'Safe' || 
@@ -481,11 +515,11 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-white dark:bg-gray-900';
     }
     if (dangerState?.includes('DangerousFreeKick')) {
-      return 'bg-gradient-to-r from-white to-red-200 dark:from-gray-900 dark:to-red-950';
+      return 'bg-gradient-to-r from-white via-white via-70% to-red-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-red-950';
     } else if (dangerState?.includes('AttackingFreeKick')) {
-      return 'bg-gradient-to-r from-white to-orange-200 dark:from-gray-900 dark:to-orange-950';
+      return 'bg-gradient-to-r from-white via-white via-70% to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-orange-950';
     } else if (dangerState === 'FreeKick') {
-      return 'bg-gradient-to-r from-white to-green-200 dark:from-gray-900 dark:to-green-950';
+      return 'bg-gradient-to-r from-white via-white via-70% to-green-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-green-950';
     } else if (dangerState?.includes('DangerousAttack')) {
       return 'bg-red-200 dark:bg-red-950';  
     } else if (dangerState?.includes('Attack')) {
@@ -502,30 +536,30 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
   if (event.type === 'freeKick') {
     const dangerState = event.details.dangerState;
     if (dangerState?.includes('DangerousAttackingFreeKick')) {
-      return 'bg-gradient-to-r from-white to-red-200 dark:from-gray-900 dark:to-red-950';
+      return 'bg-gradient-to-r from-white via-white via-70% to-red-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-red-950';
     } else if (dangerState?.includes('AttackingFreeKick')) {
-      return 'bg-gradient-to-r from-white to-orange-200 dark:from-gray-900 dark:to-orange-950';
+      return 'bg-gradient-to-r from-white via-white via-70% to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-orange-950';
     } 
-    return 'bg-gradient-to-r from-white to-green-200 dark:from-gray-900 dark:to-green-950';
+    return 'bg-gradient-to-r from-white via-white via-70% to-green-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-green-950';
   }
 
   // Throw In Types
   if (event.type === 'throwIn') {
     const throwInState = event.details.throwInState;
     if (throwInState === 'Dangerous Attack') {
-      return 'bg-gradient-to-r from-white to-red-200 dark:from-gray-900 dark:to-red-950';
+      return 'bg-gradient-to-r from-white via-white via-70% to-red-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-red-950';
     } else if (throwInState === 'Attack') {
-      return 'bg-gradient-to-r from-white to-orange-200 dark:from-gray-900 dark:to-orange-950';
+      return 'bg-gradient-to-r from-white via-white via-70% to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-orange-950';
     } else if (throwInState === null) {
       return 'bg-gray-200 dark:bg-gray-700';
     }
-    return 'bg-gradient-to-r from-white to-green-200 dark:from-gray-900 dark:to-green-950';
+    return 'bg-gradient-to-r from-white via-white via-70% to-green-200 dark:from-gray-900 dark:via-gray-900 dark:via-70% dark:to-green-950';
   }
 
   // Other Events
   switch (event.type) {
     case 'goal':
-      return 'bg-emerald-50 dark:bg-emerald-950';
+      return 'bg-white dark:bg-gray-900';
     case 'yellowCard':
       return 'bg-yellow-50 dark:bg-yellow-950';
     case 'redCard':
@@ -534,31 +568,34 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     case 'substitution':
       return 'bg-blue-50 dark:bg-blue-950';
     case 'shotOnTarget':
-      return 'bg-purple-50 dark:bg-purple-950';
+      return 'bg-white dark:bg-gray-900';
     case 'shotOffTarget':
-    case 'shotBlocked':
       return 'bg-gray-100 dark:bg-gray-800';
+    case 'shotBlocked':
+      return 'bg-white dark:bg-gray-900';
     case 'shotOffWoodwork':
       return 'bg-orange-50 dark:bg-orange-950';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-blue-50 dark:bg-blue-950';
+      return 'bg-green-100 dark:bg-green-950';
     case 'penalty':
-      return 'bg-red-50 dark:bg-red-950';
+      return 'bg-blue-300 dark:bg-blue-700';
     case 'var':
-      return 'bg-purple-50 dark:bg-purple-950';
+      return 'bg-purple-400 dark:bg-purple-600';
     case 'phaseChange':
       return 'bg-green-50 dark:bg-green-950';
     case 'throwIn':
       return 'bg-blue-50 dark:bg-blue-950';
+    case 'foul':
+      return 'bg-blue-100 dark:bg-blue-950';
     case 'woodwork':
       return 'bg-orange-50 dark:bg-orange-950';
     case 'goalKick':
-      return 'bg-green-50 dark:bg-green-950';
+      return 'bg-gray-100 dark:bg-gray-800';
     case 'offsides':
-      return 'bg-yellow-50 dark:bg-yellow-950';
+      return 'bg-gray-100 dark:bg-gray-800';
     case 'kickOff':
-      return 'bg-blue-50 dark:bg-blue-950';
+      return 'bg-white dark:bg-gray-900';
     case 'systemMessage':
       const messageType = event.details.messageType;
       if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
@@ -567,6 +604,10 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
         } else if (event?.details?.message?.toLowerCase().includes('red')) {
           return 'bg-red-50 dark:bg-red-950';
         }
+      }
+      // Special styling for reliability messages
+      if (event?.details?.message?.includes('Feed Reliable') || event?.details?.message?.includes('Feed Unreliable')) {
+        return 'bg-black dark:bg-black';
       }
       return 'bg-orange-50 dark:bg-orange-950';
     case 'stoppageTime':
@@ -579,6 +620,11 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
 };
 
 const getEventBorderColor = (event: MatchEvent): string => {
+  // Special handling for cancelled goals
+  if ((event.type === 'goal' || (event.type === 'dangerState' && event.details.dangerState === 'Goal')) && event.details.isCancelled) {
+    return 'border-red-300 dark:border-red-700';
+  }
+  
   // Booking States
   if (event.type === 'bookingState') {
     const state = event.details.bookingState;
@@ -600,11 +646,11 @@ const getEventBorderColor = (event: MatchEvent): string => {
     }
     
     if (dangerState === 'Safe') {
-      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-3 before:bg-green-500 dark:before:bg-green-600 border-gray-200 dark:border-gray-700';
+      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-10 before:bg-green-500 dark:before:bg-green-600 border-gray-200 dark:border-gray-700';
     } else if (dangerState === 'Attack') {
-      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-3 before:bg-orange-500 dark:before:bg-orange-600 border-gray-200 dark:border-gray-700';
+      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-10 before:bg-orange-500 dark:before:bg-orange-600 border-gray-200 dark:border-gray-700';
     } else if (dangerState === 'DangerousAttack') {
-      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-3 before:bg-red-600 dark:before:bg-red-700 border-gray-200 dark:border-gray-700';
+      return 'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-10 before:bg-red-600 dark:before:bg-red-700 border-gray-200 dark:border-gray-700';
     }
     if (dangerState?.includes('DangerousFreeKick')) {
       return 'border-red-300 dark:border-red-800';
@@ -651,7 +697,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
   // Other Events
   switch (event.type) {
     case 'goal':
-      return 'border-emerald-200 dark:border-emerald-800';
+      return 'border-gray-300 dark:border-gray-600';
     case 'yellowCard':
       return 'border-yellow-200 dark:border-yellow-800';
     case 'redCard':
@@ -660,31 +706,34 @@ const getEventBorderColor = (event: MatchEvent): string => {
     case 'substitution':
       return 'border-blue-200 dark:border-blue-800';
     case 'shotOnTarget':
-      return 'border-purple-200 dark:border-purple-800';
+      return 'border-gray-300 dark:border-gray-600';
     case 'shotOffTarget':
+      return 'border-gray-400 dark:border-gray-500';
     case 'shotBlocked':
-      return 'border-gray-200 dark:border-gray-700';
+      return 'border-gray-300 dark:border-gray-600';
     case 'shotOffWoodwork':
       return 'border-orange-200 dark:border-orange-800';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'border-blue-200 dark:border-blue-800';
+      return 'border-green-300 dark:border-green-700';
     case 'penalty':
-      return 'border-red-200 dark:border-red-800';
+      return 'border-blue-400 dark:border-blue-600';
     case 'var':
-      return 'border-purple-200 dark:border-purple-800';
+      return 'border-purple-500 dark:border-purple-600';
     case 'phaseChange':
       return 'border-green-200 dark:border-green-800';
     case 'throwIn':
       return 'border-blue-200 dark:border-blue-800';
+    case 'foul':
+      return 'border-blue-300 dark:border-blue-700';
     case 'woodwork':
       return 'border-orange-200 dark:border-orange-800';
     case 'goalKick':
-      return 'border-green-200 dark:border-green-800';
+      return 'border-gray-400 dark:border-gray-500';
     case 'offsides':
-      return 'border-yellow-200 dark:border-yellow-800';
+      return 'border-gray-400 dark:border-gray-500';
     case 'kickOff':
-      return 'border-blue-200 dark:border-blue-800';
+      return 'border-gray-300 dark:border-gray-600';
     case 'systemMessage':
       const messageType = event.details.messageType;
       if (messageType === 'warning' && event?.details?.message?.toLowerCase().includes('card')) {
@@ -693,6 +742,10 @@ const getEventBorderColor = (event: MatchEvent): string => {
         } else if (event?.details?.message?.toLowerCase().includes('red')) {
           return 'border-red-200 dark:border-red-800';
         }
+      }
+      // Special styling for reliability messages
+      if (event?.details?.message?.includes('Feed Reliable') || event?.details?.message?.includes('Feed Unreliable')) {
+        return 'border-black dark:border-black';
       }
       return 'border-orange-200 dark:border-orange-800';
     case 'stoppageTime':
@@ -725,10 +778,17 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
     event.details?.dangerState, 
     event.details?.messageType,
     event.details?.bookingState,
-    event.details?.throwInState
+    event.details?.throwInState,
+    event.details?.isCancelled,
+    event.details?.isGoalCancelled
   ]);
 
   const hasIcon = getEventIcon(event.type, event) !== null;
+  const hasBand = event.type === 'dangerState' && 
+    (event.details.dangerState === 'Safe' || 
+     event.details.dangerState === 'Attack' || 
+     event.details.dangerState === 'DangerousAttack');
+  const isReliabilityMessage = event.details?.message?.includes('Feed Reliable') || event.details?.message?.includes('Feed Unreliable');
 
   return (
     <div className={`flex w-full p-2 ${
@@ -760,7 +820,7 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
         )}
         
         <div className="flex-1 min-w-0 flex items-center justify-between">
-          <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs text-center' : 'text-sm'} font-medium text-gray-900 dark:text-white px-4`}>
+          <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs text-center' : 'text-sm'} font-medium ${isReliabilityMessage ? 'text-white' : 'text-gray-900 dark:text-white'} ${hasBand ? 'pl-14 pr-4' : 'px-4'}`}>
             <div dangerouslySetInnerHTML={{ __html: getEventTitle(event) }} />
           </div>
           <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ml-2 shrink-0`}>

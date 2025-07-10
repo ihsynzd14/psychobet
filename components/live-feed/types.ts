@@ -69,6 +69,8 @@ export interface MatchEventDetails {
   originalReason?: string;
   originalOutcome?: string;
   isInProgress?: boolean;
+  isCancelled?: boolean; // Add this line
+  isGoalCancelled?: boolean; // Add this line for VAR goal cancellation
 
   // Phase change details
   previousPhase?: string;
@@ -82,6 +84,14 @@ export interface MatchEventDetails {
   // Clock action details
   activityType?: string;
   isClockRunning?: boolean;
+
+  // Reliability details
+  isReliable?: boolean;
+  reliabilityReasons?: {
+    Heartbeat?: string;
+    FeedReliability?: string;
+    Coverage?: string;
+  } | null;
 }
 
 export interface MatchEvent {
@@ -131,4 +141,15 @@ export interface TeamLineup {
   startingOnPitch: Player[];
   startingBench: Player[];
   formation: string | null;
+} 
+
+export interface Color {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export interface TeamStrip {
+  color1: Color | null;
+  color2: Color | null;
 } 

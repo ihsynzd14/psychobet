@@ -1,14 +1,9 @@
 import { useMemo, useRef } from 'react';
-
-interface Color {
-  r: number;
-  g: number;
-  b: number;
-}
+import { Color } from './types';
 
 interface TeamJerseyProps {
-  color1: Color;
-  color2: Color;
+  color1: Color | null;
+  color2: Color | null;
   className?: string;
   type: 'home' | 'away';
 }
@@ -24,6 +19,17 @@ function areColorsEqual(color1: Color, color2: Color): boolean {
 export function TeamJersey({ color1, color2, className = '', type }: TeamJerseyProps) {
   const prevColor1Ref = useRef<Color | null>(null);
   const prevColor2Ref = useRef<Color | null>(null);
+
+  // Add null checks for color properties
+  if (!color1 || !color2 || 
+      typeof color1.r !== 'number' || typeof color1.g !== 'number' || typeof color1.b !== 'number' ||
+      typeof color2.r !== 'number' || typeof color2.g !== 'number' || typeof color2.b !== 'number') {
+    return (
+      <div className={className}>
+        <div className="inline-block w-12 h-20 bg-gray-300 dark:bg-gray-600 rounded"></div>
+      </div>
+    );
+  }
 
   const primaryColor = useMemo(() => {
     if (prevColor1Ref.current && areColorsEqual(prevColor1Ref.current, color1)) {
