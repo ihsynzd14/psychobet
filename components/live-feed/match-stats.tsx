@@ -202,14 +202,14 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
             <StatRow label="Shots On" home={homeStats.shotsOn} away={awayStats.shotsOn} />
             <StatRow label="Shots Off" home={homeStats.shotsOff} away={awayStats.shotsOff} />
             <StatRow label="Shots WW" home={homeStats.shotsWW} away={awayStats.shotsWW} />
-            <StatRow label="Shots Blocked" home={homeStats.shotsBlocked} away={awayStats.shotsBlocked} />
+            <StatRow label="Shots Blkd" home={homeStats.shotsBlocked} away={awayStats.shotsBlocked} />
             <StatRow label="Attacks" home={homeStats.attacks} away={awayStats.attacks} />
-            <StatRow label="Dangerous Attacks" home={homeStats.dangerousAttacks} away={awayStats.dangerousAttacks} />
+            <StatRow label="Dan.Attacks" home={homeStats.dangerousAttacks} away={awayStats.dangerousAttacks} />
             <StatRow label="Corners" home={homeStats.corners} away={awayStats.corners} />
             <StatRow label="Penalties" home={homeStats.penalties} away={awayStats.penalties} />
-            <StatRow label="Missed Penalties" home={homeStats.missedPenalties} away={awayStats.missedPenalties} />
-            <StatRow label="Dangerous FreeKicks" home={homeStats.dangerousFreeKicks} away={awayStats.dangerousFreeKicks} />
-            <StatRow label="Attacking FreeKicks" home={homeStats.attackingFreeKicks} away={awayStats.attackingFreeKicks} />
+            <StatRow label="Missed Pen." home={homeStats.missedPenalties} away={awayStats.missedPenalties} />
+            <StatRow label="Dangerous Fks" home={homeStats.dangerousFreeKicks} away={awayStats.dangerousFreeKicks} />
+            <StatRow label="Attacking Fks" home={homeStats.attackingFreeKicks} away={awayStats.attackingFreeKicks} />
             <StatRow label="Yellow Cards" home={homeStats.yellowCards} away={awayStats.yellowCards} />
             <StatRow label="Red Cards" home={homeStats.redCards} away={awayStats.redCards} />
             <StatRow label="Throw Ins" home={homeStats.throwIns} away={awayStats.throwIns} />

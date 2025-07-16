@@ -105,7 +105,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-orange-600 dark:text-orange-400';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'text-emerald-700 dark:text-emerald-300';
+      return 'text-emerald-800 dark:text-emerald-300';
     case 'penalty':
       return 'text-blue-700 dark:text-blue-300';
     case 'var':
@@ -447,7 +447,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-orange-200 dark:bg-orange-900';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-emerald-200 dark:bg-emerald-800';
+      return 'bg-emerald-400 dark:bg-emerald-800';
     case 'penalty':
       return 'bg-blue-200 dark:bg-blue-800';
     case 'var':
@@ -583,7 +583,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-orange-50 dark:bg-orange-950';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-emerald-100 dark:bg-emerald-950';
+      return 'bg-emerald-200 dark:bg-emerald-950';
     case 'penalty':
       return 'bg-blue-300 dark:bg-blue-700';
     case 'var':

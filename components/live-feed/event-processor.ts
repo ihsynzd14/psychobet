@@ -27,24 +27,12 @@ export const calculateScores = (data: any): { homeScore: number; awayScore: numb
   // Get VAR decisions - already sorted by sequenceId in raw data
   const varDecisions = actions?.varStateChanges?.varStateChanges || [];
   
-  // Fast goal cancellation detection - single pass
-  let homeGoalCancelled = false;
-  let awayGoalCancelled = false;
-  let lastDangerReason = '';
-  
-  // Single pass through VAR decisions (they're already sorted)
-  for (let i = 0, len = varDecisions.length; i < len; i++) {
-    const v = varDecisions[i];
-    
-    if (v.varState === 'Danger') {
-      lastDangerReason = v.varReasonV2 || v.varReason || '';
-    } else if (v.varState === 'Safe' && 
-               (v.varOutcomeV2 === 'NotSet' || v.varOutcome === 'NotSet')) {
-      if (lastDangerReason === 'HomeGoal') homeGoalCancelled = true;
-      else if (lastDangerReason === 'AwayGoal') awayGoalCancelled = true;
-      lastDangerReason = ''; // Reset
-    }
-  }
+  // DEBUG: Log the raw data
+  console.log('calculateScores DEBUG:', {
+    totalGoals: goals.length,
+    goals: goals.map((g: any) => ({ id: g.id, team: g.team, isConfirmed: g.isConfirmed })),
+    varDecisions: varDecisions.length
+  });
   
   // Count confirmed goals by team - single pass
   let homeGoals = 0;
@@ -57,14 +45,48 @@ export const calculateScores = (data: any): { homeScore: number; awayScore: numb
     }
   }
   
-  // Apply cancellations
+  // IMPROVED: More accurate VAR cancellation - only subtract if we have a specific cancellation pattern
+  // This is a temporary fix - ideally we should match specific goals to specific VAR decisions
+  let homeGoalCancelled = false;
+  let awayGoalCancelled = false;
+  
+  // Only look for very specific VAR cancellation patterns
+  for (let i = 0, len = varDecisions.length; i < len; i++) {
+    const v = varDecisions[i];
+    
+    // Only cancel if we have a very specific pattern indicating goal cancellation
+    if (v.varState === 'Safe' && 
+        (v.varOutcomeV2 === 'NotSet' || v.varOutcome === 'NotSet')) {
+      const reason = v.varReasonV2 || v.varReason || '';
+      // Only cancel if we have EXPLICIT goal cancellation indicators
+      if (reason === 'HomeGoal' && v.varOutcomeV2 === 'NotSet') {
+        homeGoalCancelled = true;
+      } else if (reason === 'AwayGoal' && v.varOutcomeV2 === 'NotSet') {
+        awayGoalCancelled = true;
+      }
+    }
+  }
+  
+  // DEBUG: Log before and after VAR cancellations
+  console.log('calculateScores BEFORE VAR cancellations:', {
+    homeGoals,
+    awayGoals,
+    homeGoalCancelled,
+    awayGoalCancelled
+  });
+  
+  // Apply cancellations only if we have explicit evidence
   if (homeGoalCancelled) homeGoals = Math.max(0, homeGoals - 1);
   if (awayGoalCancelled) awayGoals = Math.max(0, awayGoals - 1);
   
-  return {
+  const result = {
     homeScore: homeGoals,
     awayScore: awayGoals
   };
+  
+  console.log('calculateScores FINAL RESULT:', result);
+  
+  return result;
 };
 
 // Lineup verilerini işle ve cache'e al
