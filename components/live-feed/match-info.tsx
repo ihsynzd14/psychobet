@@ -1,4 +1,4 @@
-import { Trophy, Sun, Wind, Waves, Users2, Calendar, ArrowLeft } from 'lucide-react';
+import { Trophy, Sun, Wind, Waves, Users2, Calendar, ArrowLeft, MapPin } from 'lucide-react';
 import { MatchEvent } from './types';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -7,10 +7,12 @@ interface MatchInfoProps {
   competitionName: string;
   matchName: string;
   startDateUtc: string;
+  venueName?: string;
+  roundName?: string;
   events: MatchEvent[];
 }
 
-export function MatchInfo({ competitionName, matchName, startDateUtc, events }: MatchInfoProps) {
+export function MatchInfo({ competitionName, matchName, startDateUtc, venueName, roundName, events }: MatchInfoProps) {
   const router = useRouter();
 
   // Değerleri kontrol et
@@ -102,6 +104,30 @@ export function MatchInfo({ competitionName, matchName, startDateUtc, events }: 
               {formattedDate}
             </time>
           </div>
+
+          {/* Round Bilgisi */}
+          {roundName && (
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+              <div className="p-1 sm:p-2 rounded-lg bg-indigo-500/10">
+                <Users2 className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-500" />
+              </div>
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
+                {roundName}
+              </span>
+            </div>
+          )}
+
+          {/* Venue Bilgisi */}
+          {venueName && (
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+              <div className="p-1 sm:p-2 rounded-lg bg-rose-500/10">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-rose-500" />
+              </div>
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
+                {venueName}
+              </span>
+            </div>
+          )}
 
           {/* Saha ve Hava Durumu Bilgileri */}
           <div className="flex flex-nowrap items-center gap-1 sm:gap-2 ml-auto shrink-0">

@@ -109,6 +109,8 @@ export interface LiveFeedPageProps {
   competitionName: string;
   matchName: string;
   startDateUtc: string;
+  venueName?: string;
+  roundName?: string;
 }
 
 export interface Player {

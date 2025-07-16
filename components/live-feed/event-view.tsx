@@ -5,8 +5,8 @@ import { Activity, Goal, CreditCard, Repeat, Target, Ban, Flag, Timer,
   RectangleVerticalIcon,
   RectangleVertical,
   LucideRectangleVertical} from 'lucide-react';
-import { GiWhistle, GiGoalKeeper, GiThrowingBall, GiCornerFlag, GiSoccerKick, GiCelebrationFire } from 'react-icons/gi';
-import { TbTargetOff, TbTargetArrow, TbClockPlus } from 'react-icons/tb';
+import { GiWhistle, GiGoalKeeper, GiThrowingBall, GiCornerFlag, GiSoccerKick } from 'react-icons/gi';
+import { TbTargetOff, TbTargetArrow, TbClockPlus, TbHexagonLetterG  } from 'react-icons/tb';
 import { GoShieldSlash, GoZap } from 'react-icons/go';
 import { GrFlag } from 'react-icons/gr';
 import { MatchEvent } from './types';
@@ -94,7 +94,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     case 'secondYellow':
       return 'text-red-600 dark:text-red-400';
     case 'substitution':
-      return 'text-blue-600 dark:text-blue-400';
+      return 'text-violet-600 dark:text-violet-400';
     case 'shotOnTarget':
       return 'text-gray-700 dark:text-gray-300';
     case 'shotOffTarget':
@@ -105,7 +105,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-orange-600 dark:text-orange-400';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'text-green-700 dark:text-green-300';
+      return 'text-emerald-700 dark:text-emerald-300';
     case 'penalty':
       return 'text-blue-700 dark:text-blue-300';
     case 'var':
@@ -148,7 +148,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
 const getEventIcon = (type: string, event?: MatchEvent) => {
   switch (type) {
     case 'goal':
-      return <GiCelebrationFire className="w-6 h-6 animate-pulse" />;
+      return <TbHexagonLetterG className="w-6 h-6 animate-pulse" />;
     case 'yellowCard':
       return <LucideRectangleVertical className="w-5 h-5" />;
     case 'secondYellow':
@@ -182,7 +182,7 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
     case 'dangerState':
       // Use the same icon as 'goal' for dangerState with 'Goal' state
       if (event?.details.dangerState === 'Goal') {
-        return <GiCelebrationFire className="w-6 h-6 animate-pulse" />;
+        return <TbHexagonLetterG className="w-6 h-6 animate-pulse" />;
       }
      
       if (event?.details.dangerState === 'Safe' || 
@@ -205,6 +205,12 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
       return <Timer className="w-5 h-5" />;
     case 'systemMessage':
       const messageType = event?.details?.messageType;
+      // Use AlertTriangle for reliability and call center messages
+      if (event?.details?.message?.includes('Feed Reliable') || 
+          event?.details?.message?.includes('Feed Unreliable') ||
+          event?.details?.message?.toLowerCase().includes('call center')) {
+        return <AlertTriangle className="w-5 h-5" />;
+      }
       if (messageType === 'warning') return <AlertTriangle className="w-5 h-5" />;
       if (messageType === 'error') return <X className="w-5 h-5" />;
       if (messageType === 'success') return <Shield className="w-5 h-5" />;
@@ -430,7 +436,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     case 'secondYellow':
       return 'bg-red-200 dark:bg-red-900';
     case 'substitution':
-      return 'bg-blue-200 dark:bg-blue-900';
+      return 'bg-violet-200 dark:bg-violet-900';
     case 'shotOnTarget':
       return 'bg-gray-200 dark:bg-gray-700';
     case 'shotOffTarget':
@@ -441,7 +447,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-orange-200 dark:bg-orange-900';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-green-200 dark:bg-green-800';
+      return 'bg-emerald-200 dark:bg-emerald-800';
     case 'penalty':
       return 'bg-blue-200 dark:bg-blue-800';
     case 'var':
@@ -566,7 +572,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     case 'secondYellow':
       return 'bg-red-50 dark:bg-red-950';
     case 'substitution':
-      return 'bg-blue-50 dark:bg-blue-950';
+      return 'bg-violet-50 dark:bg-violet-950';
     case 'shotOnTarget':
       return 'bg-white dark:bg-gray-900';
     case 'shotOffTarget':
@@ -577,7 +583,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-orange-50 dark:bg-orange-950';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-green-100 dark:bg-green-950';
+      return 'bg-emerald-100 dark:bg-emerald-950';
     case 'penalty':
       return 'bg-blue-300 dark:bg-blue-700';
     case 'var':
@@ -704,7 +710,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
     case 'secondYellow':
       return 'border-red-200 dark:border-red-800';
     case 'substitution':
-      return 'border-blue-200 dark:border-blue-800';
+      return 'border-violet-200 dark:border-violet-800';
     case 'shotOnTarget':
       return 'border-gray-300 dark:border-gray-600';
     case 'shotOffTarget':
@@ -715,7 +721,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
       return 'border-orange-200 dark:border-orange-800';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'border-green-300 dark:border-green-700';
+      return 'border-emerald-300 dark:border-emerald-700';
     case 'penalty':
       return 'border-blue-400 dark:border-blue-600';
     case 'var':

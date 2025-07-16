@@ -22,7 +22,7 @@ interface TeamInfo {
   };
 }
 
-export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateUtc }: LiveFeedPageProps) {
+export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateUtc, venueName, roundName }: LiveFeedPageProps) {
   const [events, setEvents] = useState<MatchEvent[]>([]);
   const [currentTime, setCurrentTime] = useState<string>(formatTime(new Date()));
   const [homeTeam, setHomeTeam] = useState<TeamInfo | null>(null);
@@ -647,6 +647,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 competitionName={competitionName}
                 matchName={matchName}
                 startDateUtc={startDateUtc}
+                venueName={venueName}
+                roundName={roundName}
                 events={events}
               />
               <MatchHeader 

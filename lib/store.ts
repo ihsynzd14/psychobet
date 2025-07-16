@@ -4,6 +4,8 @@ interface FixtureDetails {
   competitionName: string;
   matchName: string;
   startDateUtc: string;
+  venueName?: string;
+  roundName?: string;
 }
 
 interface FixtureStore {

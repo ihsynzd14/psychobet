@@ -4,6 +4,7 @@ import { useFixtureStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
+import { apiV2 } from '@/lib/api-v2';
 
 interface LiveFeedPageProps {
   params: {
@@ -15,6 +16,8 @@ interface FixtureDetails {
   competitionName: string;
   matchName: string;
   startDateUtc: string;
+  venueName?: string;
+  roundName?: string;
 }
 
 export default function LiveFeedPageWrapper({ params }: LiveFeedPageProps) {
@@ -62,14 +65,16 @@ export default function LiveFeedPageWrapper({ params }: LiveFeedPageProps) {
         console.error('LocalStorage error:', error);
       }
       
-      // Hiçbir yerde yoksa API'dan almayı dene
+      // Hiçbir yerde yoksa API'dan almayı dene - önce V2 API'yi dene
       try {
-        const fixture = await api.getFixture(params.fixtureId);
+        const fixture = await apiV2.getFixture(params.fixtureId);
         if (fixture) {
           const details = {
-            competitionName: fixture.competitionName,
+            competitionName: fixture.competition.name,
             matchName: fixture.name,
-            startDateUtc: fixture.startDateUtc
+            startDateUtc: fixture.startDate,
+            venueName: fixture.venue?.name,
+            roundName: fixture.round?.name
           };
           
           // Hem state'e hem store'a hem de localStorage'a kaydet
@@ -80,7 +85,28 @@ export default function LiveFeedPageWrapper({ params }: LiveFeedPageProps) {
           return;
         }
       } catch (error) {
-        console.error('API error:', error);
+        console.error('V2 API error:', error);
+        
+        // V2 API başarısızsa eski API'yi dene
+        try {
+          const fixture = await api.getFixture(params.fixtureId);
+          if (fixture) {
+            const details = {
+              competitionName: fixture.competitionName,
+              matchName: fixture.name,
+              startDateUtc: fixture.startDateUtc
+            };
+            
+            // Hem state'e hem store'a hem de localStorage'a kaydet
+            setLocalFixtureDetails(details);
+            fixtureStore.setFixtureDetails(params.fixtureId, details);
+            localStorage.setItem(`fixture_${params.fixtureId}`, JSON.stringify(details));
+            setIsLoading(false);
+            return;
+          }
+        } catch (oldApiError) {
+          console.error('Old API error:', oldApiError);
+        }
       }
       
       // Hiçbir şekilde bulunamadıysa ana sayfaya yönlendir
@@ -116,6 +142,8 @@ export default function LiveFeedPageWrapper({ params }: LiveFeedPageProps) {
       competitionName={localFixtureDetails.competitionName}
       matchName={localFixtureDetails.matchName}
       startDateUtc={localFixtureDetails.startDateUtc}
+      venueName={localFixtureDetails.venueName}
+      roundName={localFixtureDetails.roundName}
     />
   );
 } 
