@@ -232,6 +232,32 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const { lastTimeElapsed, currentPhase, displayPhase } = useMemo(() => {
     if (events.length === 0) return { lastTimeElapsed: '00:00', currentPhase: 'FirstHalf', displayPhase: 'First Half' };
     
+    // Helper function to get the last clock stop time for completed phases
+    const getLastClockStopTime = (phaseChangeTimestamp: string) => {
+      // Find the last clock action event that stopped the clock before the phase change
+      const clockStopEvents = events.filter(event => 
+        event.type === 'clockAction' && 
+        event.details.isClockRunning === false &&
+        new Date(event.timestamp) <= new Date(phaseChangeTimestamp)
+      );
+      
+      if (clockStopEvents.length > 0) {
+        // Return the time from the most recent clock stop event
+        return clockStopEvents[0].timeElapsed;
+      }
+      
+      // Fallback to regular events if no clock stop found
+      const regularEvents = events.filter(event => 
+        event.team !== 'System' && 
+        event.type !== 'bookingState' && 
+        event.type !== 'phaseChange' && 
+        event.type !== 'stoppageTime' &&
+        new Date(event.timestamp) <= new Date(phaseChangeTimestamp)
+      );
+      
+      return regularEvents.length > 0 ? regularEvents[0].timeElapsed : '00:00';
+    };
+    
     // First check for phase change events to get the most accurate current phase
     const phaseChangeEvents = events.filter(event => event.type === 'phaseChange');
     
@@ -241,19 +267,10 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       
       // Handle transition to PostMatch (match completely finished)
       if (latestPhaseChange.phase === 'PostMatch') {
-        // Find the last regular event before the phase change to get the last elapsed time
-        const regularEvents = events.filter(event => 
-          event.team !== 'System' && 
-          event.type !== 'bookingState' && 
-          event.type !== 'phaseChange' && 
-          event.type !== 'stoppageTime' &&
-          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
-        );
-        
-        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
         
         return { 
-          lastTimeElapsed: lastTimeFromEvents, 
+          lastTimeElapsed: lastTimeFromClockStop, 
           currentPhase: 'PostMatch', 
           displayPhase: 'Match Complete' 
         };
@@ -261,19 +278,10 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       
       // Handle transition to HalfTime (first half finished)
       if (latestPhaseChange.phase === 'HalfTime' && latestPhaseChange.details.previousPhase === 'FirstHalf') {
-        // Find the last regular event before the phase change to get the last elapsed time
-        const regularEvents = events.filter(event => 
-          event.team !== 'System' && 
-          event.type !== 'bookingState' && 
-          event.type !== 'phaseChange' && 
-          event.type !== 'stoppageTime' &&
-          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
-        );
-        
-        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
         
         return { 
-          lastTimeElapsed: lastTimeFromEvents, 
+          lastTimeElapsed: lastTimeFromClockStop, 
           currentPhase: 'HalfTime', 
           displayPhase: '1st Half Complete' 
         };
@@ -281,18 +289,10 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       
       // Handle transition to FullTimeNormalTime (second half finished, going to extra time)
       if (latestPhaseChange.phase === 'FullTimeNormalTime' && latestPhaseChange.details.previousPhase === 'SecondHalf') {
-        const regularEvents = events.filter(event => 
-          event.team !== 'System' && 
-          event.type !== 'bookingState' && 
-          event.type !== 'phaseChange' && 
-          event.type !== 'stoppageTime' &&
-          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
-        );
-        
-        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
         
         return { 
-          lastTimeElapsed: lastTimeFromEvents, 
+          lastTimeElapsed: lastTimeFromClockStop, 
           currentPhase: 'FullTimeNormalTime', 
           displayPhase: 'Full Time Normal Time' 
         };
@@ -300,18 +300,10 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       
       // Handle transition to ExtraTimeHalfTime (extra time first half finished)
       if (latestPhaseChange.phase === 'ExtraTimeHalfTime' && latestPhaseChange.details.previousPhase === 'FullTimeExtraTime') {
-        const regularEvents = events.filter(event => 
-          event.team !== 'System' && 
-          event.type !== 'bookingState' && 
-          event.type !== 'phaseChange' && 
-          event.type !== 'stoppageTime' &&
-          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
-        );
-        
-        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
         
         return { 
-          lastTimeElapsed: lastTimeFromEvents, 
+          lastTimeElapsed: lastTimeFromClockStop, 
           currentPhase: 'ExtraTimeHalfTime', 
           displayPhase: 'Extra Time Half Time' 
         };
@@ -319,18 +311,10 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       
       // Handle transition to Penalties (extra time second half finished)
       if (latestPhaseChange.phase === 'Penalties' && latestPhaseChange.details.previousPhase === 'ExtraTimeSecondHalf') {
-        const regularEvents = events.filter(event => 
-          event.team !== 'System' && 
-          event.type !== 'bookingState' && 
-          event.type !== 'phaseChange' && 
-          event.type !== 'stoppageTime' &&
-          new Date(event.timestamp) <= new Date(latestPhaseChange.timestamp)
-        );
-        
-        const lastTimeFromEvents = regularEvents.length > 0 ? regularEvents[0].timeElapsed : latestPhaseChange.timeElapsed;
+        const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
         
         return { 
-          lastTimeElapsed: lastTimeFromEvents, 
+          lastTimeElapsed: lastTimeFromClockStop, 
           currentPhase: 'Penalties', 
           displayPhase: 'Penalties' 
         };
@@ -359,10 +343,14 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         break;
       case 'HalfTime':
         displayPhase = 'Half Time';
-        return { lastTimeElapsed: lastEvent.timeElapsed, currentPhase: lastEvent.phase, displayPhase };
+        // For completed phases, try to get clock stop time
+        const halfTimeClockStop = getLastClockStopTime(lastEvent.timestamp);
+        return { lastTimeElapsed: halfTimeClockStop, currentPhase: lastEvent.phase, displayPhase };
       case 'FullTime':
         displayPhase = '2nd Half Complete';
-        return { lastTimeElapsed: lastEvent.timeElapsed, currentPhase: lastEvent.phase, displayPhase };
+        // For completed phases, try to get clock stop time
+        const fullTimeClockStop = getLastClockStopTime(lastEvent.timestamp);
+        return { lastTimeElapsed: fullTimeClockStop, currentPhase: lastEvent.phase, displayPhase };
       case 'FullTimeNormalTime':
         displayPhase = 'Full Time Normal Time';
         break;
@@ -380,7 +368,9 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         break;
       case 'PostMatch':
         displayPhase = 'Match Complete';
-        break;
+        // For completed phases, try to get clock stop time
+        const postMatchClockStop = getLastClockStopTime(lastEvent.timestamp);
+        return { lastTimeElapsed: postMatchClockStop, currentPhase: lastEvent.phase, displayPhase };
       default:
         displayPhase = 'First Half';
     }

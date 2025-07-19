@@ -34,7 +34,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     
     // Special handling for Goal dangerState to match goal event styling
     if (dangerState === 'Goal') {
-      return 'text-gray-700 dark:text-gray-300';
+      return 'text-red-600 dark:text-red-400';
     }
     
     if (dangerState === 'Safe' || 
@@ -87,7 +87,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
   // Other Events
   switch (type) {
     case 'goal':
-      return 'text-gray-700 dark:text-gray-300';
+      return 'text-red-600 dark:text-red-400';
     case 'yellowCard':
       return 'text-yellow-600 dark:text-yellow-400';
     case 'redCard':
@@ -105,7 +105,7 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
       return 'text-orange-600 dark:text-orange-400';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'text-emerald-800 dark:text-emerald-300';
+      return 'text-[#0c6452] dark:text-[#0c6452]';
     case 'penalty':
       return 'text-blue-700 dark:text-blue-300';
     case 'var':
@@ -376,7 +376,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     
     // Special handling for Goal dangerState to match goal event styling
     if (dangerState === 'Goal') {
-      return 'bg-emerald-200 dark:bg-emerald-900';
+      return 'bg-red-200 dark:bg-emerald-900';
     }
     
     if (dangerState === 'Safe' || 
@@ -447,7 +447,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
       return 'bg-orange-200 dark:bg-orange-900';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-emerald-400 dark:bg-emerald-800';
+      return 'bg-[#45dcc8] dark:bg-[#45dcc8]';
     case 'penalty':
       return 'bg-blue-200 dark:bg-blue-800';
     case 'var':
@@ -583,7 +583,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
       return 'bg-orange-50 dark:bg-orange-950';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'bg-emerald-200 dark:bg-emerald-950';
+      return 'bg-[#23f4d2] dark:bg-[#23f4d2]';
     case 'penalty':
       return 'bg-blue-300 dark:bg-blue-700';
     case 'var':
@@ -648,7 +648,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
     
     // Special handling for Goal dangerState to match goal event styling
     if (dangerState === 'Goal') {
-      return 'border-emerald-200 dark:border-emerald-800';
+      return 'border-red-300 dark:border-emerald-800';
     }
     
     if (dangerState === 'Safe') {
@@ -721,7 +721,7 @@ const getEventBorderColor = (event: MatchEvent): string => {
       return 'border-orange-200 dark:border-orange-800';
     case 'cornerAwarded':
     case 'cornerTaken':
-      return 'border-emerald-300 dark:border-emerald-700';
+      return 'border-[#22b29a] dark:border-[#22b29a]';
     case 'penalty':
       return 'border-blue-400 dark:border-blue-600';
     case 'var':
@@ -826,7 +826,7 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
         )}
         
         <div className="flex-1 min-w-0 flex items-center justify-between">
-          <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs text-center' : 'text-sm'} font-medium ${isReliabilityMessage ? 'text-white' : 'text-gray-900 dark:text-white'} ${hasBand ? 'pl-14 pr-4' : 'px-4'}`}>
+          <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs text-center' : event.type === 'goal' || (event.type === 'dangerState' && event.details.dangerState === 'Goal') ? 'text-base' : 'text-sm'} font-medium ${isReliabilityMessage ? 'text-white' : 'text-gray-900 dark:text-white'} ${hasBand ? 'pl-14 pr-4' : 'px-4'}`}>
             <div dangerouslySetInnerHTML={{ __html: getEventTitle(event) }} />
           </div>
           <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ml-2 shrink-0`}>
