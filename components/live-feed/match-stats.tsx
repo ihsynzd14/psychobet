@@ -227,6 +227,7 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
               <MatchLineups
                 homeTeamLineup={homeTeamLineup}
                 awayTeamLineup={awayTeamLineup}
+                events={events} // Pass events to MatchLineups
               />
             ) : (
               <div className="text-center text-gray-500 dark:text-gray-400 py-6">

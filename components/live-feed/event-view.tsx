@@ -230,7 +230,7 @@ const getEventTitle = (event: MatchEvent): string => {
   switch (event.type) {
     case 'goal':
       const goalText = event.details.isCancelled 
-        ? `<span class="text-red-600 dark:text-red-400 font-bold text-lg line-through">GOAL</span> - <span class="text-red-600 dark:text-red-400 font-bold">CANCELED</span>`
+        ? `<span class="text-red-600 dark:text-red-400 font-bold text-lg line-through">GOAL</span> - <span class="text-red-600 dark:text-red-400 font-bold">CANCELLED</span>`
         : `<span class="text-red-600 dark:text-red-400 font-bold text-lg">GOAL!</span>`;
       
       return `${goalText} ${event.details.isOwnGoal ? '(Own Goal)' : ''} ${event.details.wasPenalty ? '(Penalty)' : ''} ${event.details.scoredBy?.sourceName ? `- ${event.details.scoredBy.sourceName}` : ''}${event.details.assistBy?.sourceName ? ` (Assist: ${event.details.assistBy.sourceName})` : ''}`;
