@@ -189,7 +189,7 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
           event?.details.dangerState === 'Attack' ||
           event?.details.dangerState === 'DangerousAttack') {
         return null;
-      } else if ( event?.details.dangerState === 'DangerousFreeKick' || event?.details.dangerState === 'AttackingFreeKick') {
+      } else if ( event?.details.dangerState === 'DangerousFreeKick' || event?.details.dangerState === 'AttackingFreeKick' || event?.details.dangerState === 'FreeKick') {
         return <GiSoccerKick className="w-5 h-5" />;
       }
       return <Flame className="w-5 h-5" />;
@@ -829,9 +829,11 @@ export const EventView: React.FC<EventViewProps> = ({ event }) => {
           <div className={`flex-1 min-w-0 ${isSystemMessage || isBookingState || isPhaseChange || isStoppageTime ? 'text-xs text-center' : event.type === 'goal' || (event.type === 'dangerState' && event.details.dangerState === 'Goal') ? 'text-base' : 'text-sm'} font-medium ${isReliabilityMessage ? 'text-white' : 'text-gray-900 dark:text-white'} ${hasBand ? 'pl-14 pr-4' : 'px-4'}`}>
             <div dangerouslySetInnerHTML={{ __html: getEventTitle(event) }} />
           </div>
-          <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ml-2 shrink-0`}>
-            {event.timeElapsed}
-          </div>
+          {(event.timeElapsed !== '0:00' && event.timeElapsed !== '00:00') && (
+            <div className={`text-xs text-gray-500 dark:text-gray-400 tabular-nums ml-2 shrink-0`}>
+              {event.timeElapsed}
+            </div>
+          )}
         </div>
       </div>
     </div>
