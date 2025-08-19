@@ -531,7 +531,7 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     } else if (dangerState?.includes('Attack')) {
       return 'bg-orange-200 dark:bg-orange-950';
     } else if (dangerState === 'CornerDanger') {
-      return 'bg-red-100 dark:from-gray-900 dark:to-red-950';
+      return 'bg-red-100 dark:bg-red-950';
     } else if (dangerState === 'Penalty') {
       return 'bg-red-100 dark:bg-red-950';
     } 

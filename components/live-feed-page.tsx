@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Activity, Clock, LucideAlignHorizontalJustifyStart, Users } from 'lucide-react';
+import { Activity, Clock, LucideAlignHorizontalJustifyStart, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '@/lib/api';
 import { formatTime } from './live-feed/utils';
 import { EventView } from './live-feed/event-view';
@@ -36,6 +36,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const [isClockRunning, setIsClockRunning] = useState<boolean>(true);
   const [homeScore, setHomeScore] = useState<number>(0);
   const [awayScore, setAwayScore] = useState<number>(0);
+  const [isMatchStatsExpanded, setIsMatchStatsExpanded] = useState<boolean>(true);
   const parentRef = useRef<HTMLDivElement>(null);
 
   // Optimize event update function
@@ -702,23 +703,44 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
           </div>
         </div>
 
-        <div className="w-[300px] border-l border-gray-100 dark:border-gray-700">
-          <div className="border-b border-gray-100 dark:border-gray-700 p-2 py-[21.6px]">
-            <h2 className="text-sm font-normal flex items-center gap-2">
-              <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
-              Match Details
-            </h2>
+        {isMatchStatsExpanded && (
+          <div className="w-[340px] border-l border-gray-100 dark:border-gray-700">
+            <div className="border-b border-gray-100 dark:border-gray-700 p-2 py-[21.6px] flex items-center justify-between">
+              <h2 className="text-sm font-normal flex items-center gap-2">
+                <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
+                Match Details
+              </h2>
+              <button
+                onClick={() => setIsMatchStatsExpanded(false)}
+                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                title="Close Match Details"
+              >
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+            <div className="border-t border-gray-100 dark:border-gray-700">
+              <MatchStats 
+                events={events} 
+                possession={memoizedPossession}
+                homeTeamLineup={homeTeamLineup}
+                awayTeamLineup={awayTeamLineup}
+                isLineupsLoading={isLineupsLoading}
+              />
+            </div>
           </div>
-          <div className="border-t border-gray-100 dark:border-gray-700">
-            <MatchStats 
-              events={events} 
-              possession={memoizedPossession}
-              homeTeamLineup={homeTeamLineup}
-              awayTeamLineup={awayTeamLineup}
-              isLineupsLoading={isLineupsLoading}
-            />
+        )}
+        
+        {!isMatchStatsExpanded && (
+          <div className="w-8 border-l border-gray-100 dark:border-gray-700 flex items-center justify-center">
+            <button
+              onClick={() => setIsMatchStatsExpanded(true)}
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              title="Open Match Details"
+            >
+              <ChevronLeft className="w-3 h-3 text-gray-500" />
+            </button>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

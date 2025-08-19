@@ -52,7 +52,7 @@ const RedCards = memo(({ count }: { count: number }) => {
 RedCards.displayName = 'RedCards';
 
 const ScoreDisplay = memo(({ score = 0 }: { score?: number }) => (
-  <div className="text-4xl font-bold text-gray-900 dark:text-white tabular-nums bg-gray-100 dark:from-transparent dark:to-gray-800 px-4 py-2 rounded-lg shadow-sm">
+  <div className="text-4xl font-bold text-gray-900 dark:text-white tabular-nums bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg shadow-sm">
     {score}
   </div>
 ));
@@ -328,7 +328,7 @@ export const MatchHeader = memo<MatchHeaderProps>(({
     return (
       <div className="flex flex-col border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
         <div className="flex items-center justify-center p-4">
-          <span className="text-gray-500 dark:text-gray-400"></span>
+          <span className="text-gray-500 dark:text-gray-400">Loading team data...</span>
         </div>
       </div>
     );

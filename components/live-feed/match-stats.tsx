@@ -68,19 +68,19 @@ const StatRow = React.memo(({ label, home, away }: { label: string; home: number
   return (
     <div className="relative h-6">
       <div className="grid grid-cols-3 text-sm relative z-10 text-xs">
-        <div className="text-right pr-3 py-1.5 font-normal">{home}</div>
-        <div className="text-center py-1.5 text-gray-600 truncate">{label}</div>
-        <div className="text-left pl-3 py-1.5 font-normal">{away}</div>
+        <div className="text-right pr-3 py-1.5 font-normal text-gray-900 dark:text-gray-600">{home}</div>
+        <div className="text-center py-1.5 text-gray-600 dark:text-gray-600 truncate">{label}</div>
+        <div className="text-left pl-3 py-1.5 font-normal text-gray-900 dark:text-gray-600">{away}</div>
       </div>
       
       {/* Optimized progress bars */}
       <div className="absolute inset-0 flex">
         <div 
-          className="h-full bg-[#94EBFC]"
+          className="h-full bg-[#94EBFC] dark:bg-blue-400"
           style={{ width: `${homeWidth}%` }}
         />
         <div 
-          className="h-full bg-[#E0FE67]"
+          className="h-full bg-[#E0FE67] dark:bg-green-400"
           style={{ width: `${100 - homeWidth}%` }}
         />
       </div>
@@ -196,7 +196,7 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
 
       <div className="flex-1 overflow-hidden">
         {activeTab === 'stats' ? (
-          <div className="bg-white divide-y divide-gray-100">
+          <div className="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-700">
             <StatRow label="Possession %" home={homeStats.possession} away={awayStats.possession} />
             <StatRow label="Shots" home={homeStats.shots} away={awayStats.shots} />
             <StatRow label="Shots On" home={homeStats.shotsOn} away={awayStats.shotsOn} />

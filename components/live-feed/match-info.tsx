@@ -1,4 +1,4 @@
-import { Trophy, Sun, Wind, Waves, Users2, Calendar, ArrowLeft, MapPin } from 'lucide-react';
+import { Trophy, Sun, Wind, Waves, Users2, Calendar, ArrowLeft, MapPin, Moon } from 'lucide-react';
 import { MatchEvent } from './types';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -134,7 +134,11 @@ export function MatchInfo({ competitionName, matchName, startDateUtc, venueName,
             {systemInfo.weather && (
               <div className="flex items-center gap-1">
                 <div className="p-1 sm:p-2 rounded-lg bg-yellow-500/10">
-                  <Sun className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+                  {systemInfo.weather.toLowerCase().includes('night') ? (
+                    <Moon className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+                  ) : (
+                    <Sun className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+                  )}
                 </div>
                 <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate max-w-[60px] sm:max-w-none">
                   {systemInfo.weather}
