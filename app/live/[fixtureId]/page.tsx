@@ -1,5 +1,6 @@
 'use client';
 import { LiveFeedPage } from '@/components/live-feed-page';
+import { ProtectedRoute } from '@/components/auth/protected-route';
 import { useFixtureStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -137,13 +138,15 @@ export default function LiveFeedPageWrapper({ params }: LiveFeedPageProps) {
   });
 
   return (
-    <LiveFeedPage 
-      fixtureId={params.fixtureId}
-      competitionName={localFixtureDetails.competitionName}
-      matchName={localFixtureDetails.matchName}
-      startDateUtc={localFixtureDetails.startDateUtc}
-      venueName={localFixtureDetails.venueName}
-      roundName={localFixtureDetails.roundName}
-    />
+    <ProtectedRoute>
+      <LiveFeedPage 
+        fixtureId={params.fixtureId}
+        competitionName={localFixtureDetails.competitionName}
+        matchName={localFixtureDetails.matchName}
+        startDateUtc={localFixtureDetails.startDateUtc}
+        venueName={localFixtureDetails.venueName}
+        roundName={localFixtureDetails.roundName}
+      />
+    </ProtectedRoute>
   );
 } 

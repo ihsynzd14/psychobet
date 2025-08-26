@@ -12,6 +12,7 @@ import { MatchEvent } from './live-feed/types';
 import { MatchStats } from './live-feed/match-stats';
 import { MatchHeader } from './live-feed/match-header';
 import { MatchInfo } from './live-feed/match-info';
+import { LiveFeedEmptyState } from './live-feed-empty-state';
 
 interface TeamInfo {
   sourceId: string;
@@ -629,7 +630,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const sortedEvents = useMemo(() => events, [events]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <div className="h-screen flex">
         <div className="flex-1">
           {homeTeam && awayTeam && (
@@ -660,7 +661,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
           )}
 
           <div className="h-[calc(100vh-100px)]">
-            <div className="bg-white dark:bg-gray-800 h-full flex flex-col">              
+            <div className="bg-white dark:bg-gray-900 h-full flex flex-col">              
               <div 
                 ref={parentRef} 
                 className="flex-1 overflow-auto"
@@ -695,8 +696,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
               </div>
 
               {events.length === 0 && (
-                <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-                  No events yet...
+                <div className="flex items-center justify-center h-full min-h-[500px]">
+                  <LiveFeedEmptyState />
                 </div>
               )}
             </div>

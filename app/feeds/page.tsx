@@ -13,7 +13,8 @@ import {
   ChevronDown,
   ListFilter,
   Search,
-  X
+  X,
+  User2Icon
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -37,8 +38,13 @@ import { FixturesTableV2 } from '@/components/fixtures-table-v2';
 import { FixturesTableSkeleton } from '@/components/fixtures-table-skeleton';
 import { MatchStateIllustration } from '@/components/match-state-illustration';
 import { PaginationV2 } from '@/components/pagination-v2';
+import { ProtectedRoute } from '@/components/auth/protected-route';
+import { useAuth } from '@/components/auth/auth-provider';
+import { Avatar } from '@/components/ui/avatar';
 import { apiV2, type FixturesResponse } from '@/lib/api-v2';
 import { cn } from '@/lib/utils';
+import { User, LogOut, Home } from 'lucide-react';
+import { toast } from 'sonner';
 
 // Available page size options
 const PAGE_SIZE_OPTIONS = [25, 50, 100, 150];
@@ -46,6 +52,7 @@ const PAGE_SIZE_OPTIONS = [25, 50, 100, 150];
 export default function FeedTableV2() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { user, signOut } = useAuth();
   const fixturesContainerRef = useRef<HTMLDivElement>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25); // Default page size
@@ -154,6 +161,21 @@ export default function FeedTableV2() {
     setSearch('');
   }, []);
 
+  // Handle sign out
+  const handleSignOut = useCallback(async () => {
+    try {
+      await signOut();
+      toast.success('Signed out successfully');
+    } catch (error) {
+      toast.error('Error signing out');
+    }
+  }, [signOut]);
+
+  // Handle navigation to home
+  const handleGoHome = useCallback(() => {
+    router.push('/');
+  }, [router]);
+
   // Animation variants - more performant versions
   const pageTransitionVariants = {
     hidden: { opacity: 0 },
@@ -231,132 +253,172 @@ export default function FeedTableV2() {
   const hasFixtures = Boolean(fixturesData?.items?.length);
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-950">
-      {/* Header with backdrop blur for better performance and visual aesthetics */}
-      <header className="sticky top-0 z-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 shadow-sm will-change-transform">
-        <div className="w-full px-4 sm:px-8 md:px-12 mx-auto flex items-center justify-between h-14 sm:h-16">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <TooltipProvider delayDuration={300}>
-              <Tooltip>
-                <TooltipTrigger asChild>
+    <ProtectedRoute>
+      <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-950">
+        {/* Header with backdrop blur for better performance and visual aesthetics */}
+        <header className="sticky top-0 z-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 shadow-sm will-change-transform">
+          <div className="w-full px-4 sm:px-8 md:px-12 mx-auto flex items-center justify-between h-14 sm:h-16">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <div className="p-1.5 sm:p-2 rounded-lg bg-blue-500/10">
+                  <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+                </div>
+                <div>
+                  <h1 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+                    Live Fixtures
+                  </h1>
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                    Psychobet Feed System
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Search input */}
+            <div className="flex-1 max-w-md mx-4 sm:mx-8">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Search teams..."
+                  value={search}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="pl-10 pr-10 h-8 sm:h-9 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 text-sm"
+                />
+                {search && (
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => router.push('/')}
-                    className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 w-8 h-8 sm:w-9 sm:h-9"
+                    onClick={handleSearchClear}
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
-                    <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 dark:text-gray-400" />
-                    <span className="sr-only">Go back</span>
+                    <X className="h-3 w-3 text-gray-400" />
+                    <span className="sr-only">Clear search</span>
                   </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Return to main view</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <div className="p-1.5 sm:p-2 rounded-lg bg-blue-500/10">
-                <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-              </div>
-              <div>
-                <h1 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
-                  Live Fixtures
-                </h1>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  Enhanced V2 Experience
-                </p>
+                )}
               </div>
             </div>
-          </div>
 
-          {/* Search input */}
-          <div className="flex-1 max-w-md mx-4 sm:mx-8">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search teams..."
-                value={search}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10 pr-10 h-8 sm:h-9 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 text-sm"
-              />
-              {search && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleSearchClear}
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  <X className="h-3 w-3 text-gray-400" />
-                  <span className="sr-only">Clear search</span>
-                </Button>
+            <div className="flex items-center gap-1 sm:gap-2">
+              {/* Page size selector with optimized rendering */}
+              <DropdownMenu>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="h-8 sm:h-9 gap-1 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 text-xs sm:text-sm px-2 sm:px-3"
+                          disabled={isPending || isLoading}
+                        >
+                          <ListFilter className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
+                          <span className="hidden sm:inline">{pageSize} per page</span>
+                          <span className="sm:hidden">{pageSize}</span>
+                          <ChevronDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-gray-500 ml-1" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Items per page</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <DropdownMenuContent align="end" className="min-w-[100px] sm:min-w-[120px]">
+                  {PAGE_SIZE_OPTIONS.map(size => (
+                    <DropdownMenuItem 
+                      key={size}
+                      className={cn(
+                        "flex items-center justify-between text-xs sm:text-sm",
+                        pageSize === size && "font-medium text-blue-600 dark:text-blue-400"
+                      )}
+                      onClick={() => handlePageSizeChange(size)}
+                    >
+                      {size} items
+                      {pageSize === size && (
+                        <span className="h-1.5 w-1.5 bg-blue-500 rounded-full" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
+              <Button
+                variant="outline"
+                onClick={handleRefresh}
+                disabled={isRefreshing || isFetching}
+                className="h-8 sm:h-9 gap-1 sm:gap-1.5 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 text-xs sm:text-sm px-2 sm:px-3"
+              >
+                {isRefreshing || isFetching ? (
+                  <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                ) : (
+                  <RefreshCcw className="h-3 w-3 sm:h-4 sm:w-4" />
+                )}
+                <span className="hidden sm:inline">Refresh</span>
+              </Button>
+
+              <ThemeToggle />
+              
+              {/* User Menu */}
+              {user && (
+                <DropdownMenu>
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 w-8 h-8 sm:w-9 sm:h-9 ring-1 ring-gray-200 dark:ring-gray-700"
+                          >
+                            <Avatar className="h-6 w-6 sm:h-7 sm:w-7">
+                              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 text-white">
+                                <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                              </div>
+                            </Avatar>
+                            <span className="sr-only">User menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Account menu</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <DropdownMenuContent align="end" className="w-64">
+                    <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-700">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 text-white">
+                            <User className="h-4 w-4" />
+                          </div>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            {user.email?.split('@')[0] || 'User'}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="py-1">
+                      <DropdownMenuItem onClick={handleGoHome} className="text-sm">
+                        <User2Icon className="mr-2 h-4 w-4" />
+                        <span>Profile Details</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleSignOut} className="text-sm text-red-600 dark:text-red-400">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Sign out</span>
+                      </DropdownMenuItem>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
             </div>
           </div>
-
-          <div className="flex items-center gap-1 sm:gap-2">
-            {/* Page size selector with optimized rendering */}
-            <DropdownMenu>
-              <TooltipProvider delayDuration={300}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="h-8 sm:h-9 gap-1 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 text-xs sm:text-sm px-2 sm:px-3"
-                        disabled={isPending || isLoading}
-                      >
-                        <ListFilter className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
-                        <span className="hidden sm:inline">{pageSize} per page</span>
-                        <span className="sm:hidden">{pageSize}</span>
-                        <ChevronDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-gray-500 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Items per page</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <DropdownMenuContent align="end" className="min-w-[100px] sm:min-w-[120px]">
-                {PAGE_SIZE_OPTIONS.map(size => (
-                  <DropdownMenuItem 
-                    key={size}
-                    className={cn(
-                      "flex items-center justify-between text-xs sm:text-sm",
-                      pageSize === size && "font-medium text-blue-600 dark:text-blue-400"
-                    )}
-                    onClick={() => handlePageSizeChange(size)}
-                  >
-                    {size} items
-                    {pageSize === size && (
-                      <span className="h-1.5 w-1.5 bg-blue-500 rounded-full" />
-                    )}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <Button
-              variant="outline"
-              onClick={handleRefresh}
-              disabled={isRefreshing || isFetching}
-              className="h-8 sm:h-9 gap-1 sm:gap-1.5 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 text-xs sm:text-sm px-2 sm:px-3"
-            >
-              {isRefreshing || isFetching ? (
-                <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-              ) : (
-                <RefreshCcw className="h-3 w-3 sm:h-4 sm:w-4" />
-              )}
-              <span className="hidden sm:inline">Refresh</span>
-            </Button>
-
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
+        </header>
 
       {/* Stats bar with loading indicator - optimized rendering */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-1.5 sm:py-2 will-change-transform">
@@ -470,5 +532,6 @@ export default function FeedTableV2() {
         </div>
       </main>
     </div>
+    </ProtectedRoute>
   );
 } 

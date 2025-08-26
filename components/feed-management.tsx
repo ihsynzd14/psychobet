@@ -125,7 +125,7 @@ export function FeedManagement() {
             <ThemeToggle />
             <Button
               variant="outline"
-              onClick={() => router.push('/feed-table-v2')}
+              onClick={() => router.push('/feeds')}
               className="shadow-md hover:shadow-lg transition-all hover:scale-105 bg-blue-500 text-white hover:bg-blue-600"
             >
               <ExternalLink className="w-4 h-4 mr-1" />
@@ -215,7 +215,7 @@ export function FeedManagement() {
           <ThemeToggle />
           <Button
             variant="outline"
-            onClick={() => router.push('/feed-table-v2')}
+            onClick={() => router.push('/feeds')}
             className="shadow-md hover:shadow-lg transition-all hover:scale-105 bg-blue-500 text-white hover:bg-blue-600"
           >
             <ExternalLink className="w-4 h-4 mr-1" />
