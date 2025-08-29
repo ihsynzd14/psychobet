@@ -488,7 +488,7 @@ const eventProcessors = {
       } else if (state === 'Safe' && outcome && outcome !== 'NotSet') {
         display = `VAR Ended - ${getVarOutcomeText(outcome, state)}`;
       } else if (state === 'Safe' && outcome === 'NotSet') {
-        display = isGoalCancelled ? 'VAR - Goal Cancelled' : 'No VAR';
+        display = isGoalCancelled ? 'VAR - Risk Ended' : 'No VAR';
       }
 
       return {
