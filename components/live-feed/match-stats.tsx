@@ -66,21 +66,21 @@ const StatRow = React.memo(({ label, home, away }: { label: string; home: number
   const homeWidth = total === 0 ? 50 : (home / total) * 100;
   
   return (
-    <div className="relative h-6">
+    <div className="relative h-6 min-h-[24px]">
       <div className="grid grid-cols-3 text-sm relative z-10 text-xs">
-        <div className="text-right pr-3 py-1.5 font-normal text-gray-900 dark:text-gray-600">{home}</div>
-        <div className="text-center py-1.5 text-gray-600 dark:text-gray-600 truncate">{label}</div>
-        <div className="text-left pl-3 py-1.5 font-normal text-gray-900 dark:text-gray-600">{away}</div>
+        <div className="text-right pr-2 sm:pr-3 py-1.5 font-normal text-gray-900 dark:text-gray-600 tabular-nums">{home}</div>
+        <div className="text-center py-1.5 text-gray-600 dark:text-gray-600 truncate px-1 text-xs sm:text-sm">{label}</div>
+        <div className="text-left pl-2 sm:pl-3 py-1.5 font-normal text-gray-900 dark:text-gray-600 tabular-nums">{away}</div>
       </div>
       
       {/* Optimized progress bars */}
       <div className="absolute inset-0 flex">
         <div 
-          className="h-full bg-[#94EBFC] dark:bg-blue-400"
+          className="h-full bg-[#94EBFC] dark:bg-blue-400 transition-all duration-300"
           style={{ width: `${homeWidth}%` }}
         />
         <div 
-          className="h-full bg-[#E0FE67] dark:bg-green-400"
+          className="h-full bg-[#E0FE67] dark:bg-green-400 transition-all duration-300"
           style={{ width: `${100 - homeWidth}%` }}
         />
       </div>
@@ -168,33 +168,33 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
   }, [events]);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex border-b border-gray-100 dark:border-gray-700">
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
         <button
           onClick={() => setActiveTab('stats')}
-          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${
             activeTab === 'stats'
               ? 'text-blue-500 border-b-2 border-blue-500'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
           }`}
         >
-          <Activity className="w-4 h-4" />
-          Stats
+          <Activity className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate">Stats</span>
         </button>
         <button
           onClick={() => setActiveTab('lineups')}
-          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${
             activeTab === 'lineups'
               ? 'text-blue-500 border-b-2 border-blue-500'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
           }`}
         >
-          <Users className="w-4 h-4" />
-          Lineups
+          <Users className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate">Lineups</span>
         </button>
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-auto min-h-0">
         {activeTab === 'stats' ? (
           <div className="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-700">
             <StatRow label="Possession %" home={homeStats.possession} away={awayStats.possession} />

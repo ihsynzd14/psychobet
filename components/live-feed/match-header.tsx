@@ -34,7 +34,7 @@ const RedCards = memo(({ count }: { count: number }) => {
   if (count === 0) return null;
   
   return (
-    <div className="flex items-center gap-0.5">
+    <div className="flex items-center gap-0.5 ml-1">
       {cards.map((_, index) => (
         <Image 
           key={index} 
@@ -42,7 +42,7 @@ const RedCards = memo(({ count }: { count: number }) => {
           alt="Red Card" 
           width={16} 
           height={16} 
-          className="w-4 h-5"
+          className="w-3 h-4 sm:w-4 sm:h-5"
         />
       ))}
     </div>
@@ -50,14 +50,6 @@ const RedCards = memo(({ count }: { count: number }) => {
 });
 
 RedCards.displayName = 'RedCards';
-
-const ScoreDisplay = memo(({ score = 0 }: { score?: number }) => (
-  <div className="text-4xl font-bold text-gray-900 dark:text-white tabular-nums bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg shadow-sm">
-    {score}
-  </div>
-));
-
-ScoreDisplay.displayName = 'ScoreDisplay';
 
 const timeElapsedToSeconds = (timeElapsed: string): number => {
   const [minutes, seconds] = timeElapsed.split(':').map(Number);
@@ -336,56 +328,60 @@ export const MatchHeader = memo<MatchHeaderProps>(({
 
   return (
     <div className="flex flex-col border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center justify-between p-2 sm:p-4 min-h-[80px] overflow-hidden gap-2">
         {/* Home Team */}
-        <div className="flex items-center gap-3 flex-1">
-          <TeamJersey 
-            color1={homeTeam.strip.color1} 
-            color2={homeTeam.strip.color2} 
-            type="home"
-          />
-          <div className="flex flex-col items-start">
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {homeTeam.sourceName}
-              </h2>
-              <RedCards count={homeRedCards} />
-            </div>
+        <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0 max-w-[28%] md:max-w-[30%]">
+          <div className="flex-shrink-0">
+            <TeamJersey 
+              color1={homeTeam.strip.color1} 
+              color2={homeTeam.strip.color2} 
+              type="home"
+            />
+          </div>
+          <div className="flex items-center gap-1 min-w-0 flex-1">
+            <h2 className="text-xs sm:text-sm md:text-lg font-semibold text-gray-900 dark:text-white truncate min-w-0">
+              {homeTeam.sourceName}
+            </h2>
+            <RedCards count={homeRedCards} />
           </div>
         </div>
 
-        {/* Score and Match Time */}
-        <div className="flex items-center gap-4">
-          <ScoreDisplay key={`home-score-${homeScore}`} score={displayHomeScore} />
-          <div className="flex flex-col items-center min-w-[80px]">
-            <span className="text-lg font-bold text-gray-900 dark:text-white">
+        {/* Score and Match Time - Fixed Center */}
+        <div className="flex items-center gap-1 sm:gap-2 md:gap-4 flex-shrink-0">
+          <div className="text-xl sm:text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tabular-nums bg-gray-100 dark:bg-gray-800 px-1 sm:px-2 md:px-4 py-1 md:py-2 rounded-lg shadow-sm">
+            {displayHomeScore}
+          </div>
+          <div className="flex flex-col items-center min-w-[50px] sm:min-w-[60px] md:min-w-[80px]">
+            <span className="text-xs sm:text-sm md:text-lg font-bold text-gray-900 dark:text-white whitespace-nowrap">
               {displayTime}
               {showStoppageTime && (
                 <span className="text-red-500 dark:text-red-400 ml-1">+{stoppageTime}'</span>
               )}
             </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {matchPeriod === 'Half Time' ? 'Half Time - Break' : matchPeriod}
+            <span className="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 text-center leading-tight max-w-[120px] truncate">
+              {matchPeriod === 'Half Time' ? 'Half Time' : matchPeriod}
             </span>
           </div>
-          <ScoreDisplay key={`away-score-${awayScore}`} score={displayAwayScore} />
+          <div className="text-xl sm:text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tabular-nums bg-gray-100 dark:bg-gray-800 px-1 sm:px-2 md:px-4 py-1 md:py-2 rounded-lg shadow-sm">
+            {displayAwayScore}
+          </div>
         </div>
 
         {/* Away Team */}
-        <div className="flex items-center gap-3 flex-1 justify-end">
-          <div className="flex flex-col items-end">
-            <div className="flex items-center gap-2">
-              <RedCards count={awayRedCards} />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {awayTeam.sourceName}
-              </h2>
-            </div>
+        <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0 max-w-[28%] md:max-w-[30%] justify-end">
+          <div className="flex items-center gap-1 min-w-0 flex-1 justify-end">
+            <RedCards count={awayRedCards} />
+            <h2 className="text-xs sm:text-sm md:text-lg font-semibold text-gray-900 dark:text-white truncate min-w-0 text-right">
+              {awayTeam.sourceName}
+            </h2>
           </div>
-          <TeamJersey 
-            color1={awayTeam.strip.color1} 
-            color2={awayTeam.strip.color2} 
-            type="away"
-          />
+          <div className="flex-shrink-0">
+            <TeamJersey 
+              color1={awayTeam.strip.color1} 
+              color2={awayTeam.strip.color2} 
+              type="away"
+            />
+          </div>
         </div>
       </div>
     </div>

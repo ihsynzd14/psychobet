@@ -630,9 +630,9 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const sortedEvents = useMemo(() => events, [events]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      <div className="h-screen flex">
-        <div className="flex-1">
+    <div className="min-h-screen bg-white dark:bg-gray-900 overflow-hidden">
+      <div className="h-screen flex overflow-hidden">
+        <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
           {homeTeam && awayTeam && (
             <>
               <MatchInfo 
@@ -660,8 +660,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
             </>
           )}
 
-          <div className="h-[calc(100vh-100px)]">
-            <div className="bg-white dark:bg-gray-900 h-full flex flex-col">              
+          <div className="flex-1 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 h-full flex flex-col overflow-hidden">              
               <div 
                 ref={parentRef} 
                 className="flex-1 overflow-auto"
@@ -704,22 +704,23 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
           </div>
         </div>
 
+        {/* Responsive Stats Panel */}
         {isMatchStatsExpanded && (
-          <div className="w-[340px] border-l border-gray-100 dark:border-gray-700">
+          <div className="w-80 lg:w-96 xl:w-[340px] flex-shrink-0 border-l border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="border-b border-gray-100 dark:border-gray-700 p-2 py-[21.6px] flex items-center justify-between">
-              <h2 className="text-sm font-normal flex items-center gap-2">
-                <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500" />
-                Match Details
+              <h2 className="text-sm font-normal flex items-center gap-2 truncate">
+                <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <span className="truncate">Match Details</span>
               </h2>
               <button
                 onClick={() => setIsMatchStatsExpanded(false)}
-                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors flex-shrink-0"
                 title="Close Match Details"
               >
                 <ChevronRight className="w-4 h-4 text-gray-500" />
               </button>
             </div>
-            <div className="border-t border-gray-100 dark:border-gray-700">
+            <div className="border-t border-gray-100 dark:border-gray-700 overflow-hidden">
               <MatchStats 
                 events={events} 
                 possession={memoizedPossession}
@@ -732,7 +733,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         )}
         
         {!isMatchStatsExpanded && (
-          <div className="w-8 border-l border-gray-100 dark:border-gray-700 flex items-center justify-center">
+          <div className="w-8 flex-shrink-0 border-l border-gray-100 dark:border-gray-700 flex items-center justify-center">
             <button
               onClick={() => setIsMatchStatsExpanded(true)}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
