@@ -342,7 +342,12 @@ export default function UsersPage() {
   };
 
   const handleEdit = (user: UserDetails) => {
-    setState(prev => ({ ...prev, editUser: user }));
+    // Clear any existing modal state first
+    setState(prev => ({ ...prev, editUser: null }));
+    // Set the new edit user after a brief delay
+    setTimeout(() => {
+      setState(prev => ({ ...prev, editUser: user }));
+    }, 50);
   };
 
   const handleDelete = (user: UserDetails) => {
@@ -390,7 +395,7 @@ export default function UsersPage() {
                 Manage user accounts, memberships, and permissions
               </p>
             </div>
-            <Button asChild>
+            <Button asChild className="dark:bg-blue-700 dark:hover:bg-blue-600">
               <Link href="/admin/users/new">
                 <Plus className="mr-2 h-4 w-4" />
                 Add User
@@ -399,10 +404,10 @@ export default function UsersPage() {
           </div>
 
           {/* Search and Filters */}
-          <Card>
+          <Card className="dark:bg-gray-800/80 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="text-lg">Search Users</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-lg text-gray-900 dark:text-white">Search Users</CardTitle>
+              <CardDescription className="dark:text-gray-400">
                 Find users by email or name
               </CardDescription>
             </CardHeader>
@@ -414,13 +419,14 @@ export default function UsersPage() {
                     placeholder="Search by email or name..."
                     value={state.searchTerm}
                     onChange={(e) => handleSearch(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
                 <Button
                   variant="outline"
                   onClick={() => fetchUsers(state.currentPage, state.searchTerm)}
                   disabled={state.loading}
+                  className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                 >
                   <RefreshCw className={`mr-2 h-4 w-4 ${state.loading ? 'animate-spin' : ''}`} />
                   Refresh
@@ -430,21 +436,21 @@ export default function UsersPage() {
           </Card>
 
           {/* Users Table */}
-          <Card>
+          <Card className="dark:bg-gray-800/80 dark:border-gray-700">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                     <Users className="h-5 w-5" />
                     All Users
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="dark:text-gray-400">
                     {state.loading ? 'Loading...' : `${state.totalUsers} total users`}
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-0 dark:bg-gray-800/80">
               <UsersTable
                 users={state.users}
                 loading={state.loading}
@@ -461,6 +467,7 @@ export default function UsersPage() {
                 variant="outline"
                 onClick={() => fetchUsers(state.currentPage - 1, state.searchTerm)}
                 disabled={state.currentPage <= 1 || state.loading}
+                className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
               >
                 Previous
               </Button>
@@ -471,6 +478,7 @@ export default function UsersPage() {
                 variant="outline"
                 onClick={() => fetchUsers(state.currentPage + 1, state.searchTerm)}
                 disabled={state.currentPage >= state.totalPages || state.loading}
+                className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
               >
                 Next
               </Button>
@@ -484,30 +492,33 @@ export default function UsersPage() {
           open={!!state.editUser}
           onOpenChange={(open) => {
             if (!open) {
+              // Clear the edit user state when modal is closed
               setState(prev => ({ ...prev, editUser: null }));
             }
           }}
           onUserUpdated={() => {
+            // Refresh users list and clear edit state
+            setState(prev => ({ ...prev, editUser: null }));
             fetchUsers(state.currentPage, state.searchTerm);
           }}
         />
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={!!state.deleteUser} onOpenChange={cancelDelete}>
-          <AlertDialogContent>
+          <AlertDialogContent className="dark:bg-gray-800 dark:border-gray-700">
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete User</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to delete <strong>{state.deleteUser?.email}</strong>? 
+              <AlertDialogTitle className="dark:text-white">Delete User</AlertDialogTitle>
+              <AlertDialogDescription className="dark:text-gray-300">
+                Are you sure you want to delete <strong className="dark:text-white">{state.deleteUser?.email}</strong>? 
                 This action cannot be undone and will remove all user data including memberships and league access.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel onClick={cancelDelete} className="dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={confirmDelete}
                 disabled={state.deleting}
-                className="bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white"
               >
                 {state.deleting ? 'Deleting...' : 'Delete User'}
               </AlertDialogAction>

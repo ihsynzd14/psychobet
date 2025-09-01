@@ -26,8 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Calendar } from '@/components/ui/calendar';
-import { DatePicker } from '@/components/ui/date-picker';
+import { SimpleDatePicker } from '@/components/ui/simple-date-picker';
 import {
   Popover,
   PopoverContent,
@@ -210,13 +209,13 @@ export default function NewUserPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* User Information */}
-                <Card>
+                <Card className="dark:bg-gray-800/80 dark:border-gray-700">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                       <UserPlus className="h-5 w-5" />
                       User Information
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="dark:text-gray-400">
                       Basic user account details
                     </CardDescription>
                   </CardHeader>
@@ -226,9 +225,9 @@ export default function NewUserPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email Address</FormLabel>
+                          <FormLabel className="text-gray-900 dark:text-gray-100">Email Address</FormLabel>
                           <FormControl>
-                            <Input placeholder="user@example.com" {...field} />
+                            <Input placeholder="user@example.com" {...field} className="dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -240,11 +239,11 @@ export default function NewUserPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel className="text-gray-900 dark:text-gray-100">Password</FormLabel>
                           <FormControl>
-                            <Input type="password" placeholder="Enter password" {...field} />
+                            <Input type="password" placeholder="Enter password" {...field} className="dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                           </FormControl>
-                          <FormDescription>
+                          <FormDescription className="dark:text-gray-400">
                             Minimum 6 characters
                           </FormDescription>
                           <FormMessage />
@@ -257,9 +256,9 @@ export default function NewUserPage() {
                       name="full_name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Full Name</FormLabel>
+                          <FormLabel className="text-gray-900 dark:text-gray-100">Full Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="John Doe" {...field} />
+                            <Input placeholder="John Doe" {...field} className="dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -271,16 +270,16 @@ export default function NewUserPage() {
                       name="role"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Role</FormLabel>
+                          <FormLabel className="text-gray-900 dark:text-gray-100">Role</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                 <SelectValue placeholder="Select role" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent>
-                              <SelectItem value="user">User</SelectItem>
-                              <SelectItem value="admin">Admin</SelectItem>
+                            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+                              <SelectItem value="user" className="dark:text-white dark:focus:bg-gray-700">User</SelectItem>
+                              <SelectItem value="admin" className="dark:text-white dark:focus:bg-gray-700">Admin</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -291,10 +290,10 @@ export default function NewUserPage() {
                 </Card>
 
                 {/* Membership Dates */}
-                <Card>
+                <Card className="dark:bg-gray-800/80 dark:border-gray-700">
                   <CardHeader>
-                    <CardTitle>Membership Period</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-gray-900 dark:text-white">Membership Period</CardTitle>
+                    <CardDescription className="dark:text-gray-400">
                       Set specific membership start and expiry dates
                     </CardDescription>
                   </CardHeader>
@@ -304,19 +303,19 @@ export default function NewUserPage() {
                       name="start_date"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
-                          <FormLabel>Start Date</FormLabel>
+                          <FormLabel className="text-gray-900 dark:text-gray-100">Start Date</FormLabel>
                           <FormControl>
-                            <DatePicker
+                            <SimpleDatePicker
                               date={field.value}
                               onDateChange={field.onChange}
                               placeholder="Pick start date"
                               disabled={(date) =>
                                 date < new Date(new Date().setHours(0, 0, 0, 0))
                               }
-                              className="w-full"
+                              inputClassName="w-full h-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             />
                           </FormControl>
-                          <FormDescription>
+                          <FormDescription className="dark:text-gray-400">
                             The membership start date
                           </FormDescription>
                           <FormMessage />
@@ -329,9 +328,9 @@ export default function NewUserPage() {
                       name="expiry_date"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
-                          <FormLabel>Expiry Date</FormLabel>
+                          <FormLabel className="text-gray-900 dark:text-gray-100">Expiry Date</FormLabel>
                           <FormControl>
-                            <DatePicker
+                            <SimpleDatePicker
                               date={field.value}
                               onDateChange={field.onChange}
                               placeholder="Pick expiry date"
@@ -341,10 +340,10 @@ export default function NewUserPage() {
                                 const startDate = watchedStartDate || today;
                                 return date <= startDate;
                               }}
-                              className="w-full"
+                              inputClassName="w-full h-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             />
                           </FormControl>
-                          <FormDescription>
+                          <FormDescription className="dark:text-gray-400">
                             Must be after the start date
                           </FormDescription>
                           <FormMessage />
@@ -353,7 +352,7 @@ export default function NewUserPage() {
                     />
 
                     {watchedStartDate && watchedExpiryDate && (
-                      <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                         <p className="text-sm text-blue-700 dark:text-blue-300">
                           <strong>Duration:</strong> {Math.ceil((watchedExpiryDate.getTime() - watchedStartDate.getTime()) / (1000 * 60 * 60 * 24))} days
                         </p>
@@ -365,10 +364,10 @@ export default function NewUserPage() {
 
               {/* Submit */}
               <div className="flex items-center justify-between pt-6">
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
                   <Link href="/admin/users">Cancel</Link>
                 </Button>
-                <Button type="submit" disabled={state.submitting}>
+                <Button type="submit" disabled={state.submitting} className="dark:bg-blue-700 dark:hover:bg-blue-600">
                   {state.submitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { ThemeToggle } from '@/components/theme-toggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,10 +28,6 @@ import {
 interface AdminLayoutProps {
   children: ReactNode;
 }
-
-
-
-
 
 function UserMenu() {
   const { user, signOut } = useAuth();
@@ -134,6 +131,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               </div>
               
               <div className="flex items-center space-x-4">
+                <ThemeToggle />
                 <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                   Admin
                 </Badge>

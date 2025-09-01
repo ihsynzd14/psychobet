@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { config } from '@/lib/config';
 
 // Admin service that uses service role to bypass RLS
 export class AdminServiceBypass {
@@ -6,12 +7,11 @@ export class AdminServiceBypass {
 
   constructor() {
     // Use service role key that bypasses RLS
-    // You'll need to add SUPABASE_SERVICE_ROLE_KEY to your environment
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const serviceRoleKey = config.supabase.serviceRoleKey;
     
     this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      serviceRoleKey!,
+      config.supabase.url,
+      serviceRoleKey,
       {
         auth: {
           autoRefreshToken: false,

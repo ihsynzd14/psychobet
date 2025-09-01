@@ -14,7 +14,10 @@ import {
   ListFilter,
   Search,
   X,
-  User2Icon
+  User2Icon,
+  Home,
+  User,
+  LogOut
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -36,14 +39,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FixturesTableV2 } from '@/components/fixtures-table-v2';
 import { FixturesTableSkeleton } from '@/components/fixtures-table-skeleton';
-import { MatchStateIllustration } from '@/components/match-state-illustration';
 import { PaginationV2 } from '@/components/pagination-v2';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Avatar } from '@/components/ui/avatar';
 import { apiV2, type FixturesResponse } from '@/lib/api-v2';
 import { cn } from '@/lib/utils';
-import { User, LogOut, Home } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Available page size options
@@ -83,7 +84,7 @@ export default function FeedTableV2() {
     if (!queryClient.getQueryData(queryKey)) {
       queryClient.prefetchQuery({
         queryKey,
-        queryFn: () => apiV2.getRecentFixtures(page, size, searchTerm),
+        queryFn: () => apiV2.getFixturesByCompetitions(page, size, searchTerm),
         staleTime: 30000,
       });
     }
@@ -98,7 +99,7 @@ export default function FeedTableV2() {
     isFetching
   } = useQuery<FixturesResponse>({
     queryKey: ['fixturesV2', currentPage, pageSize, debouncedSearch],
-    queryFn: () => apiV2.getRecentFixtures(currentPage, pageSize, debouncedSearch),
+    queryFn: () => apiV2.getFixturesByCompetitions(currentPage, pageSize, debouncedSearch),
     refetchInterval: 60000, // Auto-refresh every minute
     staleTime: 30000,      // Consider data fresh for 30 seconds
     placeholderData: keepPreviousData, // Use the imported helper function from react-query
@@ -192,7 +193,6 @@ export default function FeedTableV2() {
   const renderErrorState = () => (
     <Card className="border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20">
       <CardContent className="flex flex-col items-center justify-center p-4 sm:p-8 text-center">
-        <MatchStateIllustration type="error" className="mb-3 sm:mb-4 w-32 sm:w-40 h-32 sm:h-40" />
         <div className="inline-flex items-center justify-center p-1.5 sm:p-2 mb-2 sm:mb-3 rounded-full bg-red-100 dark:bg-red-900/30">
           <AlertTriangle className="h-5 sm:h-7 w-5 sm:w-7 text-red-500" />
         </div>
@@ -209,42 +209,94 @@ export default function FeedTableV2() {
 
   // Render empty state
   const renderEmptyState = () => (
-    <Card className="border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/10">
-      <CardContent className="flex flex-col items-center justify-center p-4 sm:p-8 text-center">
-        <MatchStateIllustration type="noMatches" className="mb-3 sm:mb-4 w-32 sm:w-40 h-32 sm:h-40" />
-        {debouncedSearch ? (
-          <>
-            <h2 className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mb-1 sm:mb-2">
-              No Results Found
-            </h2>
-            <p className="text-sm text-blue-600 dark:text-blue-300 mb-3 max-w-md">
-              No fixtures found for "{debouncedSearch}". Try a different search term or clear the search to see all fixtures.
-            </p>
-            <div className="flex gap-2">
-              <Button onClick={handleSearchClear} className="bg-blue-500 hover:bg-blue-600 text-white text-sm">
-                <X className="h-3.5 w-3.5 mr-1.5" />
-                Clear Search
-              </Button>
-              <Button onClick={handleRefresh} variant="outline" className="text-sm">
-                <RefreshCcw className="h-3.5 w-3.5 mr-1.5" />
-                Refresh
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mb-1 sm:mb-2">
-              No Fixtures Available
-            </h2>
-            <p className="text-sm text-blue-600 dark:text-blue-300 mb-3 max-w-md">
-              There are currently no live or upcoming fixtures. Check back later for updates.
-            </p>
-            <Button onClick={handleRefresh} className="bg-blue-500 hover:bg-blue-600 text-white text-sm">
-              <RefreshCcw className="h-3.5 w-3.5 mr-1.5" />
-              Refresh Data
-            </Button>
-          </>
-        )}
+    <Card className="border-blue-200 dark:border-blue-900/50 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950/10 h-[60vh] flex flex-col shadow-none">
+      <CardContent className="flex flex-col items-center justify-center flex-1 p-0 text-center">
+        <div className="flex flex-col items-center justify-center w-full h-full py-8">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mb-6"
+          >
+          </motion.div>
+          
+          {debouncedSearch ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="space-y-4"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                No Results Found
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-400 max-w-md px-4">
+                No fixtures match "{debouncedSearch}". Try a different search term.
+              </p>
+              <div className="flex gap-3 mt-4">
+                <Button 
+                  onClick={handleSearchClear} 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Clear Search
+                </Button>
+                <Button 
+                  onClick={handleRefresh} 
+                  variant="outline" 
+                  className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-4 py-2 rounded-lg"
+                >
+                  <RefreshCcw className="h-4 w-4 mr-2" />
+                  Refresh
+                </Button>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="space-y-4 flex flex-col items-center"
+            >
+              <div className="inline-flex items-center justify-center p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-2">
+                <Trophy className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                No Fixtures Available
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-400 max-w-md px-4">
+                There are currently no live or upcoming fixtures. Check back later for updates.
+              </p>
+              
+              <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                <Button 
+                  onClick={handleRefresh} 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg flex items-center"
+                >
+                  <RefreshCcw className="h-4 w-4 mr-2" />
+                  Refresh Data
+                </Button>
+                <Button 
+                  onClick={handleGoHome} 
+                  variant="outline" 
+                  className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-6 py-2.5 rounded-lg flex items-center"
+                >
+                  <Home className="h-4 w-4 mr-2" />
+                  Go to Home
+                </Button>
+              </div>
+              
+              <div className="mt-6 flex items-center text-sm text-gray-500 dark:text-gray-500">
+                <div className="flex h-2 w-2 relative mr-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </div>
+                <span>We're checking for new fixtures every minute</span>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
@@ -467,7 +519,7 @@ export default function FeedTableV2() {
         <div 
           id="fixtures-container" 
           ref={fixturesContainerRef}
-          className="h-full overflow-auto pb-10 overscroll-contain"
+          className="h-full overflow-auto pb-10 overscroll-contain flex flex-col"
         >
           <div className="w-full px-12 mx-auto py-6">
             <AnimatePresence mode="wait" initial={false}>

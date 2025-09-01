@@ -12,9 +12,7 @@ import {
   Users,
   UserCheck,
   AlertTriangle,
-  DollarSign,
   TrendingUp,
-  Calendar,
   Activity
 } from 'lucide-react';
 import Link from 'next/link';
@@ -23,7 +21,6 @@ interface DashboardStats {
   totalUsers: number;
   activeUsers: number;
   expiringUsers: number;
-  totalRevenue: number;
   newUsersThisMonth: number;
 }
 
@@ -58,9 +55,9 @@ function StatCard({
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow duration-200">
+    <Card className="hover:shadow-md transition-shadow duration-200 dark:bg-gray-800/80 dark:border-gray-700 dark:hover:shadow-gray-900/30">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+        <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">
           {title}
         </CardTitle>
         <div className={`p-2 rounded-lg ${colorClasses[color]}`}>
@@ -76,7 +73,7 @@ function StatCard({
             {description}
           </p>
           {trend && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs dark:bg-gray-700/70 dark:text-gray-300">
               {trend}
             </Badge>
           )}
@@ -88,26 +85,26 @@ function StatCard({
 
 function QuickActions() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <Card className="dark:bg-gray-800/80 dark:border-gray-700">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
           <Activity className="h-5 w-5" />
           Quick Actions
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="dark:text-gray-400">
           Common administrative tasks
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button asChild variant="outline" className="justify-start h-12">
-            <Link href="/admin/users/new">
+      <CardContent>
+        <div className="grid grid-cols-2 gap-3">
+          <Button asChild variant="default" className="h-10 w-full dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
+            <Link href="/admin/users/new" className="flex items-center justify-center">
               <Users className="mr-2 h-4 w-4" />
               Add New User
             </Link>
           </Button>
-          <Button asChild variant="outline" className="justify-start h-12">
-            <Link href="/admin/users">
+          <Button asChild variant="default" className="h-10 w-full dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
+            <Link href="/admin/users" className="flex items-center justify-center">
               <UserCheck className="mr-2 h-4 w-4" />
               Manage Users
             </Link>
@@ -131,30 +128,30 @@ function RecentActivityCard({ activities, loading }: { activities: RecentActivit
   const getActionIcon = (actionType: string) => {
     switch (actionType) {
       case 'user_created':
-        return <Users className="h-4 w-4 text-green-600" />;
+        return <Users className="h-4 w-4 text-green-600 dark:text-green-400" />;
       case 'membership_updated':
-        return <Calendar className="h-4 w-4 text-blue-600" />;
+        return <UserCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />;
       case 'league_granted':
-        return <Activity className="h-4 w-4 text-purple-600" />;
+        return <Activity className="h-4 w-4 text-purple-600 dark:text-purple-400" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-600" />;
+        return <Activity className="h-4 w-4 text-gray-600 dark:text-gray-400" />;
     }
   };
 
   return (
-    <Card>
+    <Card className="dark:bg-gray-800/80 dark:border-gray-700">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
               <Activity className="h-5 w-5" />
               Recent Activity
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="dark:text-gray-400">
               Latest administrative actions
             </CardDescription>
           </div>
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost" size="sm" className="dark:text-gray-200 dark:hover:bg-gray-700">
             <Link href="/admin/logs">View All</Link>
           </Button>
         </div>
@@ -164,10 +161,10 @@ function RecentActivityCard({ activities, loading }: { activities: RecentActivit
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex items-center space-x-3">
-                <Skeleton className="h-8 w-8 rounded-full" />
+                <Skeleton className="h-8 w-8 rounded-full dark:bg-gray-700" />
                 <div className="space-y-2 flex-1">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-4 w-3/4 dark:bg-gray-700" />
+                  <Skeleton className="h-3 w-1/2 dark:bg-gray-700" />
                 </div>
               </div>
             ))}
@@ -264,10 +261,10 @@ export default function AdminDashboard() {
             </p>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {/* Stats Cards - Removed Monthly Revenue */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {loading ? (
-              [...Array(5)].map((_, i) => (
+              [...Array(4)].map((_, i) => (
                 <Card key={i}>
                   <CardHeader className="pb-2">
                     <Skeleton className="h-4 w-24" />
@@ -300,13 +297,6 @@ export default function AdminDashboard() {
                   description="Within 30 days"
                   icon={AlertTriangle}
                   color="orange"
-                />
-                <StatCard
-                  title="Monthly Revenue"
-                  value={`$${stats.totalRevenue.toFixed(2)}`}
-                  description="Active subscriptions"
-                  icon={DollarSign}
-                  color="green"
                 />
                 <StatCard
                   title="New This Month"

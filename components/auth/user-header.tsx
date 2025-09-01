@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/components/auth/auth-provider'
 import { useUserProfile } from '@/hooks/use-user-profile'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import {
@@ -75,6 +76,9 @@ export function UserHeader() {
           </Button>
         )}
       </div>
+      
+      {/* Theme Toggle */}
+      <ThemeToggle />
       
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

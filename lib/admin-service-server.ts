@@ -23,22 +23,67 @@ export class AdminServiceServer {
   // ==========================================
 
   async getAllUsers(page = 1, limit = 20, search?: string) {
+    // Build the query using actual tables instead of the view
     let query = this.supabase
-      .from('user_details')
-      .select('*', { count: 'exact' });
+      .from('profiles')
+      .select(`
+        id,
+        email,
+        full_name,
+        role,
+        created_at,
+        user_memberships!user_memberships_user_id_fkey (
+          id,
+          status,
+          start_date,
+          expiry_date
+        )
+      `, { count: 'exact' });
 
     if (search) {
       query = query.or(`email.ilike.%${search}%,full_name.ilike.%${search}%`);
     }
 
     const { data, error, count } = await query
-      .order('user_created_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
     if (error) throw error;
 
+    // Transform the data to match UserDetails interface
+    const transformedUsers = (data || []).map((profile: any) => {
+      const membership = profile.user_memberships?.[0];
+      const expiryDate = membership?.expiry_date ? new Date(membership.expiry_date) : null;
+      const today = new Date();
+      
+      let membershipHealth: 'active' | 'expiring_soon' | 'expired' = 'expired';
+      if (membership?.status === 'active' && expiryDate) {
+        if (expiryDate < today) {
+          membershipHealth = 'expired';
+        } else if (expiryDate <= new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)) {
+          membershipHealth = 'expiring_soon';
+        } else {
+          membershipHealth = 'active';
+        }
+      }
+
+      return {
+        id: profile.id,
+        email: profile.email,
+        full_name: profile.full_name,
+        role: profile.role,
+        user_created_at: profile.created_at,
+        membership_id: membership?.id,
+        membership_status: membership?.status,
+        start_date: membership?.start_date,
+        expiry_date: membership?.expiry_date,
+        membership_health: membershipHealth,
+        league_count: 0 // Will be populated separately if needed
+      };
+    });
+
     return {
-      users: data || [],
+      users: transformedUsers,
       total: count || 0,
       page,
       totalPages: Math.ceil((count || 0) / limit)
@@ -46,14 +91,63 @@ export class AdminServiceServer {
   }
 
   async getUserById(id: string) {
-    const { data, error } = await this.supabase
-      .from('user_details')
-      .select('*')
+    // Get user profile and membership data
+    const { data: profile, error } = await this.supabase
+      .from('profiles')
+      .select(`
+        id,
+        email,
+        full_name,
+        role,
+        created_at,
+        user_memberships!user_memberships_user_id_fkey (
+          id,
+          status,
+          start_date,
+          expiry_date
+        )
+      `)
       .eq('id', id)
       .single();
 
     if (error) throw error;
-    return data;
+    if (!profile) return null;
+
+    // Get league count
+    const { count: leagueCount } = await this.supabase
+      .from('user_league_access')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', id);
+
+    // Transform the data
+    const membership = profile.user_memberships?.[0];
+    const expiryDate = membership?.expiry_date ? new Date(membership.expiry_date) : null;
+    const today = new Date();
+    
+    let membershipHealth: 'active' | 'expiring_soon' | 'expired' = 'expired';
+    if (membership?.status === 'active' && expiryDate) {
+      if (expiryDate < today) {
+        membershipHealth = 'expired';
+      } else if (expiryDate <= new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)) {
+        membershipHealth = 'expiring_soon';
+      } else {
+        membershipHealth = 'active';
+      }
+    }
+
+    return {
+      id: profile.id,
+      email: profile.email,
+      full_name: profile.full_name,
+      role: profile.role,
+      user_created_at: profile.created_at,
+      membership_id: membership?.id,
+      membership_status: membership?.status,
+      start_date: membership?.start_date,
+      expiry_date: membership?.expiry_date,
+      membership_health: membershipHealth,
+      league_count: leagueCount || 0
+    };
   }
 
   async getDashboardStats() {
