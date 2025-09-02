@@ -112,7 +112,7 @@ export const apiV2 = {
         params.search = search.trim();
       }
       
-      const { data } = await axiosInstance.get<FixturesResponse>('/v2/fixtures/recent', {
+      const { data } = await axiosInstance.get<FixturesResponse>('/v2/fixtures/recent?status=notfinished', {
         params
       });
       return data;
@@ -147,7 +147,7 @@ export const apiV2 = {
       
       if (isAdmin) {
         // Admins get all recent fixtures with pagination and search
-        const { data } = await axiosInstance.get<FixturesResponse>('/v2/fixtures/recent', {
+        const { data } = await axiosInstance.get<FixturesResponse>('/v2/fixtures/recent?status=notfinished', {
           params
         });
         return data;

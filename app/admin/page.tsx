@@ -298,7 +298,7 @@ export default function AdminDashboard() {
                       Use the fixture access manager to grant or revoke access to specific matches for individual users or groups.
                     </p>
                     <Button asChild className="w-full dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
-                      <Link href="/admin/fixtures/access">
+                      <Link href="/admin/fixtures">
                         Manage Fixture Access
                       </Link>
                     </Button>
