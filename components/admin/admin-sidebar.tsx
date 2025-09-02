@@ -11,7 +11,8 @@ import {
   Activity,
   Home,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Trophy
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -41,7 +42,12 @@ const adminNavItems = [
     icon: UserPlus,
     description: 'Create new user'
   },
- 
+  {
+    title: 'Fixtures',
+    href: '/admin/fixtures',
+    icon: Trophy,
+    description: 'Manage fixtures and access'
+  },
 ];
 
 interface NavItemProps {

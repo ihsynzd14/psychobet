@@ -13,7 +13,8 @@ import {
   UserCheck,
   AlertTriangle,
   TrendingUp,
-  Activity
+  Activity,
+  Trophy
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -96,7 +97,7 @@ function QuickActions() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Button asChild variant="default" className="h-10 w-full dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
             <Link href="/admin/users/new" className="flex items-center justify-center">
               <Users className="mr-2 h-4 w-4" />
@@ -107,6 +108,12 @@ function QuickActions() {
             <Link href="/admin/users" className="flex items-center justify-center">
               <UserCheck className="mr-2 h-4 w-4" />
               Manage Users
+            </Link>
+          </Button>
+          <Button asChild variant="default" className="h-10 w-full dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
+            <Link href="/admin/fixtures" className="flex items-center justify-center">
+              <Trophy className="mr-2 h-4 w-4" />
+              Manage Fixtures
             </Link>
           </Button>
         </div>
@@ -133,6 +140,8 @@ function RecentActivityCard({ activities, loading }: { activities: RecentActivit
         return <UserCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />;
       case 'league_granted':
         return <Activity className="h-4 w-4 text-purple-600 dark:text-purple-400" />;
+      case 'fixture_access_granted':
+        return <Trophy className="h-4 w-4 text-amber-600 dark:text-amber-400" />;
       default:
         return <Activity className="h-4 w-4 text-gray-600 dark:text-gray-400" />;
     }
@@ -200,122 +209,134 @@ function RecentActivityCard({ activities, loading }: { activities: RecentActivit
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [activities, setActivities] = useState<RecentActivity[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
-        setLoading(true);
-        const [statsResult, activityResult] = await Promise.all([
+        const [dashboardStats, activityLogs] = await Promise.all([
           adminService.getDashboardStats(),
-          adminService.getActivityLogs(1, 5)
+          adminService.getActivityLogs(1, 10)
         ]);
         
-        setStats(statsResult);
-        setRecentActivity(activityResult.logs);
-      } catch (err) {
-        console.error('Error fetching dashboard data:', err);
-        setError('Failed to load dashboard data');
+        setStats(dashboardStats);
+        setActivities(activityLogs.logs);
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    loadData();
   }, []);
 
-  if (error) {
-    return (
-      <ProtectedRoute>
-        <AdminLayout>
-          <div className="flex items-center justify-center h-96">
-            <div className="text-center">
-              <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                Error Loading Dashboard
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400 mb-4">{error}</p>
-              <Button onClick={() => window.location.reload()}>
-                Try Again
-              </Button>
-            </div>
-          </div>
-        </AdminLayout>
-      </ProtectedRoute>
-    );
-  }
-
   return (
-    <ProtectedRoute>
+    <ProtectedRoute >
       <AdminLayout>
         <div className="space-y-6">
-          {/* Page Header */}
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Dashboard Overview
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400">
-              Monitor Psychobet's key metrics and activity
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              Welcome to the admin panel. Manage users, memberships, and content access.
             </p>
           </div>
 
-          {/* Stats Cards - Removed Monthly Revenue */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {loading ? (
-              [...Array(4)].map((_, i) => (
-                <Card key={i}>
-                  <CardHeader className="pb-2">
-                    <Skeleton className="h-4 w-24" />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-8 w-16 mb-2" />
-                    <Skeleton className="h-3 w-20" />
-                  </CardContent>
-                </Card>
-              ))
-            ) : stats ? (
-              <>
-                <StatCard
-                  title="Total Users"
-                  value={stats.totalUsers}
-                  description="Registered users"
-                  icon={Users}
-                  color="blue"
-                />
-                <StatCard
-                  title="Active Users"
-                  value={stats.activeUsers}
-                  description="With active memberships"
-                  icon={UserCheck}
-                  color="green"
-                />
-                <StatCard
-                  title="Expiring Soon"
-                  value={stats.expiringUsers}
-                  description="Within 30 days"
-                  icon={AlertTriangle}
-                  color="orange"
-                />
-                <StatCard
-                  title="New This Month"
-                  value={stats.newUsersThisMonth}
-                  description="User registrations"
-                  icon={TrendingUp}
-                  color="purple"
-                />
-              </>
-            ) : null}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              title="Total Users"
+              value={loading ? 0 : stats?.totalUsers || 0}
+              description="All registered users"
+              icon={Users}
+              color="blue"
+              trend={stats ? `+${stats.newUsersThisMonth} this month` : undefined}
+            />
+            <StatCard
+              title="Active Users"
+              value={loading ? 0 : stats?.activeUsers || 0}
+              description="Users with active memberships"
+              icon={UserCheck}
+              color="green"
+            />
+            <StatCard
+              title="Expiring Soon"
+              value={loading ? 0 : stats?.expiringUsers || 0}
+              description="Users expiring in 30 days"
+              icon={AlertTriangle}
+              color="orange"
+            />
+            <StatCard
+              title="Growth Rate"
+              value={loading ? '0%' : stats ? `${Math.round((stats.newUsersThisMonth / stats.totalUsers) * 100) || 0}%` : '0%'}
+              description="New users this month"
+              icon={TrendingUp}
+              color="purple"
+            />
           </div>
 
-          {/* Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Quick Actions */}
-            <QuickActions />
-
-            {/* Recent Activity */}
-            <RecentActivityCard activities={recentActivity} loading={loading} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <QuickActions />
+              <RecentActivityCard activities={activities} loading={loading} />
+            </div>
+            
+            <div className="space-y-6">
+              <Card className="dark:bg-gray-800/80 dark:border-gray-700">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
+                    <Trophy className="h-5 w-5" />
+                    Fixture Access Management
+                  </CardTitle>
+                  <CardDescription className="dark:text-gray-400">
+                    Manage user access to specific fixtures
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      Use the fixture access manager to grant or revoke access to specific matches for individual users or groups.
+                    </p>
+                    <Button asChild className="w-full dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
+                      <Link href="/admin/fixtures/access">
+                        Manage Fixture Access
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="dark:bg-gray-800/80 dark:border-gray-700">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
+                    <Activity className="h-5 w-5" />
+                    System Status
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Database</span>
+                      <Badge variant="secondary" className="dark:bg-green-900/30 dark:text-green-400">
+                        Operational
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">API</span>
+                      <Badge variant="secondary" className="dark:bg-green-900/30 dark:text-green-400">
+                        Operational
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Authentication</span>
+                      <Badge variant="secondary" className="dark:bg-green-900/30 dark:text-green-400">
+                        Operational
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </AdminLayout>

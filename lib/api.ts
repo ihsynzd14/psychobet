@@ -1,5 +1,7 @@
 import axios from 'axios';
 import io from 'socket.io-client';
+import { createClient } from '@/lib/supabase/client';
+import { adminService } from '@/lib/admin-service';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://51.89.167.87:3000/api';
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://51.89.167.87:3000';
@@ -114,6 +116,76 @@ class SocketManager {
 }
 
 export const api = {
+  // Check if a user has access to a specific fixture
+  checkUserFixtureAccess: async (userId: string, fixtureId: string): Promise<boolean> => {
+    try {
+      const supabase = createClient();
+      
+      // Check if user is admin (admins have access to all fixtures)
+      const isAdmin = await adminService.isAdmin();
+      if (isAdmin) {
+        return true;
+      }
+      
+      // Check if user has direct fixture access
+      const { data, error } = await supabase
+        .from('user_fixture_access')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('fixture_id', fixtureId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') { // PGRST116 is "JSON object requested, multiple (or no) rows returned"
+        console.error('Error checking fixture access:', error);
+        return false;
+      }
+      
+      // If we have data, user has direct access
+      if (data) {
+        return true;
+      }
+      
+      // Check if user has access through league access
+      // This would require checking if the fixture's competition is in the user's accessible leagues
+      // For now, we'll just check direct fixture access
+      
+      return false;
+    } catch (error) {
+      console.error('Error checking fixture access:', error);
+      return false;
+    }
+  },
+  
+  // Get all fixtures a user has access to
+  getUserAccessibleFixtures: async (userId: string): Promise<string[]> => {
+    try {
+      const supabase = createClient();
+      
+      // Check if user is admin (admins have access to all fixtures)
+      const isAdmin = await adminService.isAdmin();
+      if (isAdmin) {
+        // Return empty array for admins since they have access to all fixtures
+        return [];
+      }
+      
+      // Get user's direct fixture access
+      const { data, error } = await supabase
+        .from('user_fixture_access')
+        .select('fixture_id')
+        .eq('user_id', userId);
+      
+      if (error) {
+        console.error('Error getting user fixture access:', error);
+        return [];
+      }
+      
+      return data.map(item => item.fixture_id);
+    } catch (error) {
+      console.error('Error getting user accessible fixtures:', error);
+      return [];
+    }
+  },
+
   getLiveFixtures: async () => {
     try {
       const { data } = await axiosInstance.get<Fixture[]>('/fixtures/live/enhanced');

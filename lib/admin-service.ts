@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/client';
 import { createClient as createServiceClient } from '@supabase/supabase-js';
 import { config } from '@/lib/config';
+import { apiV2, FixtureV2 } from '@/lib/api-v2';
 
 // Types based on our database schema
 export interface Profile {
@@ -44,6 +45,19 @@ export interface UserLeagueAccess {
   granted_at: string;
   granted_by?: string;
   league?: League;
+}
+
+export interface UserFixtureAccess {
+  id: string;
+  user_id: string;
+  fixture_id: string;
+  fixture_name?: string;
+  granted_at: string;
+  granted_by?: string;
+}
+
+export interface UserFixtureAccessWithDetails extends UserFixtureAccess {
+  fixture_details?: FixtureV2;
 }
 
 export interface UserDetails {
@@ -234,6 +248,147 @@ export class AdminService {
     };
   }
 
+  async getUsersWithAccessToFixture(fixtureId: string): Promise<UserDetails[]> {
+    // First get all user IDs with access to this fixture
+    const { data: accessData, error: accessError } = await this.supabase
+      .from('user_fixture_access')
+      .select('user_id')
+      .eq('fixture_id', fixtureId);
+
+    if (accessError) throw accessError;
+
+    if (!accessData || accessData.length === 0) {
+      return [];
+    }
+
+    const userIds = accessData.map(item => item.user_id);
+
+    // Then get the user details for these users
+    const { data: usersData, error: usersError } = await this.supabase
+      .from('profiles')
+      .select(`
+        id,
+        email,
+        full_name,
+        role,
+        created_at,
+        user_memberships!user_memberships_user_id_fkey (
+          id,
+          status,
+          start_date,
+          expiry_date
+        )
+      `)
+      .in('id', userIds);
+
+    if (usersError) throw usersError;
+
+    // Transform the data to match UserDetails interface
+    const transformedUsers: UserDetails[] = (usersData || []).map((profile: any) => {
+      const membership = profile.user_memberships?.[0]; // Get active membership
+      const expiryDate = membership?.expiry_date ? new Date(membership.expiry_date) : null;
+      const today = new Date();
+      
+      let membershipHealth: 'active' | 'expiring_soon' | 'expired' = 'expired';
+      if (membership?.status === 'active' && expiryDate) {
+        if (expiryDate < today) {
+          membershipHealth = 'expired';
+        } else if (expiryDate <= new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)) {
+          membershipHealth = 'expiring_soon';
+        } else {
+          membershipHealth = 'active';
+        }
+      }
+
+      return {
+        id: profile.id,
+        email: profile.email,
+        full_name: profile.full_name,
+        role: profile.role,
+        user_created_at: profile.created_at,
+        membership_id: membership?.id,
+        membership_status: membership?.status,
+        start_date: membership?.start_date,
+        expiry_date: membership?.expiry_date,
+        membership_health: membershipHealth,
+        league_count: 0 // Will be populated separately if needed
+      };
+    });
+
+    // Get league counts for each user
+    if (transformedUsers.length > 0) {
+      const userIdsWithAccess = transformedUsers.map(u => u.id);
+      const { data: leagueCounts } = await this.supabase
+        .from('user_league_access')
+        .select('user_id')
+        .in('user_id', userIdsWithAccess);
+
+      const leagueCountMap = (leagueCounts || []).reduce((acc: Record<string, number>, item: any) => {
+        acc[item.user_id] = (acc[item.user_id] || 0) + 1;
+        return acc;
+      }, {});
+
+      transformedUsers.forEach(user => {
+        user.league_count = leagueCountMap[user.id] || 0;
+      });
+    }
+
+    return transformedUsers;
+  }
+
+  async getFixturesAccessibleByUser(userId: string): Promise<UserFixtureAccessWithDetails[]> {
+    // First get all fixture access records for this user
+    const { data: accessData, error: accessError } = await this.supabase
+      .from('user_fixture_access')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (accessError) throw accessError;
+
+    if (!accessData || accessData.length === 0) {
+      return [];
+    }
+
+    // Get unique fixture IDs
+    const fixtureIds: string[] = Array.from(new Set(accessData.map(item => item.fixture_id)));
+
+    // Fetch fixture details for all these fixtures
+    const fixtureDetailsMap = new Map<string, FixtureV2>();
+    
+    // Fetch fixtures in batches to avoid API limits
+    const batchSize = 10;
+    for (let i = 0; i < fixtureIds.length; i += batchSize) {
+      const batch = fixtureIds.slice(i, i + batchSize);
+      try {
+        // For now, we'll fetch each fixture individually
+        // In a production environment, you might want to create a batch endpoint
+        const promises = batch.map(fixtureId => 
+          apiV2.getFixture(fixtureId).catch(err => {
+            console.error(`Error fetching fixture ${fixtureId}:`, err);
+            return null;
+          })
+        );
+        
+        const results = await Promise.all(promises);
+        results.forEach((fixture, index) => {
+          if (fixture) {
+            fixtureDetailsMap.set(batch[index], fixture);
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching fixture details:', error);
+      }
+    }
+
+    // Combine access data with fixture details
+    const result: UserFixtureAccessWithDetails[] = accessData.map(access => ({
+      ...access,
+      fixture_details: fixtureDetailsMap.get(access.fixture_id) || undefined
+    }));
+
+    return result;
+  }
+
   async createUser(userData: {
     email: string;
     password: string;
@@ -409,6 +564,16 @@ export class AdminService {
     return data || [];
   }
 
+  async getUserFixtureAccess(userId: string): Promise<UserFixtureAccess[]> {
+    const { data, error } = await this.supabase
+      .from('user_fixture_access')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return data || [];
+  }
+
   async grantLeagueAccess(userId: string, leagueIds: string[], membershipId?: string): Promise<void> {
     const currentUser = await this.getCurrentUser();
     
@@ -426,17 +591,7 @@ export class AdminService {
     if (error) throw error;
   }
 
-  async revokeLeagueAccess(userId: string, leagueIds: string[]): Promise<void> {
-    const { error } = await this.supabase
-      .from('user_league_access')
-      .delete()
-      .eq('user_id', userId)
-      .in('league_id', leagueIds);
-
-    if (error) throw error;
-  }
-
-  async replaceUserLeagueAccess(userId: string, leagueIds: string[], membershipId?: string): Promise<void> {
+  async replaceUserLeagueAccess(userId: string, leagueIds: string[]): Promise<void> {
     // First remove all existing access
     await this.supabase
       .from('user_league_access')
@@ -445,7 +600,232 @@ export class AdminService {
 
     // Then grant new access
     if (leagueIds.length > 0) {
-      await this.grantLeagueAccess(userId, leagueIds, membershipId);
+      await this.grantLeagueAccess(userId, leagueIds);
+    }
+    
+    // Log the activity
+    const currentUser = await this.getCurrentUser();
+    if (currentUser) {
+      const user = await this.getUserById(userId);
+      await this.logActivity(
+        'league_access_updated',
+        `Updated league access for ${user?.full_name || user?.email || userId}. Granted access to ${leagueIds.length} leagues`,
+        userId,
+        { leagueCount: leagueIds.length }
+      );
+    }
+  }
+
+  async grantFixtureAccess(userId: string, fixtureIds: string[]): Promise<void> {
+    const currentUser = await this.getCurrentUser();
+    
+    // Get fixture details for the provided fixture IDs
+    const fixtureDetailsMap = new Map<string, FixtureV2>();
+    
+    // Fetch fixture details in batches
+    const batchSize = 10;
+    for (let i = 0; i < fixtureIds.length; i += batchSize) {
+      const batch = fixtureIds.slice(i, i + batchSize);
+      try {
+        const promises = batch.map(fixtureId => 
+          apiV2.getFixture(fixtureId).catch(err => {
+            console.error(`Error fetching fixture ${fixtureId}:`, err);
+            return null;
+          })
+        );
+        
+        const results = await Promise.all(promises);
+        results.forEach((fixture, index) => {
+          if (fixture) {
+            fixtureDetailsMap.set(batch[index], fixture);
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching fixture details:', error);
+      }
+    }
+
+    const accessRecords = fixtureIds.map(fixtureId => {
+      const fixture = fixtureDetailsMap.get(fixtureId);
+      return {
+        user_id: userId,
+        fixture_id: fixtureId,
+        fixture_name: fixture?.name || `Fixture ${fixtureId}`, // Store fixture name
+        granted_by: currentUser?.id
+      };
+    });
+
+    const { error } = await this.supabase
+      .from('user_fixture_access')
+      .upsert(accessRecords, { onConflict: 'user_id,fixture_id' });
+
+    if (error) throw error;
+    
+    // Log the activity
+    if (currentUser) {
+      const user = await this.getUserById(userId);
+      await this.logActivity(
+        'fixture_access_granted',
+        `Granted access to ${fixtureIds.length} fixtures for ${user?.full_name || user?.email || userId}`,
+        userId,
+        { fixtureCount: fixtureIds.length }
+      );
+    }
+  }
+
+  async revokeFixtureAccess(userId: string, fixtureIds: string[]): Promise<void> {
+    const { error } = await this.supabase
+      .from('user_fixture_access')
+      .delete()
+      .eq('user_id', userId)
+      .in('fixture_id', fixtureIds);
+
+    if (error) throw error;
+    
+    // Log the activity
+    const currentUser = await this.getCurrentUser();
+    if (currentUser) {
+      const user = await this.getUserById(userId);
+      await this.logActivity(
+        'fixture_access_revoked',
+        `Revoked access to ${fixtureIds.length} fixtures for ${user?.full_name || user?.email || userId}`,
+        userId,
+        { fixtureCount: fixtureIds.length }
+      );
+    }
+  }
+
+  async replaceUserFixtureAccess(userId: string, fixtureIds: string[]): Promise<void> {
+    // First remove all existing access
+    await this.supabase
+      .from('user_fixture_access')
+      .delete()
+      .eq('user_id', userId);
+
+    // Then grant new access
+    if (fixtureIds.length > 0) {
+      await this.grantFixtureAccess(userId, fixtureIds);
+    }
+    
+    // Log the activity
+    const currentUser = await this.getCurrentUser();
+    if (currentUser) {
+      const user = await this.getUserById(userId);
+      await this.logActivity(
+        'fixture_access_updated',
+        `Updated fixture access for ${user?.full_name || user?.email || userId}. Granted access to ${fixtureIds.length} fixtures`,
+        userId,
+        { fixtureCount: fixtureIds.length }
+      );
+    }
+  }
+
+  async grantFixtureAccessToMultipleUsers(userIds: string[], fixtureIds: string[]): Promise<void> {
+    const currentUser = await this.getCurrentUser();
+    
+    // Get fixture details for the provided fixture IDs
+    const fixtureDetailsMap = new Map<string, FixtureV2>();
+    
+    // Fetch fixture details in batches
+    const batchSize = 10;
+    for (let i = 0; i < fixtureIds.length; i += batchSize) {
+      const batch = fixtureIds.slice(i, i + batchSize);
+      try {
+        const promises = batch.map(fixtureId => 
+          apiV2.getFixture(fixtureId).catch(err => {
+            console.error(`Error fetching fixture ${fixtureId}:`, err);
+            return null;
+          })
+        );
+        
+        const results = await Promise.all(promises);
+        results.forEach((fixture, index) => {
+          if (fixture) {
+            fixtureDetailsMap.set(batch[index], fixture);
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching fixture details:', error);
+      }
+    }
+
+    // Create access records for all user-fixture combinations
+    const accessRecords = [];
+    for (const userId of userIds) {
+      for (const fixtureId of fixtureIds) {
+        const fixture = fixtureDetailsMap.get(fixtureId);
+        accessRecords.push({
+          user_id: userId,
+          fixture_id: fixtureId,
+          fixture_name: fixture?.name || `Fixture ${fixtureId}`, // Store fixture name
+          granted_by: currentUser?.id
+        });
+      }
+    }
+
+    const { error } = await this.supabase
+      .from('user_fixture_access')
+      .upsert(accessRecords, { onConflict: 'user_id,fixture_id' });
+
+    if (error) throw error;
+    
+    // Log the activity
+    if (currentUser) {
+      await this.logActivity(
+        'fixture_access_granted_multiple',
+        `Granted access to ${fixtureIds.length} fixtures for ${userIds.length} users`,
+        undefined,
+        { userCount: userIds.length, fixtureCount: fixtureIds.length }
+      );
+    }
+  }
+
+  async revokeFixtureAccessFromMultipleUsers(userIds: string[], fixtureIds: string[]): Promise<void> {
+    const { error } = await this.supabase
+      .from('user_fixture_access')
+      .delete()
+      .in('user_id', userIds)
+      .in('fixture_id', fixtureIds);
+
+    if (error) throw error;
+    
+    // Log the activity
+    const currentUser = await this.getCurrentUser();
+    if (currentUser) {
+      await this.logActivity(
+        'fixture_access_revoked_multiple',
+        `Revoked access to ${fixtureIds.length} fixtures for ${userIds.length} users`,
+        undefined,
+        { userCount: userIds.length, fixtureCount: fixtureIds.length }
+      );
+    }
+  }
+
+  async replaceFixtureAccessForMultipleUsers(userIds: string[], fixtureIds: string[]): Promise<void> {
+    const currentUser = await this.getCurrentUser();
+    
+    // For each user, remove all existing access and grant new access
+    for (const userId of userIds) {
+      // First remove all existing access for this user
+      await this.supabase
+        .from('user_fixture_access')
+        .delete()
+        .eq('user_id', userId);
+
+      // Then grant new access
+      if (fixtureIds.length > 0) {
+        await this.grantFixtureAccess(userId, fixtureIds);
+      }
+    }
+    
+    // Log the activity
+    if (currentUser) {
+      await this.logActivity(
+        'fixture_access_updated_multiple',
+        `Updated fixture access for ${userIds.length} users. Granted access to ${fixtureIds.length} fixtures each`,
+        undefined,
+        { userCount: userIds.length, fixtureCount: fixtureIds.length }
+      );
     }
   }
 

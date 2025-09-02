@@ -289,6 +289,41 @@ CREATE INDEX idx_activity_logs_target_user ON public.activity_logs(target_user_i
 CREATE INDEX idx_activity_logs_created_at ON public.activity_logs(created_at);
 
 -- ==========================================
+-- 10. USER-FIXTURE ACCESS TABLE
+-- ==========================================
+-- Manages which fixtures users have access to
+CREATE TABLE public.user_fixture_access (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    fixture_id TEXT NOT NULL, -- Using TEXT to accommodate various fixture ID formats
+    fixture_name TEXT, -- Added fixture name for better display
+    granted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    granted_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    
+    -- Ensure no duplicate access per user-fixture combination
+    UNIQUE(user_id, fixture_id)
+);
+
+-- Enable RLS
+ALTER TABLE public.user_fixture_access ENABLE ROW LEVEL SECURITY;
+
+-- Policies for user fixture access
+CREATE POLICY "Users can view own fixture access" ON public.user_fixture_access
+    FOR SELECT USING (user_id = auth.uid());
+
+CREATE POLICY "Admins can manage all fixture access" ON public.user_fixture_access
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM public.profiles 
+            WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
+        )
+    );
+
+-- Indexes for user-fixture access
+CREATE INDEX idx_user_fixture_access_user_id ON public.user_fixture_access(user_id);
+CREATE INDEX idx_user_fixture_access_fixture_id ON public.user_fixture_access(fixture_id);
+
+-- ==========================================
 -- NOTES FOR IMPLEMENTATION
 -- ==========================================
 -- 

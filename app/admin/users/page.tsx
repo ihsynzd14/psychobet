@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Table,
   TableBody,
@@ -35,8 +36,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { adminService, UserDetails } from '@/lib/admin-service';
 import { UserEditModal } from '@/components/admin/user-edit-modal';
+
 import {
   Search,
   MoreHorizontal,
@@ -45,15 +54,20 @@ import {
   Trash2,
   Crown,
   Users,
-  Filter,
   RefreshCw,
-  Calendar,
   AlertTriangle,
   CheckCircle,
-  XCircle
+  XCircle,
+  Settings,
+  X,
+  ChevronDown,
+  Filter,
+  Download,
+  Zap
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface UsersPageState {
   users: UserDetails[];
@@ -66,6 +80,9 @@ interface UsersPageState {
   deleteUser: UserDetails | null;
   editUser: UserDetails | null;
   deleting: boolean;
+  selectedUsers: Set<string>;
+  fixtureManagerOpen: boolean;
+  selectionMode: boolean;
 }
 
 function UserStatusBadge({ user }: { user: UserDetails }) {
@@ -170,12 +187,20 @@ function UsersTable({
   users, 
   loading, 
   onEdit, 
-  onDelete 
+  onDelete,
+  selectedUsers,
+  onUserSelect,
+  onSelectAll,
+  selectionMode
 }: { 
   users: UserDetails[];
   loading: boolean;
   onEdit: (user: UserDetails) => void;
   onDelete: (user: UserDetails) => void;
+  selectedUsers: Set<string>;
+  onUserSelect: (userId: string, selected: boolean) => void;
+  onSelectAll: (selected: boolean) => void;
+  selectionMode: boolean;
 }) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
@@ -191,6 +216,7 @@ function UsersTable({
       <div className="space-y-3">
         {[...Array(10)].map((_, i) => (
           <div key={i} className="flex items-center space-x-4 p-4">
+            {selectionMode && <Skeleton className="h-4 w-4" />}
             <Skeleton className="h-10 w-10 rounded-full" />
             <div className="space-y-2 flex-1">
               <Skeleton className="h-4 w-48" />
@@ -225,10 +251,25 @@ function UsersTable({
     );
   }
 
+  const allSelected = users.length > 0 && users.every(user => selectedUsers.has(user.id));
+  const someSelected = users.some(user => selectedUsers.has(user.id));
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
+          {selectionMode && (
+            <TableHead className="w-12">
+              <Checkbox
+                checked={allSelected}
+                onCheckedChange={onSelectAll}
+                aria-label="Select all users"
+                className={cn(
+                  someSelected && !allSelected && "data-[state=checked]:bg-gray-400"
+                )}
+              />
+            </TableHead>
+          )}
           <TableHead>User</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Membership</TableHead>
@@ -239,59 +280,142 @@ function UsersTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>
-                    {user.email.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium text-gray-900 dark:text-white">
-                    {user.full_name || 'Unnamed User'}
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {user.email}
+        {users.map((user) => {
+          const isSelected = selectedUsers.has(user.id);
+          return (
+            <TableRow 
+              key={user.id}
+              className={cn(
+                "transition-colors",
+                isSelected && selectionMode && "bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800"
+              )}
+            >
+              {selectionMode && (
+                <TableCell>
+                  <Checkbox
+                    checked={isSelected}
+                    onCheckedChange={(checked) => onUserSelect(user.id, !!checked)}
+                    aria-label={`Select user ${user.email}`}
+                  />
+                </TableCell>
+              )}
+              <TableCell>
+                <div className="flex items-center space-x-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>
+                      {user.email.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="font-medium text-gray-900 dark:text-white">
+                      {user.full_name || 'Unnamed User'}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {user.email}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </TableCell>
-            <TableCell>
-              <UserRoleBadge role={user.role} />
-            </TableCell>
-            <TableCell>
-              <div className="space-y-1">
-                <UserStatusBadge user={user} />
-              </div>
-            </TableCell>
-            <TableCell>
-              <Badge variant="outline">
-                {user.league_count} leagues
-              </Badge>
-            </TableCell>
-            <TableCell>
-              <div className="text-sm">
-                {formatDate(user.expiry_date)}
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                {formatDate(user.user_created_at)}
-              </div>
-            </TableCell>
-            <TableCell className="text-right">
-              <UserActionsMenu 
-                user={user} 
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
-            </TableCell>
-          </TableRow>
-        ))}
+              </TableCell>
+              <TableCell>
+                <UserRoleBadge role={user.role} />
+              </TableCell>
+              <TableCell>
+                <div className="space-y-1">
+                  <UserStatusBadge user={user} />
+                </div>
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline">
+                  {user.league_count} leagues
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm">
+                  {formatDate(user.expiry_date)}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  {formatDate(user.user_created_at)}
+                </div>
+              </TableCell>
+              <TableCell className="text-right">
+                <UserActionsMenu 
+                  user={user} 
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
+  );
+}
+
+// Selection Actions Bar Component
+function SelectionActionsBar({
+  selectedCount,
+  onManageFixtures,
+  onClearSelection,
+  onExitSelection
+}: {
+  selectedCount: number;
+  onManageFixtures: () => void;
+  onClearSelection: () => void;
+  onExitSelection: () => void;
+}) {
+  if (selectedCount === 0) return null;
+
+  return (
+    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+      <Card className="shadow-2xl border-2 border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-800">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                {selectedCount}
+              </div>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                {selectedCount} user{selectedCount !== 1 ? 's' : ''} selected
+              </span>
+            </div>
+            
+            <div className="h-4 w-px bg-gray-300 dark:bg-gray-600" />
+            
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                onClick={onManageFixtures}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Zap className="mr-2 h-4 w-4" />
+                Manage Fixtures
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onClearSelection}
+                className="border-gray-300 dark:border-gray-600"
+              >
+                Clear
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onExitSelection}
+                className="text-gray-500 dark:text-gray-400"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
@@ -306,7 +430,10 @@ export default function UsersPage() {
     totalUsers: 0,
     deleteUser: null,
     editUser: null,
-    deleting: false
+    deleting: false,
+    selectedUsers: new Set<string>(),
+    fixtureManagerOpen: false,
+    selectionMode: false
   });
 
   const fetchUsers = useCallback(async (page = 1, search = '') => {
@@ -381,6 +508,54 @@ export default function UsersPage() {
     setState(prev => ({ ...prev, deleteUser: null }));
   };
 
+  const handleUserSelect = (userId: string, selected: boolean) => {
+    setState(prev => {
+      const newSelected = new Set(prev.selectedUsers);
+      if (selected) {
+        newSelected.add(userId);
+      } else {
+        newSelected.delete(userId);
+      }
+      return { ...prev, selectedUsers: newSelected };
+    });
+  };
+
+  const handleSelectAll = (selected: boolean) => {
+    setState(prev => {
+      const newSelected = selected ? new Set(prev.users.map(user => user.id)) : new Set<string>();
+      return { ...prev, selectedUsers: newSelected };
+    });
+  };
+
+  const enterSelectionMode = () => {
+    setState(prev => ({ ...prev, selectionMode: true, selectedUsers: new Set() }));
+  };
+
+  const exitSelectionMode = () => {
+    setState(prev => ({ 
+      ...prev, 
+      selectionMode: false, 
+      selectedUsers: new Set(),
+      fixtureManagerOpen: false 
+    }));
+  };
+
+  const clearSelection = () => {
+    setState(prev => ({ ...prev, selectedUsers: new Set() }));
+  };
+
+  const handleManageFixtureAccess = () => {
+    if (state.selectedUsers.size === 0) {
+      toast.error('Please select at least one user');
+      return;
+    }
+    setState(prev => ({ ...prev, fixtureManagerOpen: true }));
+  };
+
+  const getSelectedUsersData = () => {
+    return state.users.filter(user => state.selectedUsers.has(user.id));
+  };
+
   return (
     <ProtectedRoute>
       <AdminLayout>
@@ -395,12 +570,24 @@ export default function UsersPage() {
                 Manage user accounts, memberships, and permissions
               </p>
             </div>
-            <Button asChild className="dark:bg-blue-700 dark:hover:bg-blue-600">
-              <Link href="/admin/users/new">
-                <Plus className="mr-2 h-4 w-4" />
-                Add User
-              </Link>
-            </Button>
+            <div className="flex items-center gap-3">
+              {state.selectedUsers.size > 0 && (
+                <Button
+                  onClick={handleManageFixtureAccess}
+                  variant="outline"
+                  className="dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  Manage Fixtures ({state.selectedUsers.size})
+                </Button>
+              )}
+              <Button asChild className="dark:bg-blue-700 dark:hover:bg-blue-600">
+                <Link href="/admin/users/new">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add User
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {/* Search and Filters */}
@@ -456,6 +643,10 @@ export default function UsersPage() {
                 loading={state.loading}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                selectedUsers={state.selectedUsers}
+                onUserSelect={handleUserSelect}
+                onSelectAll={handleSelectAll}
+                selectionMode={state.selectionMode}
               />
             </CardContent>
           </Card>
@@ -502,6 +693,7 @@ export default function UsersPage() {
             fetchUsers(state.currentPage, state.searchTerm);
           }}
         />
+
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={!!state.deleteUser} onOpenChange={cancelDelete}>

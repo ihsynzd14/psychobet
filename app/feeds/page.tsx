@@ -17,7 +17,9 @@ import {
   User2Icon,
   Home,
   User,
-  LogOut
+  LogOut,
+  Database,
+  Hash
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -43,12 +45,16 @@ import { PaginationV2 } from '@/components/pagination-v2';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Avatar } from '@/components/ui/avatar';
-import { apiV2, type FixturesResponse } from '@/lib/api-v2';
+import { apiV2, type FixturesResponse, type FixturesByIdsResponse } from '@/lib/api-v2';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { TbPremiumRights, TbVip } from 'react-icons/tb';
 
 // Available page size options
 const PAGE_SIZE_OPTIONS = [25, 50, 100, 150];
+
+// API mode options
+type ApiMode = 'competitions' | 'by-ids';
 
 export default function FeedTableV2() {
   const router = useRouter();
@@ -61,6 +67,7 @@ export default function FeedTableV2() {
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [apiMode, setApiMode] = useState<ApiMode>('competitions');
 
   // Debounce search input for better performance
   useEffect(() => {
@@ -76,15 +83,21 @@ export default function FeedTableV2() {
   }, [search, debouncedSearch]);
 
   // Prefetch next page for smoother pagination
-  const prefetchNextPage = useCallback((page: number, size: number, searchTerm: string) => {
+  const prefetchNextPage = useCallback((page: number, size: number, searchTerm: string, mode: ApiMode) => {
     if (page < 1) return; 
     
     // Only prefetch if we're not already loading this page
-    const queryKey = ['fixturesV2', page, size, searchTerm];
+    const queryKey = ['fixturesV2', page, size, searchTerm, mode];
     if (!queryClient.getQueryData(queryKey)) {
       queryClient.prefetchQuery({
         queryKey,
-        queryFn: () => apiV2.getFixturesByCompetitions(page, size, searchTerm),
+        queryFn: async () => {
+          if (mode === 'by-ids') {
+            return await apiV2.getFixturesByIds(undefined, size);
+          } else {
+            return await apiV2.getFixturesByCompetitions(page, size, searchTerm);
+          }
+        },
         staleTime: 30000,
       });
     }
@@ -97,9 +110,15 @@ export default function FeedTableV2() {
     isError,
     refetch,
     isFetching
-  } = useQuery<FixturesResponse>({
-    queryKey: ['fixturesV2', currentPage, pageSize, debouncedSearch],
-    queryFn: () => apiV2.getFixturesByCompetitions(currentPage, pageSize, debouncedSearch),
+  } = useQuery<FixturesResponse | FixturesByIdsResponse>({
+    queryKey: ['fixturesV2', currentPage, pageSize, debouncedSearch, apiMode],
+    queryFn: async () => {
+      if (apiMode === 'by-ids') {
+        return await apiV2.getFixturesByIds(undefined, pageSize);
+      } else {
+        return await apiV2.getFixturesByCompetitions(currentPage, pageSize, debouncedSearch);
+      }
+    },
     refetchInterval: 60000, // Auto-refresh every minute
     staleTime: 30000,      // Consider data fresh for 30 seconds
     placeholderData: keepPreviousData, // Use the imported helper function from react-query
@@ -107,13 +126,13 @@ export default function FeedTableV2() {
 
   // Handle prefetching next page - moved outside the onSuccess callback
   useEffect(() => {
-    if (fixturesData) {
+    if (fixturesData && apiMode === 'competitions') {
       const totalPages = Math.ceil((fixturesData?.totalItems ?? 0) / pageSize);
       if (currentPage < totalPages) {
-        prefetchNextPage(currentPage + 1, pageSize, debouncedSearch);
+        prefetchNextPage(currentPage + 1, pageSize, debouncedSearch, apiMode);
       }
     }
-  }, [fixturesData, currentPage, pageSize, prefetchNextPage, debouncedSearch]);
+  }, [fixturesData, currentPage, pageSize, prefetchNextPage, debouncedSearch, apiMode]);
 
   // Handle refresh with smooth transition
   const handleRefresh = useCallback(async () => {
@@ -162,6 +181,17 @@ export default function FeedTableV2() {
     setSearch('');
   }, []);
 
+  // Handle API mode change
+  const handleApiModeChange = useCallback((mode: ApiMode) => {
+    startTransition(() => {
+      setApiMode(mode);
+      setCurrentPage(1); // Reset to first page when changing API mode
+      if (mode === 'by-ids') {
+        setSearch(''); // Clear search when switching to by-ids mode
+      }
+    });
+  }, []);
+
   // Handle sign out
   const handleSignOut = useCallback(async () => {
     try {
@@ -207,7 +237,7 @@ export default function FeedTableV2() {
     </Card>
   );
 
-  // Render empty state
+  // Render empty state - different messages based on API mode
   const renderEmptyState = () => (
     <Card className="border-blue-200 dark:border-blue-900/50 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950/10 h-[60vh] flex flex-col shadow-none">
       <CardContent className="flex flex-col items-center justify-center flex-1 p-0 text-center">
@@ -220,7 +250,8 @@ export default function FeedTableV2() {
           >
           </motion.div>
           
-          {debouncedSearch ? (
+          {apiMode === 'competitions' && debouncedSearch ? (
+            // Search results empty state for competitions mode
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -251,7 +282,47 @@ export default function FeedTableV2() {
                 </Button>
               </div>
             </motion.div>
+          ) : apiMode === 'by-ids' ? (
+            // Empty state for by-ids mode
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="space-y-4 flex flex-col items-center"
+            >
+              <div className="inline-flex items-center justify-center p-3 rounded-full bg-purple-100 dark:bg-purple-900/30 mb-2">
+                <TbPremiumRights className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                No Special Fixtures Available
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-400 max-w-md px-4">
+                You don't have access to any special fixtures. Contact ersenguvenuk@gmail.com to get access to special fixtures.
+              </p>
+              
+              <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                <Button 
+                  onClick={handleRefresh} 
+                  variant="outline" 
+                  className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-6 py-2.5 rounded-lg flex items-center"
+                >
+                  <RefreshCcw className="h-4 w-4 mr-2" />
+                  Refresh Data
+                </Button>
+              </div>
+              
+              <div className="mt-6 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {apiMode === 'by-ids' && 'fixtureIds' in (fixturesData || {}) && (fixturesData as FixturesByIdsResponse).fixtureIds.length > 0
+                    ? `Special fixture IDs: ${(fixturesData as FixturesByIdsResponse).fixtureIds.join(', ')}`
+                    : 'No special fixtures assigned to this user'
+                  }
+                </p>
+              </div>
+            </motion.div>
           ) : (
+            // Empty state for competitions mode (no search)
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -266,24 +337,17 @@ export default function FeedTableV2() {
                 No Fixtures Available
               </h2>
               <p className="text-base text-gray-600 dark:text-gray-400 max-w-md px-4">
-                There are currently no live or upcoming fixtures. Check back later for updates.
+                You don't have access to any competitions or there are no fixtures available. Try switching to Special Fixtures mode or contact ersenguvenuk@gmail.com.
               </p>
               
               <div className="mt-4 flex flex-col sm:flex-row gap-3">
                 <Button 
                   onClick={handleRefresh} 
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg flex items-center"
-                >
-                  <RefreshCcw className="h-4 w-4 mr-2" />
-                  Refresh Data
-                </Button>
-                <Button 
-                  onClick={handleGoHome} 
                   variant="outline" 
                   className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-6 py-2.5 rounded-lg flex items-center"
                 >
-                  <Home className="h-4 w-4 mr-2" />
-                  Go to Home
+                  <RefreshCcw className="h-4 w-4 mr-2" />
+                  Refresh Data
                 </Button>
               </div>
               
@@ -303,6 +367,8 @@ export default function FeedTableV2() {
 
   // Determine if we have fixtures to display
   const hasFixtures = Boolean(fixturesData?.items?.length);
+  
+
 
   return (
     <ProtectedRoute>
@@ -326,29 +392,68 @@ export default function FeedTableV2() {
               </div>
             </div>
 
-            {/* Search input */}
-            <div className="flex-1 max-w-md mx-4 sm:mx-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search teams..."
-                  value={search}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10 pr-10 h-8 sm:h-9 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 text-sm"
-                />
-                {search && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleSearchClear}
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    <X className="h-3 w-3 text-gray-400" />
-                    <span className="sr-only">Clear search</span>
-                  </Button>
-                )}
+            {/* Search input and API mode toggle */}
+            <div className="flex-1 flex items-center gap-3 max-w-2xl mx-4 sm:mx-8">
+              {/* API Mode Toggle */}
+              <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 min-w-fit">
+                <Button
+                  variant={apiMode === 'competitions' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleApiModeChange('competitions')}
+                  className={cn(
+                    "h-7 px-2 sm:px-3 text-xs sm:text-sm rounded-md transition-all",
+                    apiMode === 'competitions' 
+                      ? "bg-blue-500 text-white shadow-sm" 
+                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+                  )}
+                  disabled={isPending || isLoading}
+                >
+                  <Database className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
+                  <span className="hidden sm:inline">Your Fixtures</span>
+                  <span className="sm:hidden">Fixtures</span>
+                </Button>
+                <Button
+                  variant={apiMode === 'by-ids' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleApiModeChange('by-ids')}
+                  className={cn(
+                    "h-7 px-2 sm:px-3 text-xs sm:text-sm rounded-md transition-all",
+                    apiMode === 'by-ids' 
+                      ? "bg-blue-500 text-white shadow-sm" 
+                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+                  )}
+                  disabled={isPending || isLoading}
+                >
+                  <TbPremiumRights className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
+                  <span className="hidden sm:inline">Special Fixtures</span>
+                  <span className="sm:hidden">Special</span>
+                </Button>
               </div>
+
+              {/* Search input - only show for competitions mode */}
+              {apiMode === 'competitions' && (
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search teams..."
+                    value={search}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="pl-10 pr-10 h-8 sm:h-9 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 text-sm"
+                  />
+                  {search && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleSearchClear}
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <X className="h-3 w-3 text-gray-400" />
+                      <span className="sr-only">Clear search</span>
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
@@ -480,10 +585,16 @@ export default function FeedTableV2() {
               variant="outline" 
               className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700"
             >
-              {fixturesData?.totalItems ?? 0} {debouncedSearch ? 'Results' : 'Total Fixtures'}
+              {fixturesData?.totalItems ?? 0} {
+                apiMode === 'by-ids' 
+                  ? 'Fixtures by IDs' 
+                  : debouncedSearch 
+                    ? 'Results' 
+                    : 'Total Fixtures'
+              }
             </Badge>
             
-            {debouncedSearch && (
+            {apiMode === 'competitions' && debouncedSearch && (
               <Badge 
                 variant="secondary" 
                 className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
@@ -570,8 +681,8 @@ export default function FeedTableV2() {
               )}
             </AnimatePresence>
 
-            {/* Pagination - only show when we have fixtures and aren't in initial loading */}
-            {hasFixtures && (
+            {/* Pagination - only show when we have fixtures and aren't in initial loading, and only for competitions mode */}
+            {hasFixtures && apiMode === 'competitions' && (
               <PaginationV2
                 currentPage={currentPage}
                 totalPages={totalPages}
