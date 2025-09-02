@@ -245,50 +245,80 @@ export default function Home() {
                     </div>
                   </div>
                   <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Your Products
+                    {isAdmin ? 'Admin Access' : 'Your Products'}
                   </CardTitle>
                   <CardDescription>
-                    Leagues and content you have access to
+                    {isAdmin ? 'You have full access to all leagues and content' : 'Leagues and content you have access to'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {leaguesLoading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                      {[...Array(6)].map((_, i) => (
-                        <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-                      ))}
-                    </div>
-                  ) : leagues.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                      {leagues.map((access) => (
-                        <div 
-                          key={access.id}
-                          className="flex items-center p-3 bg-gray-50 dark:bg-gray-700/70 rounded-lg border border-gray-200 dark:border-gray-700"
-                        >
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                              {access.league.display_name}
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                              {access.league.country || 'Global'}
-                            </p>
-                          </div>
-                          <Badge variant="secondary" className="ml-2">
-                            Active
-                          </Badge>
+                  {isAdmin ? (
+                    <div className="text-center py-8">
+                      <div className="p-4 rounded-full bg-green-100 dark:bg-green-900/50 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                        <Shield className="h-10 w-10 text-green-600 dark:text-green-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        Full Administrative Access
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                        As an administrator, you have complete access to all leagues, fixtures, and system features.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-md mx-auto">
+                        <div className="text-center p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                          <Star className="h-5 w-5 text-green-600 dark:text-green-400 mx-auto mb-2" />
+                          <p className="text-xs font-medium text-green-700 dark:text-green-300">All Leagues</p>
                         </div>
-                      ))}
+                        <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                          <Trophy className="h-5 w-5 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">All Fixtures</p>
+                        </div>
+                        <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                          <Shield className="h-5 w-5 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
+                          <p className="text-xs font-medium text-purple-700 dark:text-purple-300">Admin Tools</p>
+                        </div>
+                      </div>
                     </div>
                   ) : (
-                    <div className="text-center py-8">
-                      <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
-                        You don't have access to any leagues yet
-                      </p>
-                      <p className="text-gray-500 dark:text-gray-500 text-xs mt-2">
-                        Contact support to get access to leagues
-                      </p>
-                    </div>
+                    <>
+                      {leaguesLoading ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {[...Array(6)].map((_, i) => (
+                            <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                          ))}
+                        </div>
+                      ) : leagues.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {leagues.map((access) => (
+                            <div 
+                              key={access.id}
+                              className="flex items-center p-3 bg-gray-50 dark:bg-gray-700/70 rounded-lg border border-gray-200 dark:border-gray-700"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                  {access.league.display_name}
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                  {access.league.country || 'Global'}
+                                </p>
+                              </div>
+                              <Badge variant="secondary" className="ml-2">
+                                Active
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">
+                            You don't have access to any leagues yet
+                          </p>
+                          <p className="text-gray-500 dark:text-gray-500 text-xs mt-2">
+                            Contact support to get access to leagues
+                          </p>
+                        </div>
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>
