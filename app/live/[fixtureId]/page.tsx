@@ -44,15 +44,30 @@ export default function LiveFeedPageWrapper({ params }: LiveFeedPageProps) {
           return;
         }
         
-        // Check access through our API
+        // Check access through our API (checks both direct fixture access and league access)
         const response = await fetch(`/api/fixture-access?fixtureId=${params.fixtureId}`);
+        
+        if (!response.ok) {
+          console.error('Error checking fixture access:', response.status, response.statusText);
+          toast({
+            title: 'Error',
+            description: 'Failed to check fixture access',
+            variant: 'destructive',
+          });
+          router.push('/');
+          return;
+        }
+        
         const accessData = await response.json();
         
         if (!accessData.hasAccess) {
+          console.log('User does not have access to fixture:', params.fixtureId);
           setHasAccess(false);
           setIsLoading(false);
           return;
         }
+        
+        console.log('User has access to fixture:', params.fixtureId);
         
         setHasAccess(true);
         
@@ -167,7 +182,7 @@ export default function LiveFeedPageWrapper({ params }: LiveFeedPageProps) {
         <div className="text-center p-8 max-w-md">
           <div className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Access Denied</div>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            You don't have permission to view this fixture. Please contact your administrator.
+            You don't have permission to view this fixture. Access can be granted either through direct fixture access or by having access to the fixture's competition/league. Please contact your administrator.
           </p>
           <button
             onClick={() => router.push('/')}

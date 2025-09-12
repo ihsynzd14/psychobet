@@ -146,8 +146,32 @@ export const api = {
       }
       
       // Check if user has access through league access
-      // This would require checking if the fixture's competition is in the user's accessible leagues
-      // For now, we'll just check direct fixture access
+      // Get the fixture details to find its competition ID
+      try {
+        const { apiV2 } = await import('@/lib/api-v2');
+        const fixture = await apiV2.getFixture(fixtureId);
+        
+        if (fixture && fixture.competition) {
+          // Get user's league access
+          const userLeagueAccess = await adminService.getUserLeagueAccess(userId);
+          
+          if (userLeagueAccess && userLeagueAccess.length > 0) {
+            // Check if user has access to this fixture's competition
+            const competitionId = fixture.competition.id.toString();
+            const userLeagueIds = userLeagueAccess.map(ula => ula.league_id);
+            
+            // Check for direct competition match or full bundle access
+            const hasCompetitionAccess = userLeagueIds.includes(competitionId) || userLeagueIds.includes('987123645');
+            
+            if (hasCompetitionAccess) {
+              return true;
+            }
+          }
+        }
+      } catch (fixtureError) {
+        console.error('Error fetching fixture details for league access check:', fixtureError);
+        // If we can't fetch fixture details, fall back to direct access only
+      }
       
       return false;
     } catch (error) {
@@ -179,7 +203,15 @@ export const api = {
         return [];
       }
       
-      return data.map(item => item.fixture_id);
+      const directFixtureIds = data.map(item => item.fixture_id);
+      
+      // Note: For league-based access, we can't easily return all accessible fixture IDs
+      // since that would require fetching all fixtures and checking their competitions.
+      // Instead, the individual checkUserFixtureAccess function should be used
+      // to verify access for specific fixtures.
+      // This function primarily returns direct fixture access for compatibility.
+      
+      return directFixtureIds;
     } catch (error) {
       console.error('Error getting user accessible fixtures:', error);
       return [];
