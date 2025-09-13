@@ -2,17 +2,56 @@ import axios from 'axios';
 import { adminService } from '@/lib/admin-service';
 import { createClient } from '@/lib/supabase/client';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+// Default BASE_URL with fallback
+const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
-// Efficient axios instance with caching and optimized settings
-const axiosInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 5000,
-  headers: {
-    'Accept': 'application/json',
-    'Cache-Control': 'max-age=10', // Cache for 10 seconds for better performance
+// Channel-specific URLs
+const CHANNEL_A_URL = 'http://51.89.167.87:3000/api';
+const CHANNEL_B_URL = 'http://51.89.167.87:3003/api';
+
+// Store the currently active channel
+let activeChannel: 'A' | 'B' | null = null;
+let BASE_URL = DEFAULT_BASE_URL;
+
+// Function to get axios instance with the current BASE_URL
+const getAxiosInstance = () => {
+  return axios.create({
+    baseURL: BASE_URL,
+    timeout: 5000,
+    headers: {
+      'Accept': 'application/json',
+      'Cache-Control': 'max-age=10', // Cache for 10 seconds for better performance
+    }
+  });
+};
+
+// Function to get axios instance that always uses port 3000 (Channel A)
+const getFixedChannelAxiosInstance = () => {
+  return axios.create({
+    baseURL: CHANNEL_A_URL,
+    timeout: 5000,
+    headers: {
+      'Accept': 'application/json',
+      'Cache-Control': 'max-age=10', // Cache for 10 seconds for better performance
+    }
+  });
+};
+
+// Function to set the active channel
+export const setApiChannel = (channel: 'A' | 'B' | null) => {
+  activeChannel = channel;
+  
+  if (channel === 'A') {
+    BASE_URL = CHANNEL_A_URL;
+  } else if (channel === 'B') {
+    BASE_URL = CHANNEL_B_URL;
+  } else {
+    BASE_URL = DEFAULT_BASE_URL;
   }
-});
+  
+  console.log(`API channel set to ${channel || 'default'}, using URL: ${BASE_URL}`);
+  return BASE_URL;
+};
 
 export interface Competitor {
   id: string | number;
@@ -112,7 +151,8 @@ export const apiV2 = {
         params.search = search.trim();
       }
       
-      const { data } = await axiosInstance.get<FixturesResponse>('/v2/fixtures/recent?status=notfinished', {
+      // Always use port 3000 (Channel A) for this function
+      const { data } = await getFixedChannelAxiosInstance().get<FixturesResponse>('/v2/fixtures/recent?status=notfinished', {
         params
       });
       return data;
@@ -125,12 +165,23 @@ export const apiV2 = {
   // Get a specific fixture by ID with caching
   getFixture: async (fixtureId: string): Promise<FixtureV2> => {
     try {
-      const { data } = await axiosInstance.get<FixtureV2>(`/v2/fixtures/${fixtureId}`);
+      // Always use port 3000 (Channel A) for this function
+      const { data } = await getFixedChannelAxiosInstance().get<FixtureV2>(`/v2/fixtures/${fixtureId}`);
       return data;
     } catch (error) {
       console.error(`Error fetching fixture ${fixtureId}:`, error);
       throw error;
     }
+  },
+  
+  // Get current active channel
+  getActiveChannel: (): { channel: 'A' | 'B' | null, url: string } => {
+    // Note: For display purposes, we show the selected channel
+    // But for API v2, we always use Channel A (port 3000) for actual requests
+    return {
+      channel: activeChannel,
+      url: CHANNEL_A_URL // Always show Channel A URL since all API v2 calls use it
+    };
   },
 
   // Get fixtures by competitions for regular users based on their league access
@@ -147,7 +198,8 @@ export const apiV2 = {
       
       if (isAdmin) {
         // Admins get all recent fixtures with pagination and search
-        const { data } = await axiosInstance.get<FixturesResponse>('/v2/fixtures/recent?status=notfinished', {
+        // Always use port 3000 (Channel A) for this function
+        const { data } = await getFixedChannelAxiosInstance().get<FixturesResponse>('/v2/fixtures/recent?status=notfinished', {
           params
         });
         return data;
@@ -180,7 +232,8 @@ export const apiV2 = {
           
           const fullBundleCompetitionIds = leaguesData.map(league => league.id.toString());
           
-          const { data } = await axiosInstance.post<FixturesResponse>('/v2/fixtures/by-competitions', {
+          // Always use port 3000 (Channel A) for this function
+          const { data } = await getFixedChannelAxiosInstance().post<FixturesResponse>('/v2/fixtures/by-competitions', {
             competitionIds: fullBundleCompetitionIds
           }, {
             params
@@ -202,7 +255,8 @@ export const apiV2 = {
         }
         
         // Fetch fixtures for user's competitions with pagination and search
-        const { data } = await axiosInstance.post<FixturesResponse>('/v2/fixtures/by-competitions', {
+        // Always use port 3000 (Channel A) for this function
+        const { data } = await getFixedChannelAxiosInstance().post<FixturesResponse>('/v2/fixtures/by-competitions', {
           competitionIds
         }, {
           params
@@ -216,6 +270,7 @@ export const apiV2 = {
   },
 
   // Get user's accessible fixture IDs from database
+  // This function doesn't make API calls, but is included in the list of functions that should use Channel A
   getUserFixtureIds: async (): Promise<number[]> => {
     try {
       const supabase = createClient();
@@ -280,7 +335,8 @@ export const apiV2 = {
       
       if (isAdmin) {
         // Admins can get fixtures by IDs directly
-        const { data } = await axiosInstance.post<FixturesByIdsResponse>('/v2/fixtures/by-ids', {
+        // Always use port 3000 (Channel A) for this function
+        const { data } = await getFixedChannelAxiosInstance().post<FixturesByIdsResponse>('/v2/fixtures/by-ids', {
           fixtureIds,
           pageSize
         });
@@ -303,7 +359,8 @@ export const apiV2 = {
         
         if (hasFullBundle) {
           // If user has full bundle access, get fixtures by IDs
-          const { data } = await axiosInstance.post<FixturesByIdsResponse>('/v2/fixtures/by-ids', {
+          // Always use port 3000 (Channel A) for this function
+          const { data } = await getFixedChannelAxiosInstance().post<FixturesByIdsResponse>('/v2/fixtures/by-ids', {
             fixtureIds,
             pageSize
           });
@@ -312,7 +369,8 @@ export const apiV2 = {
         
         // For regular users: If they have fixture IDs, they already have direct access
         // Fixture access is more specific than league access, so we don't filter by leagues
-        const { data } = await axiosInstance.post<FixturesByIdsResponse>('/v2/fixtures/by-ids', {
+        // Always use port 3000 (Channel A) for this function
+        const { data } = await getFixedChannelAxiosInstance().post<FixturesByIdsResponse>('/v2/fixtures/by-ids', {
           fixtureIds,
           pageSize
         });

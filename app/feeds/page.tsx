@@ -27,6 +27,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { ChannelStatusIndicator } from '@/components/channel-status-indicator';
 import { 
   Tooltip, 
   TooltipContent, 
@@ -514,6 +515,8 @@ export default function FeedTableV2() {
                 <span className="hidden sm:inline">Refresh</span>
               </Button>
 
+              <ChannelStatusIndicator />
+              
               <ThemeToggle />
               
               {/* User Menu */}

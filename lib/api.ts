@@ -3,8 +3,20 @@ import io from 'socket.io-client';
 import { createClient } from '@/lib/supabase/client';
 import { adminService } from '@/lib/admin-service';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://51.89.167.87:3000/api';
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://51.89.167.87:3000';
+// Default URLs with fallbacks
+const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+const DEFAULT_SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3000';
+
+// Channel-specific URLs
+const CHANNEL_A_BASE_URL = 'http://51.89.167.87:3000/api';
+const CHANNEL_A_SOCKET_URL = 'http://51.89.167.87:3000';
+const CHANNEL_B_BASE_URL = 'http://51.89.167.87:3003/api';
+const CHANNEL_B_SOCKET_URL = 'http://51.89.167.87:3003';
+
+// Store the currently active channel
+let activeChannel: 'A' | 'B' | null = null;
+let BASE_URL = DEFAULT_BASE_URL;
+let SOCKET_URL = DEFAULT_SOCKET_URL;
 
 export interface Fixture {
   fixtureId: string;
@@ -15,17 +27,45 @@ export interface Fixture {
   competitionName: string;
 }
 
-// Optimized axios instance
-const axiosInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 3000, // Reduced timeout
-  headers: {
-    'Accept': 'application/json',
-    'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-    'Expires': '0',
+// Function to get axios instance with the current BASE_URL
+const getAxiosInstance = () => {
+  return axios.create({
+    baseURL: BASE_URL,
+    timeout: 3000, // Reduced timeout
+    headers: {
+      'Accept': 'application/json',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    }
+  });
+};
+
+// Function to set the active channel
+export const setApiChannel = (channel: 'A' | 'B' | null) => {
+  activeChannel = channel;
+  
+  if (channel === 'A') {
+    BASE_URL = CHANNEL_A_BASE_URL;
+    SOCKET_URL = CHANNEL_A_SOCKET_URL;
+  } else if (channel === 'B') {
+    BASE_URL = CHANNEL_B_BASE_URL;
+    SOCKET_URL = CHANNEL_B_SOCKET_URL;
+  } else {
+    BASE_URL = DEFAULT_BASE_URL;
+    SOCKET_URL = DEFAULT_SOCKET_URL;
   }
-});
+  
+  console.log(`API channel set to ${channel || 'default'}, using URL: ${BASE_URL}`);
+  console.log(`Socket URL set to: ${SOCKET_URL}`);
+  
+  // Re-initialize socket if it exists
+  if (SocketManager.hasInstance()) {
+    SocketManager.getInstance().reinitSocket();
+  }
+  
+  return { baseUrl: BASE_URL, socketUrl: SOCKET_URL };
+};
 
 // Singleton WebSocket connection with optimized settings
 class SocketManager {
@@ -46,6 +86,28 @@ class SocketManager {
     }
     return SocketManager.instance;
   }
+  
+  static hasInstance() {
+    return !!SocketManager.instance;
+  }
+  
+  // Method to reinitialize socket when channel changes
+  reinitSocket() {
+    console.log('Reinitializing socket connection with new URL:', SOCKET_URL);
+    
+    // Disconnect existing socket if any
+    if (this.socket && this.socket.connected) {
+      this.socket.disconnect();
+    }
+    
+    // Initialize new socket with updated URL
+    this.initSocket();
+    
+    // Resubscribe to all fixtures
+    this.subscriptions.forEach((callbacks, fixtureId) => {
+      this.socket.emit('subscribe', fixtureId);
+    });
+  }
 
   private initSocket() {
     this.socket = io(SOCKET_URL, {
@@ -55,7 +117,7 @@ class SocketManager {
       reconnectionDelayMax: 5000,
       reconnectionAttempts: this.maxReconnectAttempts,
       timeout: 3000,
-      forceNew: false
+      forceNew: true // Always create a new connection when reinitializing
     });
 
     this.socket.on('connect', () => {
@@ -218,9 +280,18 @@ export const api = {
     }
   },
 
+  // Get current active channel
+  getActiveChannel: (): { channel: 'A' | 'B' | null, baseUrl: string, socketUrl: string } => {
+    return {
+      channel: activeChannel,
+      baseUrl: BASE_URL,
+      socketUrl: SOCKET_URL
+    };
+  },
+
   getLiveFixtures: async () => {
     try {
-      const { data } = await axiosInstance.get<Fixture[]>('/fixtures/live/enhanced');
+      const { data } = await getAxiosInstance().get<Fixture[]>('/fixtures/live/enhanced');
       return data;
     } catch (error) {
       console.error('Error fetching live fixtures:', error);
@@ -230,7 +301,7 @@ export const api = {
 
   getFixture: async (fixtureId: string) => {
     try {
-      const { data } = await axiosInstance.get<Fixture>(`/fixtures/${fixtureId}`);
+      const { data } = await getAxiosInstance().get<Fixture>(`/fixtures/${fixtureId}`);
       return data;
     } catch (error) {
       console.error('Error fetching fixture:', error);
@@ -245,7 +316,7 @@ export const api = {
 
   getLastAction: async (fixtureId: string) => {
     try {
-      const { data } = await axiosInstance.get(`/feed/${fixtureId}/last-action`);
+      const { data } = await getAxiosInstance().get(`/feed/${fixtureId}/last-action`);
       return data;
     } catch (error) {
       console.error('Error fetching last action:', error);
@@ -254,22 +325,22 @@ export const api = {
   },
 
   startFeed: async (fixtureId: string) => {
-    const { data } = await axiosInstance.post(`/feed/start/${fixtureId}`);
+    const { data } = await getAxiosInstance().post(`/feed/start/${fixtureId}`);
     return data;
   },
 
   stopFeed: async (fixtureId: string) => {
-    const { data } = await axiosInstance.post(`/feed/stop/${fixtureId}`);
+    const { data } = await getAxiosInstance().post(`/feed/stop/${fixtureId}`);
     return data;
   },
 
   stopAllFeeds: async () => {
-    const { data } = await axiosInstance.post('/feed/stop-all');
+    const { data } = await getAxiosInstance().post('/feed/stop-all');
     return data;
   },
 
   getFeedView: async (fixtureId: string) => {
-    const { data } = await axiosInstance.post(`/feed/${fixtureId}/view`);
+    const { data } = await getAxiosInstance().post(`/feed/${fixtureId}/view`);
     return data;
   }
 };

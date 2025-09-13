@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import {
   Trophy,
   Calendar,
@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import type { FixtureV2 } from '@/lib/api-v2';
 import React from 'react';
+import { ChannelSelectionDialog } from '@/components/channel-selection-dialog';
 
 interface FixturesTableV2Props {
   fixtures: FixtureV2[];
@@ -48,6 +49,9 @@ function getMetadataValue(competitor: any, propertyName: string): string {
 
 // Performance-optimized component using memoization where appropriate
 function FixturesTableV2Component({ fixtures, isLoading }: FixturesTableV2Props) {
+  // State for channel selection dialog
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedFixtureId, setSelectedFixtureId] = useState<string | number>('');
 
   return (
     <div className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm overflow-hidden">
@@ -203,15 +207,17 @@ function FixturesTableV2Component({ fixtures, isLoading }: FixturesTableV2Props)
                   </TableCell>
                   
                   <TableCell className="px-4 py-3 text-right">
-                    <Link href={`/live/${fixture.id}`}>
-                      <Button
-                        size="sm"
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                      >
-                        <Play className="w-3 h-3 mr-1" />
-                        {isLive ? 'Live' : 'View'}
-                      </Button>
-                    </Link>
+                    <Button
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => {
+                        setSelectedFixtureId(fixture.id);
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      <Play className="w-3 h-3 mr-1" />
+                      {isLive ? 'Live' : 'View'}
+                    </Button>
                   </TableCell>
                 </TableRow>
               );
@@ -219,6 +225,13 @@ function FixturesTableV2Component({ fixtures, isLoading }: FixturesTableV2Props)
           </TableBody>
         </Table>
       </div>
+      
+      {/* Channel Selection Dialog */}
+      <ChannelSelectionDialog 
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        fixtureId={selectedFixtureId}
+      />
     </div>
   );
 }
