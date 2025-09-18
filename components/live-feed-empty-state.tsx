@@ -2,12 +2,23 @@
 
 import { motion } from 'framer-motion';
 import { Activity, Clock, Zap } from 'lucide-react';
+import { useEffect } from 'react';
 
 interface LiveFeedEmptyStateProps {
   isConnected: boolean;
 }
 
 export function LiveFeedEmptyState({ isConnected }: LiveFeedEmptyStateProps) {
+  useEffect(() => {
+    if (!isConnected) {
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isConnected]);
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
