@@ -31,6 +31,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const [homeTeamLineup, setHomeTeamLineup] = useState<TeamLineup | null>(null);
   const [awayTeamLineup, setAwayTeamLineup] = useState<TeamLineup | null>(null);
   const [isLineupsLoading, setIsLineupsLoading] = useState<boolean>(true);
+  const [isConnectedToLiveFeed, setIsConnectedToLiveFeed] = useState<boolean>(false);
   const [possession, setPossession] = useState<{ home: number; away: number }>({ home: 0, away: 0 });
   const [matchPeriod, setMatchPeriod] = useState<string>('First Half');
   const [stoppageTime, setStoppageTime] = useState<number | null>(null);
@@ -39,6 +40,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const [awayScore, setAwayScore] = useState<number>(0);
   const [isMatchStatsExpanded, setIsMatchStatsExpanded] = useState<boolean>(true);
   const parentRef = useRef<HTMLDivElement>(null);
+  const yellowCardUpdateRef = useRef<boolean>(false);
 
   // Optimize event update function
   const updateEvents = useCallback((newEvents: MatchEvent[]) => {
@@ -517,16 +519,6 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       return false;
     }).length;
     
-    // Debug logging for final calculation
-    console.log('Goal calculation:', {
-      homeTeamGoals,
-      awayTeamGoals,
-      cancelledHomeGoals,
-      cancelledAwayGoals,
-      finalHome: Math.max(0, homeTeamGoals - cancelledHomeGoals),
-      finalAway: Math.max(0, awayTeamGoals - cancelledAwayGoals)
-    });
-    
     // Net gol sayısını hesapla
     // Tehlike durumu olaylarından gelen goller - VAR ile iptal edilen goller
     return {
@@ -535,37 +527,71 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     };
   }, [events]);
 
-  // Debug effect to track score changes
-  useEffect(() => {
-    console.log('Score values changed:', { homeGoals, awayGoals });
-  }, [homeGoals, awayGoals]);
+
 
   useEffect(() => {
-    const unsubscribe = api.subscribeToFixture(fixtureId, (data) => {
-      const newEvents = processMatchActions(data);
-      updateEvents(newEvents);
-      updateTeams(data);
-      updateLineups(data);
-      updatePossession(data);
-      updateScores(data);
-      processSubstitutions(data);
-    });
+    let isMounted = true;
+    let socketUnsubscribe: (() => void) | null = null;
+    let feedStarted = false;
 
-    // Sayfa yenilendiğinde feed'in aktif olduğundan emin ol
-    const ensureFeedIsActive = async () => {
+    const setupFeed = async () => {
       try {
-        // Feed'in aktif olup olmadığını kontrol et
-        await api.getLastAction(fixtureId);
-      } catch (error: any) {
-        // Eğer feed aktif değilse, yeniden başlat
-        if (error.message?.includes('Feed not found')) {
+        // First, subscribe to the fixture WebSocket
+        socketUnsubscribe = api.subscribeToFixture(fixtureId, (data) => {
+          if (!isMounted) return;
+
+          // Check for system messages
+          if (data._systemMessage === 'Waiting for live data stream') {
+            console.log('Received system message: Waiting for live data');
+            setIsLineupsLoading(false);
+            return;
+          }
+
+          // Check for connection confirmation
+          if (data._systemMessage === 'connected_to_live_feed') {
+            console.log('✅ Connected to live feed:', data._connectionData);
+            setIsConnectedToLiveFeed(true);
+            setIsLineupsLoading(false);
+            return;
+          }
+
+          const newEvents = processMatchActions(data);
+          updateEvents(newEvents);
+          updateTeams(data);
+          updateLineups(data);
+          updatePossession(data);
+          updateScores(data);
+          processSubstitutions(data);
+
+          // If we received actual data, mark lineups as no longer loading
+          if (newEvents.length > 0) {
+            setIsLineupsLoading(false);
+          }
+        });
+
+        // Note: We no longer check getFeedView as it returns cached data
+        // Instead, we always try to start the feed - the server will handle
+        // multiple users joining the same fixture properly with shared tokens
+
+        // Always try to start the feed - server handles multiple users properly
+        if (isMounted) {
           try {
+            console.log(`Starting feed for fixture ${fixtureId}...`);
             await api.startFeed(fixtureId);
-            console.log('Feed restarted after page refresh');
-          } catch (startError) {
-            console.error('Error restarting feed:', startError);
+            feedStarted = true;
+            console.log(`Feed started for fixture ${fixtureId}`);
+          } catch (startError: any) {
+            // Feed might already be started by another user, which is fine
+            if (startError.response?.data?.message?.includes('already active')) {
+              console.log(`Feed already active for fixture ${fixtureId} - joining existing stream`);
+              feedStarted = true;
+            } else {
+              console.error('Error starting feed:', startError);
+            }
           }
         }
+      } catch (error) {
+        console.error('Error setting up feed:', error);
       }
     };
 
@@ -577,18 +603,24 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       startDateUtc
     });
 
-    ensureFeedIsActive();
+    // Setup the feed
+    setupFeed();
 
     // 10 saniye sonra hala data gelmemişse loading'i kaldır
     const timer = setTimeout(() => {
-      setIsLineupsLoading(false);
+      if (isMounted) {
+        setIsLineupsLoading(false);
+      }
     }, 10000);
 
     return () => {
-      unsubscribe();
+      isMounted = false;
+      if (socketUnsubscribe) {
+        socketUnsubscribe();
+      }
       clearTimeout(timer);
     };
-  }, [fixtureId, updateEvents, updateTeams, updateLineups, updatePossession, updateScores, processSubstitutions, competitionName, matchName, startDateUtc]);
+  }, [fixtureId]);
 
   // Add a new effect to handle yellow card player updates
   useEffect(() => {
@@ -600,12 +632,21 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     // Check if any have updated player data
     const hasPlayerUpdates = yellowCardEvents.some(e => e.details.player?.sourceName);
 
-    if (hasPlayerUpdates && (homeTeamLineup || awayTeamLineup)) {
-      // Force an update to the events list by creating a new array with the same items
-      // This causes the EventView components to re-render with the updated player names
-      setEvents(prevEvents => [...prevEvents]);
+    const shouldUpdate = hasPlayerUpdates && (homeTeamLineup || awayTeamLineup);
+    
+    // Only update if the condition changed from false to true
+    if (shouldUpdate && !yellowCardUpdateRef.current) {
+      yellowCardUpdateRef.current = true;
+      // Use a more targeted update approach that doesn't trigger a full re-render
+      // by only updating specific events that need to be refreshed
+      const yellowCardIds = new Set(yellowCardEvents.map(e => e.id));
+      setEvents(prevEvents => 
+        prevEvents.map(e => yellowCardIds.has(e.id) ? {...e} : e)
+      );
+    } else if (!shouldUpdate) {
+      yellowCardUpdateRef.current = false;
     }
-  }, [events]);
+  }, [events, homeTeamLineup, awayTeamLineup]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -697,7 +738,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
 
               {events.length === 0 && (
                 <div className="flex items-center justify-center h-full min-h-[500px]">
-                  <LiveFeedEmptyState />
+                  <LiveFeedEmptyState isConnected={isConnectedToLiveFeed} />
                 </div>
               )}
             </div>

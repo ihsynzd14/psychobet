@@ -161,6 +161,19 @@ class SocketManager {
       this.socket.on(`fixture:${fixtureId}`, (data: any) => {
         callbacks.forEach(cb => cb(data));
       });
+      
+      // Listen for connection confirmation
+      this.socket.on(`fixture:${fixtureId}:connected`, (data: any) => {
+        console.log(`✅ Connected to real-time feed for fixture ${fixtureId}:`, data);
+        // Trigger frontend to know it's connected
+        callbacks.forEach(cb => {
+          cb({
+            _systemMessage: 'connected_to_live_feed',
+            _connectionData: data,
+            raw: { matchActions: {} }
+          });
+        });
+      });
     }
 
     return () => {

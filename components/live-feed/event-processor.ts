@@ -28,11 +28,7 @@ export const calculateScores = (data: any): { homeScore: number; awayScore: numb
   const varDecisions = actions?.varStateChanges?.varStateChanges || [];
   
   // DEBUG: Log the raw data
-  console.log('calculateScores DEBUG:', {
-    totalGoals: goals.length,
-    goals: goals.map((g: any) => ({ id: g.id, team: g.team, isConfirmed: g.isConfirmed })),
-    varDecisions: varDecisions.length
-  });
+  
   
   // Count confirmed goals by team - single pass
   let homeGoals = 0;
@@ -67,14 +63,7 @@ export const calculateScores = (data: any): { homeScore: number; awayScore: numb
     }
   }
   
-  // DEBUG: Log before and after VAR cancellations
-  console.log('calculateScores BEFORE VAR cancellations:', {
-    homeGoals,
-    awayGoals,
-    homeGoalCancelled,
-    awayGoalCancelled
-  });
-  
+
   // Apply cancellations only if we have explicit evidence
   if (homeGoalCancelled) homeGoals = Math.max(0, homeGoals - 1);
   if (awayGoalCancelled) awayGoals = Math.max(0, awayGoals - 1);
@@ -84,8 +73,7 @@ export const calculateScores = (data: any): { homeScore: number; awayScore: numb
     awayScore: awayGoals
   };
   
-  console.log('calculateScores FINAL RESULT:', result);
-  
+
   return result;
 };
 

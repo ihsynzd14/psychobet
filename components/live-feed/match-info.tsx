@@ -15,16 +15,6 @@ interface MatchInfoProps {
 export function MatchInfo({ competitionName, matchName, startDateUtc, venueName, roundName, events }: MatchInfoProps) {
   const router = useRouter();
 
-  // Değerleri kontrol et
-  useEffect(() => {
-    console.log('MatchInfo rendered with:', {
-      competitionName,
-      matchName,
-      startDateUtc,
-      eventsCount: events.length
-    });
-  }, [competitionName, matchName, startDateUtc, events.length]);
-
   // Sistem mesajlarını filtrele ve en son durumları al
   const systemInfo = events
     .filter(event => 

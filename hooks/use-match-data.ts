@@ -31,11 +31,6 @@ export function useMatchData({
     refetchInterval: updateInterval,
   });
 
-  const { data: lastAction } = useQuery({
-    queryKey: ['lastAction', fixtureId],
-    queryFn: () => api.getLastAction(fixtureId),
-    refetchInterval: updateInterval,
-  });
 
   // Process buffered updates using requestAnimationFrame
   const processBuffer = () => {
@@ -87,9 +82,6 @@ export function useMatchData({
       if (data?.feed) {
         bufferUpdate('feed', data.feed);
       }
-      if (data?.lastAction) {
-        bufferUpdate('lastAction', data.lastAction);
-      }
     });
 
     return () => {
@@ -103,7 +95,6 @@ export function useMatchData({
   return {
     fixture,
     feedData,
-    lastAction,
     isLoading: !fixture || !feedData,
   };
 }

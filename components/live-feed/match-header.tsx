@@ -85,25 +85,8 @@ export const MatchHeader = memo<MatchHeaderProps>(({
   const displayHomeScore = homeScore;
   const displayAwayScore = awayScore;
 
-  // Log score changes for debugging
-  useEffect(() => {
-    console.log('MatchHeader score props changed:', { 
-      homeScore, 
-      awayScore
-    });
-  }, [homeScore, awayScore]);
-
   useEffect(() => {
     // Debug log to help identify why timer might still be running
-    console.log('Current state:', { 
-      matchPeriod, 
-      currentPhase, 
-      displayTime,
-      matchTimeElapsed,
-      isClockRunning,
-      shouldStopTimer: currentPhase === 'PostMatch'
-    });
-
     // If match period changes, update the previous match period
     if (matchPeriod !== prevMatchPeriod) {
       setPrevMatchPeriod(matchPeriod);

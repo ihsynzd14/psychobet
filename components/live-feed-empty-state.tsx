@@ -3,7 +3,11 @@
 import { motion } from 'framer-motion';
 import { Activity, Clock, Zap } from 'lucide-react';
 
-export function LiveFeedEmptyState() {
+interface LiveFeedEmptyStateProps {
+  isConnected: boolean;
+}
+
+export function LiveFeedEmptyState({ isConnected }: LiveFeedEmptyStateProps) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -73,11 +77,14 @@ export function LiveFeedEmptyState() {
         className="space-y-3"
       >
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          Waiting for Live Events
+          {isConnected ? 'Waiting for Live Events' : 'Connecting to Live Feed...'}
         </h3>
         <div className="space-y-2">
           <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md">
-            The match feed is ready. Live events will appear here as soon as the match begins.
+            {isConnected
+              ? 'The match feed is ready. Live events will appear here as soon as the match begins.'
+              : 'Establishing connection to the live data stream. This may take a moment...'
+            }
           </p>
           
           <motion.div
@@ -111,10 +118,21 @@ export function LiveFeedEmptyState() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="mt-8 px-4 py-2 bg-blue-50 dark:bg-blue-950/50 rounded-full border border-blue-100 dark:border-blue-900"
+        className={`mt-8 px-4 py-2 rounded-full border ${
+          isConnected
+            ? 'bg-green-50 dark:bg-green-950/50 border-green-100 dark:border-green-900'
+            : 'bg-amber-50 dark:bg-amber-950/50 border-amber-100 dark:border-amber-900'
+        }`}
       >
-        <p className="text-xs font-medium text-blue-700 dark:text-blue-300">
-          Live feed is active and monitoring
+        <p className={`text-xs font-medium ${
+          isConnected
+            ? 'text-green-700 dark:text-green-300'
+            : 'text-amber-700 dark:text-amber-300'
+        }`}>
+          {isConnected
+            ? '✅ Live feed is active and monitoring'
+            : '⏳ Connecting to live data stream...'
+          }
         </p>
       </motion.div>
     </motion.div>

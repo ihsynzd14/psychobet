@@ -1,8 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Play, StopCircle, ExternalLink, Clock, Activity, Trophy, Users, Radio, Shield } from 'lucide-react';
+import { Play, StopCircle, ExternalLink, Clock, Trophy, Users, Radio, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,38 +16,13 @@ interface LiveFixtureProps {
 }
 
 export function LiveFixture({ fixture, activeFeeds, onStart, onStop }: LiveFixtureProps) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
   // Use the shared activeFeeds state
   const isActive = activeFeeds.has(fixture.fixtureId);
 
-  const { data: lastAction, refetch: refetchLastAction } = useQuery({
-    queryKey: ['lastAction', fixture.fixtureId],
-    queryFn: async () => {
-      try {
-        return await api.getLastAction(fixture.fixtureId);
-      } catch (error) {
-        console.error('Feed query error:', error);
-        return null;
-      }
-    },
-    enabled: isActive,
-    refetchInterval: isActive ? 12000 : false,
-    staleTime: Infinity,
-    gcTime: Infinity,
-    retry: 3,
-    retryDelay: 1000
-  });
 
   const handleStart = async () => {
     try {
       await onStart();
-      await refetchLastAction();
-      // Ensure the query stays enabled
-      queryClient.invalidateQueries({
-        queryKey: ['lastAction', fixture.fixtureId]
-      });
     } catch (error) {
       console.error('Error starting feed:', error);
     }
@@ -58,11 +31,6 @@ export function LiveFixture({ fixture, activeFeeds, onStart, onStop }: LiveFixtu
   const handleStop = async () => {
     try {
       await onStop();
-      // Clear the last action data from the cache
-      queryClient.setQueryData(['lastAction', fixture.fixtureId], null);
-      queryClient.cancelQueries({
-        queryKey: ['lastAction', fixture.fixtureId]
-      });
     } catch (error) {
       console.error('Error stopping feed:', error);
     }
@@ -136,17 +104,6 @@ export function LiveFixture({ fixture, activeFeeds, onStart, onStop }: LiveFixtu
             </time>
           </div>
 
-          {lastAction?.data?.lastAction && (
-            <div className="rounded-lg bg-gray-50 dark:bg-gray-800/50 p-3 border border-gray-100 dark:border-gray-700">
-              <div className="flex items-center gap-2 text-sm mb-1">
-                <Activity className="w-4 h-4 text-blue-500" />
-                <span className="font-medium text-gray-900 dark:text-white">Latest Update</span>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                {lastAction.data.lastAction.type}: {lastAction.data.lastAction.description}
-              </p>
-            </div>
-          )}
         </div>
       </CardContent>
 
