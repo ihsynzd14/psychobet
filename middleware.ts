@@ -53,18 +53,71 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   )
 
-  // If user is authenticated, manage session
+  // If user is authenticated, manage session and check for conflicts
   if (user && session) {
     try {
+      const clientIP = request.headers.get('x-forwarded-for') ||
+                      request.headers.get('x-real-ip') ||
+                      'unknown'
+
+      // AGGRESSIVE SESSION ENFORCEMENT - KICK OUT NON-LATEST SESSIONS
+      const { data: userSessions } = await supabase
+        .from('user_sessions')
+        .select('session_id, created_at')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+
+      const sessions = userSessions || []
+
+      if (sessions.length > 1) {
+        console.log(`MULTIPLE SESSIONS: ${sessions.length} active for user ${user.id}`)
+
+        // Find current session position
+        const currentSessionIndex = sessions.findIndex(s => s.session_id === session.access_token)
+
+        if (currentSessionIndex > 0) {
+          // NOT THE NEWEST SESSION - INSTANT KICK OUT
+          console.log(`AGGRESSIVE: Current session is position ${currentSessionIndex + 1}, KICKING OUT`)
+          console.log(`AGGRESSIVE: Newest session is ${sessions[0].session_id.substring(0, 20)}...`)
+
+          try {
+            // Immediately mark current session as dead
+            await supabase
+              .from('user_sessions')
+              .update({
+                is_active: false,
+                last_active: new Date().toISOString(),
+                kickout_reason: 'not_newest_session'
+              })
+              .eq('session_id', session.access_token)
+
+            console.log('AGGRESSIVE: Current session marked as dead')
+
+            // INSTANT REDIRECT TO LOGIN - NO MERCY
+            const loginUrl = new URL('/auth/login', request.url)
+            loginUrl.searchParams.set('kicked', 'true')
+            return NextResponse.redirect(loginUrl)
+
+          } catch (kickoutError) {
+            console.error('AGGRESSIVE kickout failed:', kickoutError)
+          }
+        } else if (currentSessionIndex === 0) {
+          console.log('AGGRESSIVE: Current session is the newest - ALLOWED')
+        } else {
+          console.log('AGGRESSIVE: Current session not found - allowing access')
+        }
+      } else if (sessions.length === 1) {
+        console.log('AGGRESSIVE: Single session - no conflict')
+      } else {
+        console.log('AGGRESSIVE: No sessions found')
+      }
+
       // Try to validate session, but don't fail if it doesn't exist yet
       const isValidSession = await SessionManager.validateSession(session.access_token)
 
       if (isValidSession) {
         // Update session activity for valid sessions
-        const clientIP = request.headers.get('x-forwarded-for') ||
-                        request.headers.get('x-real-ip') ||
-                        'unknown'
-
         await SessionManager.updateSessionActivity(session.access_token, clientIP)
         console.log('Session validated and updated for user:', user.email)
       } else {
@@ -72,10 +125,6 @@ export async function middleware(request: NextRequest) {
         console.log('Session not found for user:', user.email, '- creating session record')
 
         try {
-          const clientIP = request.headers.get('x-forwarded-for') ||
-                          request.headers.get('x-real-ip') ||
-                          'unknown'
-
           const userAgent = request.headers.get('user-agent') || 'unknown'
 
           await SessionManager.createSessionRecord(
@@ -85,9 +134,12 @@ export async function middleware(request: NextRequest) {
             clientIP
           )
           console.log('Session record created for user:', user.email)
-        } catch (createError) {
-          console.error('Failed to create session record:', createError)
-          // Continue even if session creation fails
+        } catch (createError: any) {
+          if (createError?.code === '23505') {
+            console.log('Session record already exists (duplicate key), skipping creation')
+          } else {
+            console.error('Failed to create session record:', createError)
+          }
         }
       }
     } catch (error) {

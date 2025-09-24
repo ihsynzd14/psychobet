@@ -28,6 +28,9 @@ export async function POST(request: NextRequest) {
 
       if (!profileResponse.ok) {
         console.warn('Profile creation failed, but continuing with session setup')
+      } else {
+        const profileResult = await profileResponse.json()
+        console.log('Profile setup result:', profileResult.message)
       }
     } catch (profileError) {
       console.warn('Profile setup error:', profileError)
@@ -48,16 +51,26 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      // Create session record
-      await SessionManager.createSessionRecord(
-        session.user.id,
-        session.access_token,
-        deviceInfo,
-        clientIP
-      )
+      // Just update session activity - sessions already invalidated in login API
+      const { data: existingSession } = await supabase
+        .from('user_sessions')
+        .select('id')
+        .eq('session_id', session.access_token)
+        .single()
 
-      // Invalidate previous sessions
-      await SessionManager.invalidatePreviousSessions(session.user.id, session.access_token)
+      if (!existingSession) {
+        // Fallback session creation if somehow missed
+        await SessionManager.createSessionRecord(
+          session.user.id,
+          session.access_token,
+          deviceInfo,
+          clientIP
+        )
+        console.log('Session record created (fallback)')
+      } else {
+        await SessionManager.updateSessionActivity(session.access_token, clientIP)
+        console.log('Session activity updated')
+      }
 
       return NextResponse.json({
         success: true,

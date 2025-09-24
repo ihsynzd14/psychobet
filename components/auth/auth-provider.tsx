@@ -31,6 +31,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem('session_conflict')
     }
 
+    // Check if user was kicked out
+    const wasKickedOut = localStorage.getItem('session_kicked')
+    if (wasKickedOut === 'true') {
+      setSessionConflict(true) // Use same conflict state
+      localStorage.removeItem('session_kicked')
+    }
+
     // Get initial session
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
@@ -63,11 +70,85 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase.auth])
 
   const signInWithEmail = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    return { error }
+    try {
+      setLoading(true)
+
+      // BRUTAL SESSION TERMINATION - BEFORE AUTHENTICATION
+      try {
+        const serviceClient = await import('@/lib/supabase/service-role').then(m => m.createServiceRoleClient())
+
+        if (serviceClient) {
+          // Get user ID for this email
+          const { data: { user } } = await serviceClient.auth.admin.getUserByEmail(email)
+
+          if (user) {
+            console.log(`BRUTAL TERMINATION for user: ${user.id}`)
+
+            // STEP 1: INSTANTLY MARK ALL SESSIONS AS INACTIVE
+            const { error: updateError } = await serviceClient
+              .from('user_sessions')
+              .update({
+                is_active: false,
+                last_active: new Date().toISOString(),
+                invalidated_by: `brutal_termination_${Date.now()}`
+              })
+              .eq('user_id', user.id)
+
+            if (!updateError) {
+              console.log(`BRUTAL: All sessions marked inactive for user ${user.id}`)
+
+              // STEP 2: FIND AND IMMEDIATELY TERMINATE ALL ACTIVE SESSIONS
+              const { data: activeSessions } = await serviceClient
+                .from('user_sessions')
+                .select('session_id')
+                .eq('user_id', user.id)
+
+              if (activeSessions && activeSessions.length > 0) {
+                console.log(`BRUTAL: Terminating ${activeSessions.length} active sessions`)
+
+                for (const session of activeSessions) {
+                  try {
+                    // FORCE SIGN OUT FROM SUPABASE AUTH
+                    await serviceClient.auth.admin.signOut(session.session_id)
+                    console.log(`BRUTAL: Terminated session ${session.session_id.substring(0, 20)}...`)
+                  } catch (e) {
+                    // Continue even if one fails
+                  }
+                }
+
+                console.log(`BRUTAL: All previous sessions terminated for user ${user.id}`)
+              }
+
+              // STEP 3: WAIT FOR TERMINATION TO PROPAGATE
+              await new Promise(resolve => setTimeout(resolve, 1200))
+              console.log(`BRUTAL: Termination delay completed, ready for new session`)
+            }
+          }
+        }
+      } catch (terminationError) {
+        console.warn('BRUTAL termination failed:', terminationError)
+        // Continue anyway - we'll still try to login
+      }
+
+      // STEP 4: NOW CREATE NEW SESSION
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
+        console.error('Auth provider sign in error:', error)
+        return { error }
+      }
+
+      console.log(`BRUTAL: New session created for ${email} - previous users KICKED OUT`)
+      return { error: null }
+    } catch (error) {
+      console.error('Unexpected auth provider error:', error)
+      return { error: error instanceof Error ? error : new Error('Unknown error') }
+    } finally {
+      setLoading(false)
+    }
   }
 
   const signOut = async () => {

@@ -23,6 +23,8 @@ export class SessionManager {
     }
 
     try {
+      console.log(`Invalidating previous sessions for user ${userId}, keeping session ${currentSessionId?.substring(0, 20)}...`)
+
       // Get all active sessions for this user except current one
       const { data: sessions, error: fetchError } = await serviceClient
         .from('user_sessions')
@@ -36,17 +38,10 @@ export class SessionManager {
         return
       }
 
-      // Invalidate each session using Supabase admin API
-      for (const session of sessions || []) {
-        try {
-          await serviceClient.auth.admin.signOut(session.session_id)
-        } catch (signOutError) {
-          console.error('Error signing out session:', signOutError)
-          // Continue with other sessions even if one fails
-        }
-      }
+      const sessionsToInvalidate = sessions || []
+      console.log(`Found ${sessionsToInvalidate.length} previous sessions to invalidate`)
 
-      // Mark sessions as inactive in database
+      // First, mark sessions as inactive in database (more reliable)
       const { error: updateError } = await serviceClient
         .from('user_sessions')
         .update({
@@ -57,8 +52,23 @@ export class SessionManager {
         .neq('session_id', currentSessionId)
 
       if (updateError) {
-        console.error('Error updating sessions:', updateError)
+        console.error('Error updating sessions in database:', updateError)
+      } else {
+        console.log(`Marked ${sessionsToInvalidate.length} sessions as inactive in database`)
       }
+
+      // Then invalidate each session using Supabase admin API
+      for (const session of sessionsToInvalidate) {
+        try {
+          await serviceClient.auth.admin.signOut(session.session_id)
+          console.log(`Invalidated session: ${session.session_id?.substring(0, 20)}...`)
+        } catch (signOutError) {
+          console.error('Error signing out session:', signOutError)
+          // Continue with other sessions even if one fails
+        }
+      }
+
+      console.log('Session invalidation completed')
     } catch (error) {
       console.error('Error in invalidatePreviousSessions:', error)
     }

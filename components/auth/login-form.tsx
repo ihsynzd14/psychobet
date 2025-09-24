@@ -24,8 +24,11 @@ type LoginFormData = z.infer<typeof loginSchema>
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { signInWithEmail } = useAuth()
+  const { signInWithEmail, loading: authLoading } = useAuth()
   const router = useRouter()
+
+  // Combined loading state
+  const isProcessing = isLoading || authLoading
 
   const schema = loginSchema
   
@@ -41,19 +44,33 @@ export function LoginForm() {
   })
 
   const onSubmit = async (data: LoginFormData) => {
+    // Prevent multiple submissions and handle loading state
+    if (isProcessing) {
+      console.log('Login already in progress, ignoring duplicate submission')
+      return
+    }
+
     setIsLoading(true)
 
     try {
-      // Try regular authentication first
+      console.log('Attempting login for:', data.email)
+
+      // Use auth provider for proper session management
       const { error } = await signInWithEmail(data.email, data.password)
 
       if (error) {
+        console.error('Login failed:', error.message)
         toast.error(error.message || 'Authentication failed', {
           icon: <AlertCircle className="h-4 w-4" />,
         })
         return
       }
 
+      console.log('Auth provider login successful')
+
+      console.log('Login successful, setting up session...')
+
+      // Show success message
       toast.success('Welcome back! Setting up your session...', {
         icon: <FaviconIcon size={16} />,
       })
@@ -69,20 +86,25 @@ export function LoginForm() {
 
         if (!response.ok) {
           console.warn('Session setup failed, but login was successful')
+        } else {
+          const result = await response.json()
+          console.log('Session setup completed successfully:', result.message)
         }
       } catch (sessionError) {
         console.warn('Session setup error:', sessionError)
         // Don't fail the login if session management fails
       }
 
-      // Redirect to dashboard
+      // Use router.replace for cleaner navigation (no history stack)
       setTimeout(() => {
-        router.push('/')
+        console.log('Redirecting to dashboard...')
+        router.replace('/')
         router.refresh()
-      }, 1000)
+      }, 300)
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
+      console.error('Unexpected login error:', errorMessage)
       toast.error(errorMessage, {
         icon: <AlertCircle className="h-4 w-4" />,
       })
@@ -125,7 +147,7 @@ export function LoginForm() {
               placeholder="Enter your email"
               error={errors.email?.message}
               leftIcon={<Mail className="h-4 w-4" />}
-              disabled={isLoading}
+              disabled={isProcessing}
               size="lg"
             />
           </div>
@@ -144,13 +166,13 @@ export function LoginForm() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-accent"
-                  disabled={isLoading}
+                  disabled={isProcessing}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               }
-              disabled={isLoading}
+              disabled={isProcessing}
               size="lg"
             />
           </div>
@@ -160,13 +182,13 @@ export function LoginForm() {
             <EnhancedButton
               type="submit"
               className="w-full"
-              loading={isLoading}
-              disabled={isLoading}
+              loading={isProcessing}
+              disabled={isProcessing || !isValid}
               variant="gradient"
               size="lg"
-              rightIcon={!isLoading && <ArrowRight className="h-4 w-4" />}
+              rightIcon={!isProcessing && <ArrowRight className="h-4 w-4" />}
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {isProcessing ? 'Signing In...' : 'Sign In'}
             </EnhancedButton>
           </div>
         </form>
