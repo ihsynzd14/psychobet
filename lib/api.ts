@@ -4,8 +4,8 @@ import { createClient } from '@/lib/supabase/client';
 import { adminService } from '@/lib/admin-service';
 
 // Default URLs with fallbacks
-const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-const DEFAULT_SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3000';
+const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://51.89.167.87:3000/api';
+const DEFAULT_SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://51.89.167.87:3000';
 
 // Channel-specific URLs
 const CHANNEL_A_BASE_URL = 'http://51.89.167.87:3000/api';

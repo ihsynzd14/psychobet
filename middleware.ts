@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { config as appConfig } from '@/lib/config'
+import { SessionManager } from '@/lib/session-manager'
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -29,7 +30,9 @@ export async function middleware(request: NextRequest) {
   )
 
   // Refresh session if expired - required for Server Components
-  await supabase.auth.getSession()
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   const {
     data: { user },
@@ -49,6 +52,49 @@ export async function middleware(request: NextRequest) {
   const isAuthRoute = authRoutes.some(route => 
     request.nextUrl.pathname.startsWith(route)
   )
+
+  // If user is authenticated, manage session
+  if (user && session) {
+    try {
+      // Try to validate session, but don't fail if it doesn't exist yet
+      const isValidSession = await SessionManager.validateSession(session.access_token)
+
+      if (isValidSession) {
+        // Update session activity for valid sessions
+        const clientIP = request.headers.get('x-forwarded-for') ||
+                        request.headers.get('x-real-ip') ||
+                        'unknown'
+
+        await SessionManager.updateSessionActivity(session.access_token, clientIP)
+        console.log('Session validated and updated for user:', user.email)
+      } else {
+        // Session doesn't exist or is invalid, but we'll allow access and create it
+        console.log('Session not found for user:', user.email, '- creating session record')
+
+        try {
+          const clientIP = request.headers.get('x-forwarded-for') ||
+                          request.headers.get('x-real-ip') ||
+                          'unknown'
+
+          const userAgent = request.headers.get('user-agent') || 'unknown'
+
+          await SessionManager.createSessionRecord(
+            user.id,
+            session.access_token,
+            { userAgent, timestamp: new Date().toISOString() },
+            clientIP
+          )
+          console.log('Session record created for user:', user.email)
+        } catch (createError) {
+          console.error('Failed to create session record:', createError)
+          // Continue even if session creation fails
+        }
+      }
+    } catch (error) {
+      console.error('Session management error:', error)
+      // Continue with request even if session management fails
+    }
+  }
 
   // If user is not authenticated and trying to access protected route
   if (!user && (isProtectedRoute || isAdminRoute)) {

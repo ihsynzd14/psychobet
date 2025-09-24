@@ -42,23 +42,48 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
-    
+
     try {
+      // Try regular authentication first
       const { error } = await signInWithEmail(data.email, data.password)
 
       if (error) {
         toast.error(error.message || 'Authentication failed', {
           icon: <AlertCircle className="h-4 w-4" />,
         })
-      } else {
-        toast.success('Welcome back! Signing you in...', {
-          icon: <FaviconIcon size={16} />,
+        return
+      }
+
+      toast.success('Welcome back! Setting up your session...', {
+        icon: <FaviconIcon size={16} />,
+      })
+
+      // Setup session management after successful login
+      try {
+        const response = await fetch('/api/auth/setup-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
+
+        if (!response.ok) {
+          console.warn('Session setup failed, but login was successful')
+        }
+      } catch (sessionError) {
+        console.warn('Session setup error:', sessionError)
+        // Don't fail the login if session management fails
+      }
+
+      // Redirect to dashboard
+      setTimeout(() => {
         router.push('/')
         router.refresh()
-      }
+      }, 1000)
+
     } catch (error) {
-      toast.error('An unexpected error occurred', {
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
+      toast.error(errorMessage, {
         icon: <AlertCircle className="h-4 w-4" />,
       })
     } finally {
