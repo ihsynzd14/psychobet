@@ -49,7 +49,7 @@ export function UserHeader() {
     <div className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
       <div className="flex-1">
         <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-          Psychobet System
+          Psychoff Radar System
         </h1>
       </div>
       

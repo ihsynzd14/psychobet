@@ -12,7 +12,7 @@ export function FaviconIcon({ className, size = 32 }: FaviconIconProps) {
   return (
     <Image
       src="/favicon.ico"
-      alt="Psychobet Logo"
+      alt="Psychoff Radar Logo"
       width={size}
       height={size}
       className={cn("object-contain", className)}

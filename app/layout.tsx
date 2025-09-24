@@ -6,7 +6,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Psychobet System',
+  title: 'Psychoff Radar System',
   description: 'Real-time sports feed management system',
   icons: {
     icon: '/favicon.ico',

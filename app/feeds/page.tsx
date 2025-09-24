@@ -387,7 +387,7 @@ export default function FeedTableV2() {
                     Live Fixtures
                   </h1>
                   <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    Psychobet Feed System
+                    Psychoff Radar Feed System
                   </p>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 -- ==========================================
--- PsychoBet Database Schema
+-- Psychoff Radar Database Schema
 -- ==========================================
 
 -- Enable Row Level Security (RLS) and required extensions

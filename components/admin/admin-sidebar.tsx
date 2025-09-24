@@ -148,7 +148,7 @@ export function AdminSidebar({ currentPath, onMobileToggle, isMobile = false, on
           {(isExpanded || isMobile) && (
             <div className="min-w-0">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">
-                PsychoBet
+                Psychoff Radar
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                 Admin Panel

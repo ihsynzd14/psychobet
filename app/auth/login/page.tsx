@@ -19,7 +19,7 @@ export default function LoginPage() {
           {/* Footer Info */}
           <div className="mt-8 text-center animate-in slide-in-from-bottom-4 duration-700 delay-300">
             <p className="text-xs text-muted-foreground">
-              © 2025 Psychobet System. All rights reserved.
+              © 2025 Psychoff Radar System. All rights reserved.
             </p>
           </div>
         </div>

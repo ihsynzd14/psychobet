@@ -83,7 +83,7 @@ export function LoginForm() {
             Welcome Back
           </AuthCardTitle>
           <AuthCardDescription>
-            Sign in to access your Psychobet dashboard
+            Sign in to access your Psychoff Radar dashboard
           </AuthCardDescription>
         </div>
       </AuthCardHeader>

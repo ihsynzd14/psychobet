@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/ihsynzd/Documents/Dev/Github/Psychoff_Radar/geniusBackend/src/services/**)",
+      "Read(//c/Users/ihsynzd/Documents/Dev/Github/Psychoff_Radar/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

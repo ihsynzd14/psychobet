@@ -103,7 +103,7 @@ export function FeedManagement() {
             </div>
             <div>
               <h1 className="text-lg font-semibold tracking-tight text-gray-800 dark:text-gray-200">
-                Psychobet System
+                Psychoff Radar System
               </h1>
               <p className="text-sm text-muted-foreground">
                 {fixtures?.length ? (
@@ -194,7 +194,7 @@ export function FeedManagement() {
           </div>
           <div>
             <h1 className="text-lg font-semibold tracking-tight text-gray-800 dark:text-gray-200">
-              Psychobet System
+              Psychoff Radar System
             </h1>
             <p className="text-sm text-muted-foreground">
               {fixtures?.length ? (
