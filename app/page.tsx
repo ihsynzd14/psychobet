@@ -43,57 +43,58 @@ export default function Home() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-900">
+      <div className="h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 flex flex-col">
         <UserHeader />
         
-        <main className="container mx-auto px-4 py-8">
-          <div className="flex flex-col items-center justify-center min-h-[calc(100vh-140px)]">
-            <div className="w-full max-w-4xl">
-              {/* Profile Header - Centered */}
-              <div className="flex flex-col items-center mb-10">
-                <Avatar className="h-20 w-20 mb-4">
-                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600">
-                    <User className="h-8 w-8 text-white" />
+        <main className="flex-1 overflow-y-auto">
+          <div className="container mx-auto px-4 py-6 max-w-7xl h-full">
+            <div className="h-full flex flex-col gap-4">
+              {/* Profile Header */}
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 flex-shrink-0">
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-16 w-16 ring-2 ring-gray-100 dark:ring-gray-800">
+                    <div className="flex h-full w-full items-center justify-center bg-blue-600 dark:bg-blue-500">
+                      <User className="h-8 w-8 text-white" />
+                    </div>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                      {profile?.full_name || 'User Profile'}
+                    </h1>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {user?.email}
+                    </p>
                   </div>
-                </Avatar>
-                <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                    {profile?.full_name || 'User Profile'}
-                  </h1>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {user?.email}
-                  </p>
                   {profile?.role && profile.role !== 'user' && (
-                    <Badge variant="secondary" className="mt-2">
+                    <Badge variant="secondary" className="text-xs px-2 py-1">
                       {profile.role.replace('_', ' ')}
                     </Badge>
                   )}
                 </div>
               </div>
 
-              {/* Quick Actions Navigation - Symmetric Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+              {/* Quick Actions */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-shrink-0">
                 {/* Live Fixtures Card */}
                 <Card 
-                  className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
+                  className="group border-2 border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-500 bg-white dark:bg-gray-900 cursor-pointer transition-all duration-300 hover:shadow-lg"
                   onClick={() => router.push('/feeds')}
                 >
-                  <CardContent className="p-6">
-                    <div className="flex flex-col items-center text-center">
-                      <div className="p-3 rounded-full bg-blue-500 text-white mb-3">
-                        <Trophy className="h-6 w-6" />
+                  <CardContent className="p-5">
+                    <div className="flex items-start gap-3">
+                      <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                        <Trophy className="h-5 w-5" />
                       </div>
-                      <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">Live Fixtures</h3>
-                      <p className="text-blue-700 dark:text-blue-300 text-sm mb-4">
-                        Watch live matches and real-time updates
-                      </p>
-                      <Button 
-                        size="sm" 
-                        className="bg-blue-500 hover:bg-blue-600 text-white border-0 w-full"
-                      >
-                        View Fixtures
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                      </Button>
+                      <div className="flex-1">
+                        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">Live Fixtures</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs mb-2 leading-relaxed">
+                          Watch live matches and real-time updates
+                        </p>
+                        <div className="flex items-center text-blue-600 dark:text-blue-400 font-semibold text-xs group-hover:gap-2 transition-all">
+                          View Fixtures
+                          <ArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -101,50 +102,48 @@ export default function Home() {
                 {/* Admin Panel Card - Only for admins */}
                 {isAdmin ? (
                   <Card 
-                    className="border-0 shadow-sm bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-950 dark:to-orange-900 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
+                    className="group border-2 border-gray-200 dark:border-gray-800 hover:border-amber-500 dark:hover:border-amber-500 bg-white dark:bg-gray-900 cursor-pointer transition-all duration-300 hover:shadow-lg"
                     onClick={() => router.push('/admin')}
                   >
-                    <CardContent className="p-6">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 rounded-full bg-amber-500 text-white mb-3">
-                          <Shield className="h-6 w-6" />
+                    <CardContent className="p-5">
+                      <div className="flex items-start gap-3">
+                        <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+                          <Shield className="h-5 w-5" />
                         </div>
-                        <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-2">Admin Panel</h3>
-                        <p className="text-amber-700 dark:text-amber-300 text-sm mb-4">
-                          Manage users and system settings
-                        </p>
-                        <Button 
-                          size="sm" 
-                          className="bg-amber-500 hover:bg-amber-600 text-white border-0 w-full"
-                        >
-                          Open Admin
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
+                        <div className="flex-1">
+                          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">Admin Panel</h3>
+                          <p className="text-gray-600 dark:text-gray-400 text-xs mb-2 leading-relaxed">
+                            Manage users and system settings
+                          </p>
+                          <div className="flex items-center text-amber-600 dark:text-amber-400 font-semibold text-xs group-hover:gap-2 transition-all">
+                            Open Admin
+                            <ArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
                 ) : (
                   // Psychoff Website Card for non-admins
                   <Card 
-                    className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
+                    className="group border-2 border-gray-200 dark:border-gray-800 hover:border-purple-500 dark:hover:border-purple-500 bg-white dark:bg-gray-900 cursor-pointer transition-all duration-300 hover:shadow-lg"
                     onClick={() => window.open('https://www.psychoff.co.uk/psychoff-radar', '_blank')}
                   >
-                    <CardContent className="p-6">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 rounded-full bg-purple-500 text-white mb-3">
-                          <TbWorldWww className="h-6 w-6" />
+                    <CardContent className="p-5">
+                      <div className="flex items-start gap-3">
+                        <div className="p-3 rounded-xl bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                          <TbWorldWww className="h-5 w-5" />
                         </div>
-                        <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-100 mb-2">Psychoff Radar</h3>
-                        <p className="text-purple-700 dark:text-purple-300 text-sm mb-4">
-                          Check our main website for discounts and news
-                        </p>
-                        <Button 
-                          size="sm" 
-                          className="bg-purple-500 hover:bg-purple-600 text-white border-0 w-full"
-                        >
-                          Visit Website
-                          <ExternalLink className="h-4 w-4 ml-2" />
-                        </Button>
+                        <div className="flex-1">
+                          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">Psychoff Radar</h3>
+                          <p className="text-gray-600 dark:text-gray-400 text-xs mb-2 leading-relaxed">
+                            Check our main website for discounts and news
+                          </p>
+                          <div className="flex items-center text-purple-600 dark:text-purple-400 font-semibold text-xs group-hover:gap-2 transition-all">
+                            Visit Website
+                            <ExternalLink className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -152,169 +151,170 @@ export default function Home() {
               </div>
 
               {/* Membership Information Section */}
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white text-center mb-6">Membership Information</h2>
-              </div>
+              <div className="flex-1 min-h-0 flex flex-col">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3 flex-shrink-0">Membership Overview</h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 gap-4 flex-shrink-0">
                 {/* Membership Status Card */}
-                <Card className="border-0 shadow-sm bg-white dark:bg-gray-800/80">
-                  <CardHeader className="pb-4">
-                    <div className="flex flex-col items-center">
-                      <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/50 mb-3">
-                        <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <Card className="border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950">
+                        <Shield className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
-                      <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        Membership Status
-                      </CardTitle>
-                      {membershipLoading ? (
-                        <div className="mt-2 h-6 w-20 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
-                      ) : membershipStatus ? (
-                        <Badge variant={membershipStatus.variant} className="mt-2">
-                          {membershipStatus.text}
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="mt-2">
-                          No Active Membership
-                        </Badge>
-                      )}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 gap-4 text-sm">
-                      <div className="text-center">
-                        <p className="text-gray-600 dark:text-gray-400 font-medium">Status</p>
+                      <div className="flex-1">
+                        <CardTitle className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+                          Membership Status
+                        </CardTitle>
                         {membershipLoading ? (
-                          <div className="mt-1 h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse mx-auto" />
+                          <div className="h-5 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        ) : membershipStatus ? (
+                          <Badge variant={membershipStatus.variant} className="text-xs px-2 py-0.5">
+                            {membershipStatus.text}
+                          </Badge>
                         ) : (
-                          <p className="text-gray-900 dark:text-white capitalize mt-1">
-                            {membership?.status || 'No membership'}
-                          </p>
+                          <Badge variant="outline" className="text-xs px-2 py-0.5">
+                            No Active Membership
+                          </Badge>
                         )}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Membership Dates Card */}
-                <Card className="border-0 shadow-sm bg-white dark:bg-gray-800/80">
-                  <CardHeader className="pb-4">
-                    <div className="flex flex-col items-center">
-                      <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/50 mb-3">
-                        <Calendar className="h-5 w-5 text-green-600 dark:text-green-400" />
-                      </div>
-                      <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        Membership Dates
-                      </CardTitle>
-                    </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    {membershipLoading ? (
-                      <div className="space-y-4">
-                        <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-                        <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-                      </div>
-                    ) : membership ? (
-                      <div className="space-y-4 text-sm">
-                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/70 rounded-lg">
-                          <span className="text-gray-600 dark:text-gray-300 font-medium">Start Date</span>
-                          <span className="text-gray-900 dark:text-white font-medium">{formatDate(membership.start_date)}</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/70 rounded-lg">
-                          <span className="text-gray-600 dark:text-gray-300 font-medium">Expiry Date</span>
-                          <span className="text-gray-900 dark:text-white font-medium">{formatDate(membership.expiry_date)}</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center py-4">
-                        <p className="text-gray-500 dark:text-gray-400 text-sm">
-                          No membership dates available
+                  <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Current Status</p>
+                      {membershipLoading ? (
+                        <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      ) : (
+                        <p className="text-sm font-bold text-gray-900 dark:text-white capitalize">
+                          {membership?.status || 'N/A'}
                         </p>
-                      </div>
-                    )}
+                      )}
+                    </div>
+                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Start Date</p>
+                      {membershipLoading ? (
+                        <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      ) : (
+                        <p className="text-sm font-bold text-gray-900 dark:text-white">
+                          {membership ? formatDate(membership.start_date) : 'N/A'}
+                        </p>
+                      )}
+                    </div>
+                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Expiry Date</p>
+                      {membershipLoading ? (
+                        <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      ) : (
+                        <p className="text-sm font-bold text-gray-900 dark:text-white">
+                          {membership ? formatDate(membership.expiry_date) : 'N/A'}
+                        </p>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Products/Leagues Access Card */}
-              <Card className="mt-5 border-0 shadow-sm bg-white dark:bg-gray-800/80">
-                <CardHeader className="text-center">
-                  <div className="flex justify-center mb-3">
-                    <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/50">
-                      <Package className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <Card className="mt-4 border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 h-[400px] flex flex-col">
+                <CardHeader className="flex-shrink-0">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-purple-50 dark:bg-purple-950">
+                      <Package className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-sm font-bold text-gray-900 dark:text-white">
+                        {isAdmin ? 'Admin Access' : 'Your Products'}
+                      </CardTitle>
+                      <CardDescription className="text-xs mt-0.5">
+                        {isAdmin ? 'Full access to all leagues' : 'Leagues you have access to'}
+                      </CardDescription>
                     </div>
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {isAdmin ? 'Admin Access' : 'Your Products'}
-                  </CardTitle>
-                  <CardDescription>
-                    {isAdmin ? 'You have full access to all leagues and content' : 'Leagues and content you have access to'}
-                  </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-1 min-h-0 overflow-y-auto">
                   {isAdmin ? (
-                    <div className="text-center py-8">
-                      <div className="p-4 rounded-full bg-green-100 dark:bg-green-900/50 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                        <Shield className="h-10 w-10 text-green-600 dark:text-green-400" />
+                    <div className="space-y-3">
+                      <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900 rounded-lg p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-green-600 dark:bg-green-500">
+                            <Shield className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                              Full Administrative Access
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400 text-xs">
+                              Complete system access
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                        Full Administrative Access
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        As an administrator, you have complete access to all leagues, fixtures, and system features.
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-md mx-auto">
-                        <div className="text-center p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
-                          <Star className="h-5 w-5 text-green-600 dark:text-green-400 mx-auto mb-2" />
-                          <p className="text-xs font-medium text-green-700 dark:text-green-300">All Leagues</p>
+                      <div className="grid grid-cols-3 gap-3">
+                        <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center">
+                          <div className="p-2 rounded-lg bg-green-100 dark:bg-green-950 w-fit mx-auto mb-2">
+                            <Star className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          </div>
+                          <p className="text-xs font-bold text-gray-900 dark:text-white">All Leagues</p>
                         </div>
-                        <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                          <Trophy className="h-5 w-5 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">All Fixtures</p>
+                        <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center">
+                          <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-950 w-fit mx-auto mb-2">
+                            <Trophy className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <p className="text-xs font-bold text-gray-900 dark:text-white">All Fixtures</p>
                         </div>
-                        <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-                          <Shield className="h-5 w-5 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
-                          <p className="text-xs font-medium text-purple-700 dark:text-purple-300">Admin Tools</p>
+                        <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-3 text-center">
+                          <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-950 w-fit mx-auto mb-2">
+                            <Shield className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <p className="text-xs font-bold text-gray-900 dark:text-white">Admin Tools</p>
                         </div>
                       </div>
                     </div>
                   ) : (
                     <>
                       {leaguesLoading ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           {[...Array(6)].map((_, i) => (
                             <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
                           ))}
                         </div>
                       ) : leagues.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                           {leagues.map((access) => (
-                            <div 
+                            <div
                               key={access.id}
-                              className="flex items-center p-3 bg-gray-50 dark:bg-gray-700/70 rounded-lg border border-gray-200 dark:border-gray-700"
+                              className="group relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:border-purple-500 dark:hover:border-purple-500 hover:-translate-y-1"
                             >
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                  {access.league.display_name}
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                  {access.league.country || 'Global'}
-                                </p>
+                              <div className="flex items-center gap-4">
+                                <div className="p-2 bg-purple-50 dark:bg-purple-950/50 rounded-lg">
+                                  <Trophy className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <h4 className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                                    {access.league.display_name}
+                                  </h4>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {access.league.country || 'Global'}
+                                  </p>
+                                </div>
                               </div>
-                              <Badge variant="secondary" className="ml-2">
+                              <Badge variant="secondary" className="absolute top-3 right-3 text-[10px] px-2 py-0.5 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                 Active
                               </Badge>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="text-center py-8">
-                          <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                          <p className="text-gray-600 dark:text-gray-400 text-sm">
-                            You don't have access to any leagues yet
+                        <div className="text-center py-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                          <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 w-fit mx-auto mb-3">
+                            <Package className="h-8 w-8 text-gray-400" />
+                          </div>
+                          <p className="text-gray-900 dark:text-white font-semibold text-sm mb-1">
+                            No leagues available
                           </p>
-                          <p className="text-gray-500 dark:text-gray-500 text-xs mt-2">
-                            Contact support to get access to leagues
+                          <p className="text-gray-500 dark:text-gray-400 text-xs">
+                            Contact support to get access
                           </p>
                         </div>
                       )}
@@ -322,6 +322,7 @@ export default function Home() {
                   )}
                 </CardContent>
               </Card>
+              </div>
             </div>
           </div>
         </main>
