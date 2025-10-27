@@ -3,15 +3,23 @@ import io from 'socket.io-client';
 import { createClient } from '@/lib/supabase/client';
 import { adminService } from '@/lib/admin-service';
 
+// Check if we're in production (accessed via domain)
+const isProduction = typeof window !== 'undefined' &&
+  (window.location.hostname === 'www.psychoff.com' ||
+   window.location.hostname === 'psychoff.com' ||
+   window.location.hostname === 'radar.psychoff.com');
+
 // Default URLs with fallbacks
-const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://51.89.167.87:3000/api';
-const DEFAULT_SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://51.89.167.87:3000';
+const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
+  (isProduction ? '/api-channel-a' : 'http://51.89.167.87:3000/api');
+const DEFAULT_SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ||
+  (isProduction ? '' : 'http://51.89.167.87:3000');
 
 // Channel-specific URLs
-const CHANNEL_A_BASE_URL = 'http://51.89.167.87:3000/api';
-const CHANNEL_A_SOCKET_URL = 'http://51.89.167.87:3000';
-const CHANNEL_B_BASE_URL = 'http://51.89.167.87:3003/api';
-const CHANNEL_B_SOCKET_URL = 'http://51.89.167.87:3003';
+const CHANNEL_A_BASE_URL = isProduction ? '/api-channel-a' : 'http://51.89.167.87:3000/api';
+const CHANNEL_A_SOCKET_URL = isProduction ? '' : 'http://51.89.167.87:3000';
+const CHANNEL_B_BASE_URL = isProduction ? '/api-channel-b' : 'http://51.89.167.87:3003/api';
+const CHANNEL_B_SOCKET_URL = isProduction ? '' : 'http://51.89.167.87:3003';
 
 // Store the currently active channel
 let activeChannel: 'A' | 'B' | null = null;
@@ -110,15 +118,30 @@ class SocketManager {
   }
 
   private initSocket() {
-    this.socket = io(SOCKET_URL, {
+    // In production, we need to use the full URL with the current domain
+    const socketUrl = isProduction ?
+      `${window.location.protocol}//${window.location.hostname}` :
+      SOCKET_URL;
+    
+    // In production, we need to specify the path for Channel A or B
+    const socketOptions: any = {
       transports: ['websocket'],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: this.maxReconnectAttempts,
-      timeout: 3000,
-      forceNew: true // Always create a new connection when reinitializing
-    });
+      timeout: 20000, // Increased timeout for production (20 seconds)
+      forceNew: true, // Always create a new connection when reinitializing
+      upgrade: false, // Don't try to upgrade from polling, use websocket directly
+      rememberUpgrade: false
+    };
+    
+    // Add path for production to route to the correct backend
+    if (isProduction) {
+      socketOptions.path = activeChannel === 'B' ? '/socket-b/socket.io/' : '/socket.io/';
+    }
+    
+    this.socket = io(socketUrl, socketOptions);
 
     this.socket.on('connect', () => {
       console.log('Socket connected');

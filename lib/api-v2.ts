@@ -2,12 +2,19 @@ import axios from 'axios';
 import { adminService } from '@/lib/admin-service';
 import { createClient } from '@/lib/supabase/client';
 
+// Check if we're in production (accessed via domain)
+const isProduction = typeof window !== 'undefined' &&
+  (window.location.hostname === 'www.psychoff.com' ||
+   window.location.hostname === 'psychoff.com' ||
+   window.location.hostname === 'radar.psychoff.com');
+
 // Default BASE_URL with fallback
-const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://51.89.167.87:3000/api';
+const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
+  (isProduction ? '/api-channel-a' : 'http://51.89.167.87:3000/api');
 
 // Channel-specific URLs
-const CHANNEL_A_URL = 'http://51.89.167.87:3000/api';
-const CHANNEL_B_URL = 'http://51.89.167.87:3003/api';
+const CHANNEL_A_URL = isProduction ? '/api-channel-a' : 'http://51.89.167.87:3000/api';
+const CHANNEL_B_URL = isProduction ? '/api-channel-b' : 'http://51.89.167.87:3003/api';
 
 // Store the currently active channel
 let activeChannel: 'A' | 'B' | null = null;
