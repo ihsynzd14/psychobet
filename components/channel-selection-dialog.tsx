@@ -77,9 +77,9 @@ export function ChannelSelectionDialog({
                     <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <p className="font-medium">Channel A (Default)</p>
+                    <p className="font-medium">Channel A</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Server at 51.89.167.87:3000
+                      (Default)
                     </p>
                   </div>
                 </div>
@@ -94,9 +94,9 @@ export function ChannelSelectionDialog({
                     <Radio className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
-                    <p className="font-medium">Channel B (Backup)</p>
+                    <p className="font-medium">Channel B</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Server at 51.89.167.87:3003
+                      (Backup)
                     </p>
                   </div>
                 </div>
