@@ -6,7 +6,7 @@ import { Activity, Goal, CreditCard, Repeat, Target, Ban, Flag, Timer,
   RectangleVertical,
   LucideRectangleVertical} from 'lucide-react';
 import { GiWhistle, GiGoalKeeper, GiThrowingBall, GiCornerFlag, GiSoccerKick } from 'react-icons/gi';
-import { TbTargetOff, TbTargetArrow, TbClockPlus, TbHexagonLetterG  } from 'react-icons/tb';
+import { TbTargetOff, TbTargetArrow, TbClockPlus, TbHexagonLetterG, TbRectangleFilled, TbRectangleVerticalFilled  } from 'react-icons/tb';
 import { GoShieldSlash, GoZap } from 'react-icons/go';
 import { GrFlag } from 'react-icons/gr';
 import { MatchEvent } from './types';
@@ -89,10 +89,10 @@ const getEventIconColor = (type: string, event?: MatchEvent): string => {
     case 'goal':
       return 'text-red-600 dark:text-red-400';
     case 'yellowCard':
-      return 'text-yellow-600 dark:text-yellow-400';
+      return 'text-yellow-400 dark:text-yellow-400';
     case 'redCard':
     case 'secondYellow':
-      return 'text-red-600 dark:text-red-400';
+      return 'text-red-400 dark:text-red-400';
     case 'substitution':
       return 'text-violet-600 dark:text-violet-400';
     case 'shotOnTarget':
@@ -150,11 +150,11 @@ const getEventIcon = (type: string, event?: MatchEvent) => {
     case 'goal':
       return <TbHexagonLetterG className="w-6 h-6 animate-pulse" />;
     case 'yellowCard':
-      return <LucideRectangleVertical className="w-5 h-5" />;
+      return <TbRectangleVerticalFilled className="w-5 h-5" />;
     case 'secondYellow':
-      return <LucideRectangleVertical className="w-5 h-5" />;
+      return <TbRectangleVerticalFilled className="w-5 h-5" />;
     case 'redCard':
-      return <LucideRectangleVertical className="w-5 h-5" />;
+      return <TbRectangleVerticalFilled className="w-5 h-5" />;
     case 'bookingState':
       return  null;
     case 'substitution':
@@ -431,7 +431,7 @@ const getEventColor = (type: string, event?: MatchEvent): string => {
     case 'goal':
       return 'bg-gray-200 dark:bg-gray-700';
     case 'yellowCard':
-      return 'bg-yellow-200 dark:bg-yellow-900';
+      return 'bg-yellow-200 dark:bg-yellow-800';
     case 'redCard':
     case 'secondYellow':
       return 'bg-red-200 dark:bg-red-900';
@@ -567,10 +567,10 @@ const getEventBackgroundColor = (event: MatchEvent): string => {
     case 'goal':
       return 'bg-white dark:bg-gray-900';
     case 'yellowCard':
-      return 'bg-yellow-50 dark:bg-yellow-950';
+      return 'bg-yellow-300 dark:bg-yellow-900';
     case 'redCard':
     case 'secondYellow':
-      return 'bg-red-50 dark:bg-red-950';
+      return 'bg-red-300 dark:bg-red-950';
     case 'substitution':
       return 'bg-violet-50 dark:bg-violet-950';
     case 'shotOnTarget':
