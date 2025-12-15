@@ -2,7 +2,8 @@ import { memo, useMemo, useState, useEffect } from 'react';
 import { TeamJersey } from './jerseys';
 import { Square } from 'lucide-react';
 import Image from 'next/image';
-import { Color } from './types';
+import { Color, ExtraTimeCalculation } from './types';
+import { ExtraTimeDisplay } from './extra-time-display';
 
 interface TeamInfo {
   sourceId: string;
@@ -26,6 +27,8 @@ interface MatchHeaderProps {
   stoppageTime?: number | null;
   currentPhase?: string;
   isClockRunning?: boolean;
+  extraTimeCalculations?: ExtraTimeCalculation;
+  isAdmin?: boolean;
 }
 
 const RedCards = memo(({ count }: { count: number }) => {
@@ -74,7 +77,9 @@ export const MatchHeader = memo<MatchHeaderProps>(({
   awayScore = 0,
   stoppageTime = null,
   currentPhase = 'FirstHalf',
-  isClockRunning = true
+  isClockRunning = true,
+  extraTimeCalculations,
+  isAdmin
 }) => {
   const [displayTime, setDisplayTime] = useState(matchTimeElapsed);
   const [lastTimeElapsed, setLastTimeElapsed] = useState(matchTimeElapsed);
@@ -344,6 +349,14 @@ export const MatchHeader = memo<MatchHeaderProps>(({
             <span className="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 text-center leading-tight max-w-[120px] truncate">
               {matchPeriod === 'Half Time' ? 'Half Time' : matchPeriod}
             </span>
+            {/* Add Extra Time Display for admins */}
+            {extraTimeCalculations && isAdmin !== undefined && (
+              <ExtraTimeDisplay 
+                calculations={extraTimeCalculations}
+                currentPhase={currentPhase || 'FirstHalf'}
+                isAdmin={isAdmin}
+              />
+            )}
           </div>
           <div className="text-xl sm:text-2xl md:text-4xl font-bold text-gray-900 dark:text-white tabular-nums bg-gray-100 dark:bg-gray-800 px-1 sm:px-2 md:px-4 py-1 md:py-2 rounded-lg shadow-sm">
             {displayAwayScore}

@@ -7,12 +7,14 @@ import { api } from '@/lib/api';
 import { formatTime } from './live-feed/utils';
 import { EventView } from './live-feed/event-view';
 import { processMatchActions, calculateScores } from './live-feed/event-processor';
-import { LiveFeedPageProps, TeamLineup, Color } from './live-feed/types';
+import { LiveFeedPageProps, TeamLineup, Color, ExtraTimeCalculation } from './live-feed/types';
 import { MatchEvent } from './live-feed/types';
 import { MatchStats } from './live-feed/match-stats';
 import { MatchHeader } from './live-feed/match-header';
 import { MatchInfo } from './live-feed/match-info';
 import { LiveFeedEmptyState } from './live-feed-empty-state';
+import { ExtraTimeCalculator } from '@/utils/extra-time-calculator';
+import { AdminService } from '@/lib/admin-service';
 
 interface TeamInfo {
   sourceId: string;
@@ -39,6 +41,12 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const [homeScore, setHomeScore] = useState<number>(0);
   const [awayScore, setAwayScore] = useState<number>(0);
   const [isMatchStatsExpanded, setIsMatchStatsExpanded] = useState<boolean>(true);
+  const [extraTimeCalculations, setExtraTimeCalculations] = useState<ExtraTimeCalculation>({
+    firstHalf: { substitutions: 0, injuries: 0, varChecks: 0, incidents: 0, redCards: 0, total: 0 },
+    secondHalf: { substitutions: 0, injuries: 0, varChecks: 0, incidents: 0, redCards: 0, total: 0 },
+    history: []
+  });
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const parentRef = useRef<HTMLDivElement>(null);
   const yellowCardUpdateRef = useRef<boolean>(false);
 
@@ -648,6 +656,23 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     }
   }, [events, homeTeamLineup, awayTeamLineup]);
 
+  // Check admin status
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const adminService = new AdminService();
+      const adminStatus = await adminService.isAdmin();
+      setIsAdmin(adminStatus);
+    };
+    checkAdminStatus();
+  }, []);
+
+  // Update extra time calculations when events change
+  useEffect(() => {
+    const calculator = new ExtraTimeCalculator();
+    const calculations = calculator.processEvents(events);
+    setExtraTimeCalculations(calculations);
+  }, [events]);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(formatTime(new Date()));
@@ -697,6 +722,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 stoppageTime={stoppageTime}
                 currentPhase={currentPhase}
                 isClockRunning={isClockRunning}
+                extraTimeCalculations={extraTimeCalculations}
+                isAdmin={isAdmin}
               />
             </>
           )}

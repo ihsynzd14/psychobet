@@ -92,6 +92,15 @@ export interface MatchEventDetails {
     FeedReliability?: string;
     Coverage?: string;
   } | null;
+
+  // Extra time calculation fields
+  extraTimeCalculation?: {
+    type: 'substitution' | 'injury' | 'var' | 'incident' | 'redCard';
+    duration?: number; // in seconds
+    startTime?: string; // timestamp when stoppage started
+    endTime?: string; // timestamp when play resumed
+    calculatedTime?: number; // calculated extra time in seconds
+  };
 }
 
 export interface MatchEvent {
@@ -154,4 +163,36 @@ export interface Color {
 export interface TeamStrip {
   color1: Color | null;
   color2: Color | null;
+}
+
+// Extra Time Calculation Types
+export interface ExtraTimeCalculation {
+  firstHalf: {
+    substitutions: number;
+    injuries: number;
+    varChecks: number;
+    incidents: number;
+    redCards: number;
+    total: number;
+  };
+  secondHalf: {
+    substitutions: number;
+    injuries: number;
+    varChecks: number;
+    incidents: number;
+    redCards: number;
+    total: number;
+  };
+  history: ExtraTimeEvent[];
+}
+
+export interface ExtraTimeEvent {
+  id: string;
+  type: 'substitution' | 'injury' | 'var' | 'incident' | 'redCard';
+  phase: 'FirstHalf' | 'SecondHalf';
+  startTime: string;
+  endTime?: string;
+  duration: number; // in seconds
+  description: string;
+  timestamp: string;
 } 
