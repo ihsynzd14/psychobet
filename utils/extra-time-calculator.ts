@@ -2,7 +2,7 @@ import { MatchEvent, ExtraTimeCalculation, ExtraTimeEvent } from '../components/
 
 export class ExtraTimeCalculator {
   private calculations: ExtraTimeCalculation;
-  
+
   constructor() {
     this.calculations = {
       firstHalf: { substitutions: 0, injuries: 0, varChecks: 0, incidents: 0, redCards: 0, total: 0 },
@@ -44,14 +44,15 @@ export class ExtraTimeCalculator {
 
     let totalTime = 0;
     let batchStartTime: Date | null = null;
+    let batchStartEvent: MatchEvent | null = null;
     let batchSize = 0;
 
     substitutionEvents.forEach(event => {
       const eventTime = new Date(event.timestamp);
-      
+
       if (!batchStartTime || eventTime.getTime() - batchStartTime.getTime() > 30000) {
         // New batch - add previous batch time
-        if (batchSize > 0) {
+        if (batchSize > 0 && batchStartEvent) {
           totalTime += 30; // 30 seconds per batch
           this.addToHistory({
             id: `sub-batch-${Date.now()}-${Math.random()}`,
@@ -61,10 +62,12 @@ export class ExtraTimeCalculator {
             endTime: eventTime.toISOString(),
             duration: 30,
             description: `Substitution batch (${batchSize} players)`,
-            timestamp: batchStartTime!.toISOString()
+            timestamp: batchStartTime!.toISOString(),
+            timeElapsed: batchStartEvent.timeElapsed
           });
         }
         batchStartTime = eventTime;
+        batchStartEvent = event;
         batchSize = 1;
       } else {
         // Same batch - increment size
@@ -73,7 +76,7 @@ export class ExtraTimeCalculator {
     });
 
     // Add last batch
-    if (batchSize > 0) {
+    if (batchSize > 0 && batchStartEvent) {
       totalTime += 30;
       this.addToHistory({
         id: `sub-batch-${Date.now()}-${Math.random()}`,
@@ -83,7 +86,8 @@ export class ExtraTimeCalculator {
         endTime: new Date().toISOString(),
         duration: 30,
         description: `Substitution batch (${batchSize} players)`,
-        timestamp: batchStartTime!.toISOString()
+        timestamp: batchStartTime!.toISOString(),
+        timeElapsed: batchStartEvent.timeElapsed
       });
     }
 
@@ -91,44 +95,80 @@ export class ExtraTimeCalculator {
   }
 
   private calculateInjuryTime(events: MatchEvent[], phase: string): number {
-    const systemMessages = events
-      .filter(e => e.type === 'systemMessage' && e.phase === phase)
+    // Filter events: system messages about injury AND danger state changes that indicate play resumption
+    const relevantEvents = events
+      .filter(e =>
+        e.phase === phase &&
+        (e.type === 'systemMessage' ||
+          (e.type === 'dangerState' &&
+            (e.details.dangerState === 'Safe' ||
+              e.details.dangerState === 'Attack' ||
+              e.details.dangerState === 'DangerousAttack')))
+      )
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
     let totalTime = 0;
     let injuryStartTime: Date | null = null;
+    let injuryStartEvent: MatchEvent | null = null;
+    let lastEventTime: number = 0;
 
-    systemMessages.forEach((event, index) => {
-      const message = event.details.message?.toLowerCase() || '';
-      
-      if (message.includes('injured')) {
-        injuryStartTime = new Date(event.timestamp);
-      } else if (injuryStartTime && (
-        message.includes('safe') || 
-        message.includes('resumed') ||
-        message.includes('play resumed') ||
-        (message.includes('suspended') && !message.includes('injured'))
-      )) {
-        const injuryEndTime = new Date(event.timestamp);
-        const duration = Math.floor((injuryEndTime.getTime() - injuryStartTime.getTime()) / 1000);
-        totalTime += duration;
-        
-        this.addToHistory({
-          id: `injury-${Date.now()}-${Math.random()}`,
-          type: 'injury',
-          phase: phase as 'FirstHalf' | 'SecondHalf',
-          startTime: injuryStartTime.toISOString(),
-          endTime: injuryEndTime.toISOString(),
-          duration,
-          description: `Injury treatment`,
-          timestamp: injuryStartTime.toISOString()
-        });
-        
-        injuryStartTime = null;
+    relevantEvents.forEach((event) => {
+      const eventTime = new Date(event.timestamp).getTime();
+
+      // Skip events that are out of order or duplicate timestamps (processed already)
+      if (eventTime < lastEventTime) return;
+      lastEventTime = eventTime;
+
+      // Check for start of injury - ONLY "The game is suspended due to an injured" messages
+      if (event.type === 'systemMessage') {
+        const message = event.details.message || '';
+
+        // START: Only count "the game is suspended due to an injured" messages
+        // This covers both "injured Away player" and "injured Home player"
+        if (message.includes('The game is suspended due to an injured') && !injuryStartTime) {
+          injuryStartTime = new Date(event.timestamp);
+          injuryStartEvent = event;
+        }
+        // We don't process any other system messages for injury end
+        // Only danger state events indicating play resumption end injury stoppages
+      }
+      // Check for Danger State end signal - play has resumed
+      // Accept Safe, Attack, or DangerousAttack as valid end signals
+      else if (event.type === 'dangerState' &&
+        (event.details.dangerState === 'Safe' ||
+          event.details.dangerState === 'Attack' ||
+          event.details.dangerState === 'DangerousAttack') &&
+        injuryStartTime &&
+        injuryStartEvent) {
+
+        // Only count if it's been at least 10 seconds (avoid immediate state changes unrelated to stoppage)
+        if (eventTime - injuryStartTime.getTime() > 10000) {
+          const endTime = new Date(event.timestamp);
+          const duration = Math.floor((endTime.getTime() - injuryStartTime.getTime()) / 1000);
+          totalTime += duration;
+          this.finishInjuryCalculation(injuryStartTime, endTime, phase, duration, injuryStartEvent.timeElapsed);
+          injuryStartTime = null;
+          injuryStartEvent = null;
+        }
       }
     });
 
     return totalTime;
+  }
+
+  private finishInjuryCalculation(startTime: Date, endTime: Date, phase: string, duration?: number, timeElapsed?: string) {
+    const calcDuration = duration || Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+    this.addToHistory({
+      id: `injury-${Date.now()}-${Math.random()}`,
+      type: 'injury',
+      phase: phase as 'FirstHalf' | 'SecondHalf',
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
+      duration: calcDuration,
+      description: `Injury treatment`,
+      timestamp: startTime.toISOString(),
+      timeElapsed: timeElapsed || '00:00'
+    });
   }
 
   private calculateVarTime(events: MatchEvent[], phase: string): number {
@@ -138,17 +178,19 @@ export class ExtraTimeCalculator {
 
     let totalTime = 0;
     let varStartTime: Date | null = null;
+    let varStartEvent: MatchEvent | null = null;
     let varReason = '';
 
     varEvents.forEach(event => {
       if (event.details.isInProgress) {
         varStartTime = new Date(event.timestamp);
+        varStartEvent = event;
         varReason = event.details.reason || 'VAR Check';
-      } else if (varStartTime && !event.details.isInProgress) {
+      } else if (varStartTime && varStartEvent && !event.details.isInProgress) {
         const varEndTime = new Date(event.timestamp);
         const duration = Math.floor((varEndTime.getTime() - varStartTime.getTime()) / 1000);
         totalTime += duration;
-        
+
         this.addToHistory({
           id: `var-${Date.now()}-${Math.random()}`,
           type: 'var',
@@ -157,10 +199,12 @@ export class ExtraTimeCalculator {
           endTime: varEndTime.toISOString(),
           duration,
           description: `VAR Review: ${varReason}`,
-          timestamp: varStartTime.toISOString()
+          timestamp: varStartTime.toISOString(),
+          timeElapsed: varStartEvent.timeElapsed
         });
-        
+
         varStartTime = null;
+        varStartEvent = null;
         varReason = '';
       }
     });
@@ -175,13 +219,15 @@ export class ExtraTimeCalculator {
 
     let totalTime = 0;
     let incidentStartTime: Date | null = null;
+    let incidentStartEvent: MatchEvent | null = null;
 
     systemMessages.forEach((event, index) => {
       const message = event.details.message?.toLowerCase() || '';
-      
+
       if (message.includes('suspended') && !message.includes('injured')) {
         incidentStartTime = new Date(event.timestamp);
-      } else if (incidentStartTime && (
+        incidentStartEvent = event;
+      } else if (incidentStartTime && incidentStartEvent && (
         message.includes('resumed') ||
         message.includes('play resumed') ||
         (message.includes('suspended') && message.includes('injured')) // New injury starts
@@ -189,7 +235,7 @@ export class ExtraTimeCalculator {
         const incidentEndTime = new Date(event.timestamp);
         const duration = Math.floor((incidentEndTime.getTime() - incidentStartTime.getTime()) / 1000);
         totalTime += duration;
-        
+
         this.addToHistory({
           id: `incident-${Date.now()}-${Math.random()}`,
           type: 'incident',
@@ -198,10 +244,12 @@ export class ExtraTimeCalculator {
           endTime: incidentEndTime.toISOString(),
           duration,
           description: `Incident delay`,
-          timestamp: incidentStartTime.toISOString()
+          timestamp: incidentStartTime.toISOString(),
+          timeElapsed: incidentStartEvent.timeElapsed
         });
-        
+
         incidentStartTime = null;
+        incidentStartEvent = null;
       }
     });
 
@@ -227,20 +275,20 @@ export class ExtraTimeCalculator {
           .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
         const redCardIndex = allEvents.findIndex(e => e.id === redCardEvent.id);
-        
+
         if (redCardIndex > 0) {
           const previousEvent = allEvents[redCardIndex - 1];
           const nextEvent = allEvents[redCardIndex + 1];
-          
+
           if (previousEvent && nextEvent) {
             const delayStart = new Date(previousEvent.timestamp);
             const delayEnd = new Date(nextEvent.timestamp);
             const duration = Math.floor((delayEnd.getTime() - delayStart.getTime()) / 1000);
-            
+
             // Only count if delay is reasonable (between 30 seconds and 3 minutes)
             if (duration >= 30 && duration <= 180) {
               totalTime += duration;
-              
+
               this.addToHistory({
                 id: `redcard-${Date.now()}-${Math.random()}`,
                 type: 'redCard',
@@ -249,7 +297,8 @@ export class ExtraTimeCalculator {
                 endTime: delayEnd.toISOString(),
                 duration,
                 description: `Red card delay`,
-                timestamp: delayStart.toISOString()
+                timestamp: delayStart.toISOString(),
+                timeElapsed: redCardEvent.timeElapsed
               });
             }
           }
@@ -262,8 +311,8 @@ export class ExtraTimeCalculator {
 
   private hasAssociatedInjury(events: MatchEvent[], redCardEvent: MatchEvent): boolean {
     const redCardTime = new Date(redCardEvent.timestamp).getTime();
-    const injuryEvents = events.filter(e => 
-      e.type === 'systemMessage' && 
+    const injuryEvents = events.filter(e =>
+      e.type === 'systemMessage' &&
       e.details.message?.toLowerCase().includes('injured') &&
       Math.abs(new Date(e.timestamp).getTime() - redCardTime) < 60000 // Within 1 minute
     );
@@ -272,7 +321,7 @@ export class ExtraTimeCalculator {
 
   private hasAssociatedVar(events: MatchEvent[], redCardEvent: MatchEvent): boolean {
     const redCardTime = new Date(redCardEvent.timestamp).getTime();
-    const varEvents = events.filter(e => 
+    const varEvents = events.filter(e =>
       e.type === 'var' &&
       e.details.reason?.toLowerCase().includes('redcard') &&
       Math.abs(new Date(e.timestamp).getTime() - redCardTime) < 120000 // Within 2 minutes

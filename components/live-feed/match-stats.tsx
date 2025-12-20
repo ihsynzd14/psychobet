@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { MatchEvent } from './types';
 import React from 'react';
-import { Activity, Users } from 'lucide-react';
+import { Activity, Users, Clock } from 'lucide-react';
 import { MatchLineups } from './match-lineups';
-import { TeamLineup } from './types';
+import { TeamLineup, ExtraTimeCalculation } from './types';
+import { ExtraTimeDisplay } from './extra-time-display';
 
 interface MatchStatsProps {
   events: MatchEvent[];
@@ -14,6 +15,9 @@ interface MatchStatsProps {
   homeTeamLineup?: TeamLineup | null;
   awayTeamLineup?: TeamLineup | null;
   isLineupsLoading?: boolean;
+  extraTimeCalculations?: ExtraTimeCalculation;
+  isAdmin?: boolean;
+  currentPhase?: string;
 }
 
 interface TeamStats {
@@ -64,7 +68,7 @@ const initialStats: TeamStats = {
 const StatRow = React.memo(({ label, home, away }: { label: string; home: number; away: number }) => {
   const total = home + away;
   const homeWidth = total === 0 ? 50 : (home / total) * 100;
-  
+
   return (
     <div className="relative h-6 min-h-[24px]">
       <div className="grid grid-cols-3 text-sm relative z-10 text-xs">
@@ -72,14 +76,14 @@ const StatRow = React.memo(({ label, home, away }: { label: string; home: number
         <div className="text-center py-1.5 text-gray-600 dark:text-gray-600 truncate px-1 text-xs sm:text-sm">{label}</div>
         <div className="text-left pl-2 sm:pl-3 py-1.5 font-normal text-gray-900 dark:text-gray-600 tabular-nums">{away}</div>
       </div>
-      
+
       {/* Optimized progress bars */}
       <div className="absolute inset-0 flex">
-        <div 
+        <div
           className="h-full bg-[#94EBFC] dark:bg-blue-400 transition-all duration-300"
           style={{ width: `${homeWidth}%` }}
         />
-        <div 
+        <div
           className="h-full bg-[#E0FE67] dark:bg-green-400 transition-all duration-300"
           style={{ width: `${100 - homeWidth}%` }}
         />
@@ -90,8 +94,17 @@ const StatRow = React.memo(({ label, home, away }: { label: string; home: number
 
 StatRow.displayName = 'StatRow';
 
-export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup, isLineupsLoading }: MatchStatsProps) {
-  const [activeTab, setActiveTab] = useState<'stats' | 'lineups'>('stats');
+export function MatchStats({
+  events,
+  possession,
+  homeTeamLineup,
+  awayTeamLineup,
+  isLineupsLoading,
+  extraTimeCalculations,
+  isAdmin,
+  currentPhase
+}: MatchStatsProps) {
+  const [activeTab, setActiveTab] = useState<'stats' | 'lineups' | 'extraTime'>('stats');
 
   const { homeStats, awayStats } = useMemo(() => {
     const home = { ...initialStats };
@@ -107,7 +120,7 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
     for (let i = 0; i < events.length; i++) {
       const event = events[i];
       const stats = event.team === 'Home' ? home : away;
-      
+
       switch (event.type) {
         case 'shotOnTarget':
           stats.shots++;
@@ -143,14 +156,14 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
             stats.corners++;
           }
           break;
-        case 'penalty': 
+        case 'penalty':
           if (event.details.state === 'awarded') {
             stats.penalties++;
-          } 
-          else if (event.details.state === 'outcome' && 
-                  (event.details.outcome === 'Missed' || 
-                   event.details.outcome === 'Saved' || 
-                   event.details.outcome === 'HitPost')) {
+          }
+          else if (event.details.state === 'outcome' &&
+            (event.details.outcome === 'Missed' ||
+              event.details.outcome === 'Saved' ||
+              event.details.outcome === 'HitPost')) {
             stats.missedPenalties++;
           }
           break;
@@ -172,30 +185,40 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
       <div className="flex border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
         <button
           onClick={() => setActiveTab('stats')}
-          className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${
-            activeTab === 'stats'
-              ? 'text-blue-500 border-b-2 border-blue-500'
-              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-          }`}
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${activeTab === 'stats'
+            ? 'text-blue-500 border-b-2 border-blue-500'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
         >
           <Activity className="w-4 h-4 flex-shrink-0" />
           <span className="truncate">Stats</span>
         </button>
         <button
           onClick={() => setActiveTab('lineups')}
-          className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${
-            activeTab === 'lineups'
-              ? 'text-blue-500 border-b-2 border-blue-500'
-              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-          }`}
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${activeTab === 'lineups'
+            ? 'text-blue-500 border-b-2 border-blue-500'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
         >
           <Users className="w-4 h-4 flex-shrink-0" />
           <span className="truncate">Lineups</span>
         </button>
+        {isAdmin && extraTimeCalculations && (
+          <button
+            onClick={() => setActiveTab('extraTime')}
+            className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${activeTab === 'extraTime'
+              ? 'text-blue-500 border-b-2 border-blue-500'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+              }`}
+          >
+            <Clock className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">Time</span>
+          </button>
+        )}
       </div>
 
       <div className="flex-1 overflow-auto min-h-0">
-        {activeTab === 'stats' ? (
+        {activeTab === 'stats' && (
           <div className="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-700">
             <StatRow label="Possession %" home={homeStats.possession} away={awayStats.possession} />
             <StatRow label="Shots" home={homeStats.shots} away={awayStats.shots} />
@@ -217,23 +240,35 @@ export function MatchStats({ events, possession, homeTeamLineup, awayTeamLineup,
             <StatRow label="Goal Kicks" home={homeStats.goalKicks} away={awayStats.goalKicks} />
             <StatRow label="Substitutions" home={homeStats.substitutions} away={awayStats.substitutions} />
           </div>
-        ) : (
+        )}
+
+        {activeTab === 'lineups' && (
           <div className="h-full">
             {isLineupsLoading ? (
               <div className="text-center text-gray-500 dark:text-gray-400 py-6">
-               Lineups are loading...
+                Lineups are loading...
               </div>
             ) : homeTeamLineup && awayTeamLineup ? (
               <MatchLineups
                 homeTeamLineup={homeTeamLineup}
                 awayTeamLineup={awayTeamLineup}
-                events={events} // Pass events to MatchLineups
+                events={events}
               />
             ) : (
               <div className="text-center text-gray-500 dark:text-gray-400 py-6">
                 No lineup data available for this match
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'extraTime' && extraTimeCalculations && (
+          <div className="h-full flex items-center justify-center p-4">
+            <ExtraTimeDisplay
+              calculations={extraTimeCalculations}
+              currentPhase={currentPhase || 'FirstHalf'}
+              isAdmin={isAdmin || false}
+            />
           </div>
         )}
       </div>

@@ -59,7 +59,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         .sort((a, b) => {
           const timeA = new Date(a.timestamp).getTime();
           const timeB = new Date(b.timestamp).getTime();
-          
+
           // Eğer timestamp'ler aynıysa, özel sıralama mantığı uygula
           if (timeA === timeB) {
             // Foul ve DangerState olayları için özel sıralama
@@ -70,7 +70,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
               return -1; // Foul'u üste koy
             }
           }
-          
+
           // Normal timestamp sıralaması
           return timeB - timeA;
         });
@@ -93,14 +93,14 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     if (!updates?.length) return;
 
     // Always update with the latest lineup data, don't fallback to previous
-      const latestHomeUpdate = updates
-        .filter((u: any) => u.team === 'Home')
-        .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
-      
-      const latestAwayUpdate = updates
-        .filter((u: any) => u.team === 'Away')
-        .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
-      
+    const latestHomeUpdate = updates
+      .filter((u: any) => u.team === 'Home')
+      .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
+
+    const latestAwayUpdate = updates
+      .filter((u: any) => u.team === 'Away')
+      .sort((a: any, b: any) => new Date(b.timestampUtc).getTime() - new Date(a.timestampUtc).getTime())[0];
+
     // Set home team lineup - use fresh data only
     if (latestHomeUpdate?.newLineup) {
       setHomeTeamLineup(latestHomeUpdate.newLineup);
@@ -122,7 +122,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
           home: data.raw.statistics.possession.home,
           away: data.raw.statistics.possession.away
         };
-        
+
         // Sadece değerler değiştiyse güncelle
         if (prev.home !== newPossession.home || prev.away !== newPossession.away) {
           return newPossession;
@@ -151,18 +151,18 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     // Update home team lineup
     setHomeTeamLineup(prevLineup => {
       if (!prevLineup) return prevLineup;
-      
+
       const homeSubs = confirmedSubs.filter((sub: any) => sub.team === 'Home');
       if (!homeSubs.length) return prevLineup;
 
       let updatedLineup = { ...prevLineup };
-      
+
       homeSubs.forEach((sub: any) => {
         // Find player coming on (from bench)
         const playerOnIndex = updatedLineup.startingBench.findIndex(
           p => p.internalId === sub.playerOnInternalId
         );
-        
+
         // Find player going off (from starting XI)
         const playerOffIndex = updatedLineup.startingOnPitch.findIndex(
           p => p.internalId === sub.playerOffInternalId
@@ -195,18 +195,18 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     // Update away team lineup
     setAwayTeamLineup(prevLineup => {
       if (!prevLineup) return prevLineup;
-      
+
       const awaySubs = confirmedSubs.filter((sub: any) => sub.team === 'Away');
       if (!awaySubs.length) return prevLineup;
 
       let updatedLineup = { ...prevLineup };
-      
+
       awaySubs.forEach((sub: any) => {
         // Find player coming on (from bench)
         const playerOnIndex = updatedLineup.startingBench.findIndex(
           p => p.internalId === sub.playerOnInternalId
         );
-        
+
         // Find player going off (from starting XI)
         const playerOffIndex = updatedLineup.startingOnPitch.findIndex(
           p => p.internalId === sub.playerOffInternalId
@@ -243,101 +243,101 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   // Son event'in timeElapsed'ını al ve matchPeriod'u güncelle
   const { lastTimeElapsed, currentPhase, displayPhase } = useMemo(() => {
     if (events.length === 0) return { lastTimeElapsed: '00:00', currentPhase: 'FirstHalf', displayPhase: 'First Half' };
-    
+
     // Helper function to get the last clock stop time for completed phases
     const getLastClockStopTime = (phaseChangeTimestamp: string) => {
       // Find the last clock action event that stopped the clock before the phase change
-      const clockStopEvents = events.filter(event => 
-        event.type === 'clockAction' && 
+      const clockStopEvents = events.filter(event =>
+        event.type === 'clockAction' &&
         event.details.isClockRunning === false &&
         new Date(event.timestamp) <= new Date(phaseChangeTimestamp)
       );
-      
+
       if (clockStopEvents.length > 0) {
         // Return the time from the most recent clock stop event
         return clockStopEvents[0].timeElapsed;
       }
-      
+
       // Fallback to regular events if no clock stop found
-      const regularEvents = events.filter(event => 
-        event.team !== 'System' && 
-        event.type !== 'bookingState' && 
-        event.type !== 'phaseChange' && 
+      const regularEvents = events.filter(event =>
+        event.team !== 'System' &&
+        event.type !== 'bookingState' &&
+        event.type !== 'phaseChange' &&
         event.type !== 'stoppageTime' &&
         new Date(event.timestamp) <= new Date(phaseChangeTimestamp)
       );
-      
+
       return regularEvents.length > 0 ? regularEvents[0].timeElapsed : '00:00';
     };
-    
+
     // First check for phase change events to get the most accurate current phase
     const phaseChangeEvents = events.filter(event => event.type === 'phaseChange');
-    
+
     // If we have phase change events, use the most recent one to determine the current phase
     if (phaseChangeEvents.length > 0) {
       const latestPhaseChange = phaseChangeEvents[0]; // Events are already sorted by timestamp
-      
+
       // Handle transition to PostMatch (match completely finished)
       if (latestPhaseChange.phase === 'PostMatch') {
         const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
-        
-        return { 
-          lastTimeElapsed: lastTimeFromClockStop, 
-          currentPhase: 'PostMatch', 
-          displayPhase: 'Match Complete' 
+
+        return {
+          lastTimeElapsed: lastTimeFromClockStop,
+          currentPhase: 'PostMatch',
+          displayPhase: 'Match Complete'
         };
       }
-      
+
       // Handle transition to HalfTime (first half finished)
       if (latestPhaseChange.phase === 'HalfTime' && latestPhaseChange.details.previousPhase === 'FirstHalf') {
         const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
-        
-        return { 
-          lastTimeElapsed: lastTimeFromClockStop, 
-          currentPhase: 'HalfTime', 
-          displayPhase: '1st Half Complete' 
+
+        return {
+          lastTimeElapsed: lastTimeFromClockStop,
+          currentPhase: 'HalfTime',
+          displayPhase: '1st Half Complete'
         };
       }
-      
+
       // Handle transition to FullTimeNormalTime (second half finished, going to extra time)
       if (latestPhaseChange.phase === 'FullTimeNormalTime' && latestPhaseChange.details.previousPhase === 'SecondHalf') {
         const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
-        
-        return { 
-          lastTimeElapsed: lastTimeFromClockStop, 
-          currentPhase: 'FullTimeNormalTime', 
-          displayPhase: 'Full Time Normal Time' 
+
+        return {
+          lastTimeElapsed: lastTimeFromClockStop,
+          currentPhase: 'FullTimeNormalTime',
+          displayPhase: 'Full Time Normal Time'
         };
       }
-      
+
       // Handle transition to ExtraTimeHalfTime (extra time first half finished)
       if (latestPhaseChange.phase === 'ExtraTimeHalfTime' && latestPhaseChange.details.previousPhase === 'FullTimeExtraTime') {
         const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
-        
-        return { 
-          lastTimeElapsed: lastTimeFromClockStop, 
-          currentPhase: 'ExtraTimeHalfTime', 
-          displayPhase: 'Extra Time Half Time' 
+
+        return {
+          lastTimeElapsed: lastTimeFromClockStop,
+          currentPhase: 'ExtraTimeHalfTime',
+          displayPhase: 'Extra Time Half Time'
         };
       }
-      
+
       // Handle transition to Penalties (extra time second half finished)
       if (latestPhaseChange.phase === 'Penalties' && latestPhaseChange.details.previousPhase === 'ExtraTimeSecondHalf') {
         const lastTimeFromClockStop = getLastClockStopTime(latestPhaseChange.timestamp);
-        
-        return { 
-          lastTimeElapsed: lastTimeFromClockStop, 
-          currentPhase: 'Penalties', 
-          displayPhase: 'Penalties' 
+
+        return {
+          lastTimeElapsed: lastTimeFromClockStop,
+          currentPhase: 'Penalties',
+          displayPhase: 'Penalties'
         };
       }
     }
-    
+
     // Filter out system messages, booking states, phase changes, and stoppage time events
-    const filteredEvents = events.filter(event => 
-      event.team !== 'System' && 
-      event.type !== 'bookingState' && 
-      event.type !== 'phaseChange' && 
+    const filteredEvents = events.filter(event =>
+      event.team !== 'System' &&
+      event.type !== 'bookingState' &&
+      event.type !== 'phaseChange' &&
       event.type !== 'stoppageTime'
     );
 
@@ -346,7 +346,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
 
     // Get the last valid event
     const lastEvent = filteredEvents[0]; // Events are already sorted by timestamp
-    
+
     // Phase'e göre periyot metnini belirle
     let displayPhase = 'First Half';
     switch (lastEvent.phase) {
@@ -386,7 +386,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
       default:
         displayPhase = 'First Half';
     }
-    
+
     return {
       lastTimeElapsed: lastEvent.timeElapsed,
       currentPhase: lastEvent.phase,
@@ -402,13 +402,13 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   useEffect(() => {
     // Uzatma süresi olaylarını bul
     const stoppageTimeEvents = events.filter(e => e.type === 'stoppageTime');
-    
+
     if (stoppageTimeEvents.length > 0) {
       // En son uzatma süresi olayını al
-      const latestStoppageTimeEvent = stoppageTimeEvents.sort((a, b) => 
+      const latestStoppageTimeEvent = stoppageTimeEvents.sort((a, b) =>
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       )[0];
-      
+
       // Eğer olay mevcut fazla ilgiliyse, uzatma süresini ayarla
       if (latestStoppageTimeEvent.phase === currentPhase) {
         const minutes = latestStoppageTimeEvent.details.addedMinutes;
@@ -427,12 +427,12 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   useEffect(() => {
     // Find the most recent clock action event
     const clockActionEvents = events.filter(e => e.type === 'clockAction');
-    
+
     if (clockActionEvents.length > 0) {
       // Get the latest clock action event (events are already sorted by timestamp)
       const latestClockAction = clockActionEvents[0];
       const newIsClockRunning = latestClockAction.details.isClockRunning ?? true;
-      
+
       // Only update if the value has changed
       if (newIsClockRunning !== isClockRunning) {
         setIsClockRunning(newIsClockRunning);
@@ -445,10 +445,10 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   const { homeGoals, awayGoals } = useMemo(() => {
     // Tüm gol olaylarını bul (dangerState tipindeki Goal olayları)
     const dangerStateGoals = events.filter(e => e.type === 'dangerState' && e.details.dangerState === 'Goal');
-    
+
     // VAR kararlarını bul - sadece gol ile ilgili ve "No Goal" kararı verilmiş olanlar
-    const cancelledGoals = events.filter(e => 
-      e.type === 'var' && 
+    const cancelledGoals = events.filter(e =>
+      e.type === 'var' &&
       e.details.state === 'Safe' && // Sadece tamamlanmış VAR kararlarını dikkate al
       (
         // Check both reason and originalReason for goal-related VAR
@@ -459,7 +459,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         (e.details.outcome === 'No Goal')
       )
     );
-    
+
     // Debug logging to track VAR decisions
     if (cancelledGoals.length > 0) {
       console.log('Cancelled goals found:', cancelledGoals.map(g => ({
@@ -471,22 +471,22 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         originalOutcome: g.details.originalOutcome
       })));
     }
-    
+
     // Ev sahibi ve deplasman takımlarının gol sayılarını hesapla
     const homeTeamGoals = dangerStateGoals.filter(e => e.team === 'Home').length;
     const awayTeamGoals = dangerStateGoals.filter(e => e.team === 'Away').length;
-    
+
     // İptal edilen golleri takımlara göre say - improved team identification
     const cancelledHomeGoals = cancelledGoals.filter(e => {
       // First check the VAR event's team assignment
       if (e.team === 'Home') return true;
-      
+
       // Then check the original reason for team identification
       if (e.details.originalReason?.includes('Home')) return true;
-      
+
       // Check if the outcome mentions Home team
       if (e.details.originalOutcome?.includes('Home')) return true;
-      
+
       // For "No Goal" outcomes, try to match with recent goal events by timestamp
       if (e.details.outcome === 'No Goal') {
         // Find a recent goal event within 2 minutes that could be related
@@ -498,20 +498,20 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         });
         if (recentGoal) return true;
       }
-      
+
       return false;
     }).length;
-    
+
     const cancelledAwayGoals = cancelledGoals.filter(e => {
       // First check the VAR event's team assignment
       if (e.team === 'Away') return true;
-      
+
       // Then check the original reason for team identification
       if (e.details.originalReason?.includes('Away')) return true;
-      
+
       // Check if the outcome mentions Away team
       if (e.details.originalOutcome?.includes('Away')) return true;
-      
+
       // For "No Goal" outcomes, try to match with recent goal events by timestamp
       if (e.details.outcome === 'No Goal') {
         // Find a recent goal event within 2 minutes that could be related
@@ -523,10 +523,10 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         });
         if (recentGoal) return true;
       }
-      
+
       return false;
     }).length;
-    
+
     // Net gol sayısını hesapla
     // Tehlike durumu olaylarından gelen goller - VAR ile iptal edilen goller
     return {
@@ -633,7 +633,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
   // Add a new effect to handle yellow card player updates
   useEffect(() => {
     // Get all yellow card events
-    const yellowCardEvents = events.filter(e => 
+    const yellowCardEvents = events.filter(e =>
       (e.type === 'yellowCard' || e.type === 'secondYellow' || e.type === 'redCard')
     );
 
@@ -641,15 +641,15 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
     const hasPlayerUpdates = yellowCardEvents.some(e => e.details.player?.sourceName);
 
     const shouldUpdate = hasPlayerUpdates && (homeTeamLineup || awayTeamLineup);
-    
+
     // Only update if the condition changed from false to true
     if (shouldUpdate && !yellowCardUpdateRef.current) {
       yellowCardUpdateRef.current = true;
       // Use a more targeted update approach that doesn't trigger a full re-render
       // by only updating specific events that need to be refreshed
       const yellowCardIds = new Set(yellowCardEvents.map(e => e.id));
-      setEvents(prevEvents => 
-        prevEvents.map(e => yellowCardIds.has(e.id) ? {...e} : e)
+      setEvents(prevEvents =>
+        prevEvents.map(e => yellowCardIds.has(e.id) ? { ...e } : e)
       );
     } else if (!shouldUpdate) {
       yellowCardUpdateRef.current = false;
@@ -701,7 +701,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
         <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
           {homeTeam && awayTeam && (
             <>
-              <MatchInfo 
+              <MatchInfo
                 competitionName={competitionName}
                 matchName={matchName}
                 startDateUtc={startDateUtc}
@@ -709,9 +709,9 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 roundName={roundName}
                 events={events}
               />
-              <MatchHeader 
-                homeTeam={homeTeam} 
-                awayTeam={awayTeam} 
+              <MatchHeader
+                homeTeam={homeTeam}
+                awayTeam={awayTeam}
                 currentTime={currentTime}
                 matchPeriod={matchPeriod}
                 homeRedCards={events.filter(e => (e.type === 'redCard' || e.type === 'secondYellow') && e.team === 'Home').length}
@@ -722,16 +722,14 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 stoppageTime={stoppageTime}
                 currentPhase={currentPhase}
                 isClockRunning={isClockRunning}
-                extraTimeCalculations={extraTimeCalculations}
-                isAdmin={isAdmin}
               />
             </>
           )}
 
           <div className="flex-1 overflow-hidden">
-            <div className="bg-white dark:bg-gray-900 h-full flex flex-col overflow-hidden">              
-              <div 
-                ref={parentRef} 
+            <div className="bg-white dark:bg-gray-900 h-full flex flex-col overflow-hidden">
+              <div
+                ref={parentRef}
                 className="flex-1 overflow-auto"
               >
                 <div
@@ -789,17 +787,20 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
               </button>
             </div>
             <div className="border-t border-gray-100 dark:border-gray-700 overflow-hidden">
-              <MatchStats 
-                events={events} 
+              <MatchStats
+                events={events}
                 possession={memoizedPossession}
                 homeTeamLineup={homeTeamLineup}
                 awayTeamLineup={awayTeamLineup}
                 isLineupsLoading={isLineupsLoading}
+                extraTimeCalculations={extraTimeCalculations}
+                isAdmin={isAdmin}
+                currentPhase={currentPhase}
               />
             </div>
           </div>
         )}
-        
+
         {!isMatchStatsExpanded && (
           <div className="w-8 flex-shrink-0 border-l border-gray-100 dark:border-gray-700 flex items-center justify-center">
             <button

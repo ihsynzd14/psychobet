@@ -11,7 +11,7 @@ export type Team = 'Home' | 'Away' | 'System';
 export interface MatchEventDetails {
   // Common fields
   isConfirmed?: boolean;
-  
+
   // Goal details
   isOwnGoal?: boolean;
   wasPenalty?: boolean;
@@ -31,9 +31,9 @@ export interface MatchEventDetails {
   // Danger state details
   dangerState?: DangerState;
   throwInState?: ThrowInState;
-  
+
   ballReturnedToPlay?: boolean;
-  
+
   // Booking state details
   bookingState?: BookingState;
   previousState?: BookingState;
@@ -152,7 +152,7 @@ export interface TeamLineup {
   startingOnPitch: Player[];
   startingBench: Player[];
   formation: string | null;
-} 
+}
 
 export interface Color {
   r: number;
@@ -195,4 +195,5 @@ export interface ExtraTimeEvent {
   duration: number; // in seconds
   description: string;
   timestamp: string;
+  timeElapsed: string; // match time when event started (e.g., "45:23")
 } 
