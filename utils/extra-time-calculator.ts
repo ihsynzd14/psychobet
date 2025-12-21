@@ -95,60 +95,58 @@ export class ExtraTimeCalculator {
   }
 
   private calculateInjuryTime(events: MatchEvent[], phase: string): number {
-    // Filter events: system messages about injury AND danger state changes that indicate play resumption
-    const relevantEvents = events
-      .filter(e =>
-        e.phase === phase &&
-        (e.type === 'systemMessage' ||
-          (e.type === 'dangerState' &&
-            (e.details.dangerState === 'Safe' ||
-              e.details.dangerState === 'Attack' ||
-              e.details.dangerState === 'DangerousAttack')))
-      )
+    // Sort all events by timestamp to ensure chronological order
+    const sortedEvents = [...events]
+      .filter(e => e.phase === phase)
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
     let totalTime = 0;
     let injuryStartTime: Date | null = null;
     let injuryStartEvent: MatchEvent | null = null;
-    let lastEventTime: number = 0;
 
-    for (const event of relevantEvents) {
+    for (let i = 0; i < sortedEvents.length; i++) {
+      const event = sortedEvents[i];
       const eventTime = new Date(event.timestamp).getTime();
 
-      // Skip events that are out of order or duplicate timestamps (processed already)
-      if (eventTime < lastEventTime) continue;
-      lastEventTime = eventTime;
-
       // Check for start of injury - ONLY "The game is suspended due to an injured" messages
-      if (event.type === 'systemMessage') {
+      if (event.type === 'systemMessage' && !injuryStartTime) {
         const message = event.details.message || '';
 
         // START: Only count "the game is suspended due to an injured" messages
-        // This covers both "injured Away player" and "injured Home player"
-        if (message.includes('The game is suspended due to an injured') && !injuryStartTime) {
-          injuryStartTime = new Date(event.timestamp);
-          injuryStartEvent = event;
+        if (message.includes('The game is suspended due to an injured')) {
+          // Look backwards for the nearest non-system event
+          let startEvent = event;
+          for (let j = i - 1; j >= 0; j--) {
+            const prev = sortedEvents[j];
+            // Use non-system event as start point (e.g. Throw In, Foul, etc.)
+            // Also skip other system messages to find the actual game event
+            if (prev.type !== 'systemMessage') {
+              startEvent = prev;
+              break;
+            }
+          }
+
+          injuryStartTime = new Date(startEvent.timestamp);
+          injuryStartEvent = startEvent;
         }
-        // We don't process any other system messages for injury end
-        // Only danger state events indicating play resumption end injury stoppages
       }
       // Check for Danger State end signal - play has resumed
       // Accept Safe, Attack, or DangerousAttack as valid end signals
-      else if (event.type === 'dangerState' &&
-        (event.details.dangerState === 'Safe' ||
-          event.details.dangerState === 'Attack' ||
-          event.details.dangerState === 'DangerousAttack') &&
-        injuryStartTime !== null &&
-        injuryStartEvent !== null) {
+      else if (injuryStartTime && injuryStartEvent && event.type === 'dangerState') {
+        const state = event.details.dangerState;
 
-        // Only count if it's been at least 10 seconds (avoid immediate state changes unrelated to stoppage)
-        if (eventTime - injuryStartTime.getTime() > 10000) {
-          const endTime = new Date(event.timestamp);
-          const duration = Math.floor((endTime.getTime() - injuryStartTime.getTime()) / 1000);
-          totalTime += duration;
-          this.finishInjuryCalculation(injuryStartTime, endTime, phase, duration, injuryStartEvent.timeElapsed);
-          injuryStartTime = null;
-          injuryStartEvent = null;
+        if (state === 'Safe' || state === 'Attack' || state === 'DangerousAttack') {
+          // Only count if it's been at least 10 seconds (avoid immediate state changes unrelated to stoppage)
+          if (eventTime - injuryStartTime.getTime() > 10000) {
+            const endTime = new Date(event.timestamp);
+            const duration = Math.floor((endTime.getTime() - injuryStartTime.getTime()) / 1000);
+            totalTime += duration;
+
+            this.finishInjuryCalculation(injuryStartTime, endTime, phase, duration, injuryStartEvent.timeElapsed);
+
+            injuryStartTime = null;
+            injuryStartEvent = null;
+          }
         }
       }
     }
@@ -172,9 +170,12 @@ export class ExtraTimeCalculator {
   }
 
   private calculateVarTime(events: MatchEvent[], phase: string): number {
-    const varEvents = events
-      .filter(e => e.type === 'var' && e.phase === phase)
+    // Sort all events by timestamp to ensure chronological order
+    const sortedEvents = [...events]
+      .filter(e => e.phase === phase)
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+    const varEvents = sortedEvents.filter(e => e.type === 'var');
 
     let totalTime = 0;
     let varStartTime: Date | null = null;
@@ -182,30 +183,102 @@ export class ExtraTimeCalculator {
     let varReason = '';
 
     for (const event of varEvents) {
-      if (event.details.isInProgress) {
-        varStartTime = new Date(event.timestamp);
-        varStartEvent = event;
-        varReason = event.details.reason || 'VAR Check';
-      } else if (varStartTime !== null && varStartEvent !== null && !event.details.isInProgress) {
-        const varEndTime = new Date(event.timestamp);
-        const duration = Math.floor((varEndTime.getTime() - varStartTime.getTime()) / 1000);
-        totalTime += duration;
+      const state = event.details.state;
+      const isInProgress = event.details.isInProgress;
 
-        this.addToHistory({
-          id: `var-${Date.now()}-${Math.random()}`,
-          type: 'var',
-          phase: phase as 'FirstHalf' | 'SecondHalf',
-          startTime: varStartTime.toISOString(),
-          endTime: varEndTime.toISOString(),
-          duration,
-          description: `VAR Review: ${varReason}`,
-          timestamp: varStartTime.toISOString(),
-          timeElapsed: varStartEvent.timeElapsed
-        });
+      // Start Condition: Danger (Possible VAR) or InProgress
+      const isStart = state === 'Danger' || isInProgress;
+      // End Condition: Safe (Completed) and NOT InProgress
+      const isEnd = state === 'Safe' && !isInProgress;
 
-        varStartTime = null;
-        varStartEvent = null;
-        varReason = '';
+      if (varStartTime === null) {
+        if (isStart) {
+          varStartTime = new Date(event.timestamp);
+          varStartEvent = event;
+          varReason = event.details.reason || 'VAR Check';
+        }
+      } else if (varStartTime !== null && varStartEvent !== null) {
+        // Update reason if we have a more specific one now
+        if (event.details.reason && event.details.reason !== 'VAR Check' && event.details.reason !== 'NotSet') {
+          varReason = event.details.reason;
+        }
+
+        if (isEnd) {
+          // VAR sequence ended
+          let startTime = varStartTime;
+          let endTime = new Date(event.timestamp);
+          let timeElapsed = varStartEvent.timeElapsed;
+          const reasonLC = varReason.toLowerCase();
+
+          const startIdx = sortedEvents.findIndex(e => e.id === varStartEvent!.id);
+          const endIdx = sortedEvents.findIndex(e => e.id === event.id);
+
+          // 1. General Rule: Use Preceding and Succeeding events
+          if (startIdx > 0) {
+            const prev = sortedEvents[startIdx - 1];
+            // Sanity check: don't jump too far back (limit to 5 mins)
+            if (startTime.getTime() - new Date(prev.timestamp).getTime() < 300000) {
+              startTime = new Date(prev.timestamp);
+              timeElapsed = prev.timeElapsed; // Use preceding event time
+            }
+          }
+          if (endIdx !== -1 && endIdx < sortedEvents.length - 1) {
+            const next = sortedEvents[endIdx + 1];
+            // Sanity check
+            if (new Date(next.timestamp).getTime() - endTime.getTime() < 300000) {
+              endTime = new Date(next.timestamp);
+            }
+          }
+
+          // 2. Goal Specific Override (More specific/robust for goals)
+          if (reasonLC.includes('goal')) {
+            // Search backwards for actual GOAL event
+            if (startIdx !== -1) {
+              for (let j = startIdx - 1; j >= 0; j--) {
+                const prev = sortedEvents[j];
+                if (startTime.getTime() - new Date(prev.timestamp).getTime() > 300000) break;
+
+                if (prev.type === 'goal') {
+                  startTime = new Date(prev.timestamp);
+                  timeElapsed = prev.timeElapsed;
+                  break;
+                }
+              }
+            }
+
+            // Search forwards for KICKOFF event
+            if (endIdx !== -1) {
+              for (let j = endIdx + 1; j < sortedEvents.length; j++) {
+                const next = sortedEvents[j];
+                if (new Date(next.timestamp).getTime() - endTime.getTime() > 300000) break;
+
+                if (next.type === 'kickOff') {
+                  endTime = new Date(next.timestamp);
+                  break;
+                }
+              }
+            }
+          }
+
+          const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+          totalTime += duration;
+
+          this.addToHistory({
+            id: `var-${Date.now()}-${Math.random()}`,
+            type: 'var',
+            phase: phase as 'FirstHalf' | 'SecondHalf',
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString(),
+            duration,
+            description: `VAR Review: ${varReason}`,
+            timestamp: startTime.toISOString(),
+            timeElapsed: timeElapsed
+          });
+
+          varStartTime = null;
+          varStartEvent = null;
+          varReason = '';
+        }
       }
     }
 
@@ -213,43 +286,96 @@ export class ExtraTimeCalculator {
   }
 
   private calculateIncidentTime(events: MatchEvent[], phase: string): number {
-    const systemMessages = events
-      .filter(e => e.type === 'systemMessage' && e.phase === phase)
+    const sortedEvents = [...events]
+      .filter(e => e.phase === phase)
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
     let totalTime = 0;
     let incidentStartTime: Date | null = null;
     let incidentStartEvent: MatchEvent | null = null;
 
-    for (const event of systemMessages) {
-      const message = event.details.message?.toLowerCase() || '';
+    for (let i = 0; i < sortedEvents.length; i++) {
+      const event = sortedEvents[i];
+      const eventTime = new Date(event.timestamp).getTime();
 
-      if (message.includes('suspended') && !message.includes('injured')) {
-        incidentStartTime = new Date(event.timestamp);
-        incidentStartEvent = event;
-      } else if (incidentStartTime !== null && incidentStartEvent !== null && (
-        message.includes('resumed') ||
-        message.includes('play resumed') ||
-        (message.includes('suspended') && message.includes('injured')) // New injury starts
-      )) {
-        const incidentEndTime = new Date(event.timestamp);
-        const duration = Math.floor((incidentEndTime.getTime() - incidentStartTime.getTime()) / 1000);
-        totalTime += duration;
+      // Check for start of incident
+      if (event.type === 'systemMessage' && !incidentStartTime) {
+        const message = event.details.message?.toLowerCase() || '';
 
-        this.addToHistory({
-          id: `incident-${Date.now()}-${Math.random()}`,
-          type: 'incident',
-          phase: phase as 'FirstHalf' | 'SecondHalf',
-          startTime: incidentStartTime.toISOString(),
-          endTime: incidentEndTime.toISOString(),
-          duration,
-          description: `Incident delay`,
-          timestamp: incidentStartTime.toISOString(),
-          timeElapsed: incidentStartEvent.timeElapsed
-        });
+        // If message is "suspended" but NOT "injured" (injuries handled separately)
+        if (message.includes('suspended') && !message.includes('injured')) {
 
-        incidentStartTime = null;
-        incidentStartEvent = null;
+          // Check if this incident is overlapping or very close to an injury
+          // If an injury message exists within 60 seconds around this message, skip it
+          // This prevents double counting water breaks that happen during injury stoppages
+          const nearbyInjury = events.some(e =>
+            e.type === 'systemMessage' &&
+            e.details.message?.includes('The game is suspended due to an injured') &&
+            Math.abs(new Date(e.timestamp).getTime() - eventTime) < 60000
+          );
+
+          if (!nearbyInjury) {
+            // Look backwards for the nearest non-system event for START time
+            let startEvent = event;
+            for (let j = i - 1; j >= 0; j--) {
+              const prev = sortedEvents[j];
+              // Use non-system event as start point (e.g. Throw In, Foul, etc.)
+              if (prev.type !== 'systemMessage') {
+                startEvent = prev;
+                break;
+              }
+            }
+
+            incidentStartTime = new Date(startEvent.timestamp);
+            incidentStartEvent = startEvent;
+          }
+        }
+      }
+      // Check for End Signal
+      else if (incidentStartTime && incidentStartEvent) {
+        let isEnd = false;
+        let endTime = new Date(event.timestamp);
+
+        // End Condition 1: System Message "Resumed"
+        if (event.type === 'systemMessage') {
+          const msg = event.details.message?.toLowerCase() || '';
+          if (msg.includes('resumed') || msg.includes('play resumed')) {
+            isEnd = true;
+          }
+        }
+        // End Condition 2: Play Active (Danger States)
+        else if (event.type === 'dangerState') {
+          const s = event.details.dangerState;
+          if (s === 'Safe' || s === 'Attack' || s === 'DangerousAttack') {
+            // Only count if sufficient duration passed (e.g. > 10s)
+            if (eventTime - incidentStartTime.getTime() > 10000) {
+              isEnd = true;
+            }
+          }
+        }
+
+        if (isEnd) {
+          const duration = Math.floor((endTime.getTime() - incidentStartTime.getTime()) / 1000);
+
+          if (duration > 5) {
+            totalTime += duration;
+
+            this.addToHistory({
+              id: `incident-${Date.now()}-${Math.random()}`,
+              type: 'incident',
+              phase: phase as 'FirstHalf' | 'SecondHalf',
+              startTime: incidentStartTime.toISOString(),
+              endTime: endTime.toISOString(),
+              duration,
+              description: `Incident delay`,
+              timestamp: incidentStartTime.toISOString(),
+              timeElapsed: incidentStartEvent.timeElapsed
+            });
+          }
+
+          incidentStartTime = null;
+          incidentStartEvent = null;
+        }
       }
     }
 
