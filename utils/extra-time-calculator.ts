@@ -20,105 +20,21 @@ export class ExtraTimeCalculator {
     };
 
     // Calculate for each phase
-    this.calculateSubstitutionTime(events, 'FirstHalf');
-    this.calculateInjuryTime(events, 'FirstHalf');
-    this.calculateVarTime(events, 'FirstHalf');
-    this.calculateIncidentTime(events, 'FirstHalf');
-    this.calculateRedCardTime(events, 'FirstHalf');
+    this.calculations.firstHalf.substitutions = this.calculateSubstitutionTime(events, 'FirstHalf');
+    this.calculations.firstHalf.injuries = this.calculateInjuryTime(events, 'FirstHalf');
+    this.calculations.firstHalf.varChecks = this.calculateVarTime(events, 'FirstHalf');
+    this.calculations.firstHalf.incidents = this.calculateIncidentTime(events, 'FirstHalf');
+    this.calculations.firstHalf.redCards = this.calculateRedCardTime(events, 'FirstHalf');
+    this.calculations.firstHalf.total = this.sumPhaseTime(this.calculations.firstHalf);
 
-    this.calculateSubstitutionTime(events, 'SecondHalf');
-    this.calculateInjuryTime(events, 'SecondHalf');
-    this.calculateVarTime(events, 'SecondHalf');
-    this.calculateIncidentTime(events, 'SecondHalf');
-    this.calculateRedCardTime(events, 'SecondHalf');
-
-    // Resolve overlaps to prevent double counting
-    this.resolveOverlaps('FirstHalf');
-    this.resolveOverlaps('SecondHalf');
+    this.calculations.secondHalf.substitutions = this.calculateSubstitutionTime(events, 'SecondHalf');
+    this.calculations.secondHalf.injuries = this.calculateInjuryTime(events, 'SecondHalf');
+    this.calculations.secondHalf.varChecks = this.calculateVarTime(events, 'SecondHalf');
+    this.calculations.secondHalf.incidents = this.calculateIncidentTime(events, 'SecondHalf');
+    this.calculations.secondHalf.redCards = this.calculateRedCardTime(events, 'SecondHalf');
+    this.calculations.secondHalf.total = this.sumPhaseTime(this.calculations.secondHalf);
 
     return this.calculations;
-  }
-
-  private resolveOverlaps(phase: 'FirstHalf' | 'SecondHalf') {
-    const phaseHistory = this.calculations.history
-      .filter(h => h.phase === phase)
-      .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-
-    if (phaseHistory.length === 0) return;
-
-    const merged: ExtraTimeEvent[] = [];
-    let current = phaseHistory[0];
-
-    // Priority for description retention when merging: 
-    // Red Card > VAR > Incident > Injury > Substitution
-    const getPriority = (type: string) => {
-      if (type === 'redCard' || type === 'redcard') return 5;
-      if (type === 'var') return 4;
-      if (type === 'incident') return 3;
-      if (type === 'injury') return 2;
-      return 1;
-    };
-
-    for (let i = 1; i < phaseHistory.length; i++) {
-      const next = phaseHistory[i];
-      const currentEnd = current.endTime ? new Date(current.endTime).getTime() : new Date(current.startTime).getTime();
-      const nextStart = new Date(next.startTime).getTime();
-      const nextEnd = next.endTime ? new Date(next.endTime).getTime() : new Date(next.startTime).getTime();
-
-      // Check overlap (next starts before current ends)
-      if (nextStart < currentEnd) {
-        // Overlap detected - MERGE
-
-        // 1. Extend duration to cover both
-        const newEnd = Math.max(currentEnd, nextEnd);
-        current.endTime = new Date(newEnd).toISOString();
-        current.duration = Math.floor((newEnd - new Date(current.startTime).getTime()) / 1000);
-
-        // 2. Determine which description/type to keep based on priority
-        // If the 'next' event is higher priority (e.g. VAR overlapping an earlier Injury),
-        // we might want that description. BUT usually we keep the 'current' (earlier) event as the base
-        // and just update description if 'next' is significantly more important.
-        const currentP = getPriority(current.type);
-        const nextP = getPriority(next.type);
-
-        if (nextP > currentP) {
-          // Upgrade the event type/description
-          current.type = next.type;
-          current.description = next.description;
-          // Note: we kept the earlier startTime of 'current', which is correct/desired (widest window)
-        }
-        // Else keep current description
-      } else {
-        merged.push(current);
-        current = next;
-      }
-    }
-    merged.push(current);
-
-    // Update history with clean list
-    this.calculations.history = this.calculations.history
-      .filter(h => h.phase !== phase)
-      .concat(merged);
-
-    // Recalculate totals based on merged events
-    const stats = {
-      substitutions: 0, injuries: 0, varChecks: 0, incidents: 0, redCards: 0, total: 0
-    };
-
-    merged.forEach(e => {
-      stats.total += e.duration;
-      if (e.type === 'substitution') stats.substitutions += e.duration;
-      else if (e.type === 'injury') stats.injuries += e.duration;
-      else if (e.type === 'var') stats.varChecks += e.duration;
-      else if (e.type === 'incident') stats.incidents += e.duration;
-      else if (e.type === 'redCard' || e.type === 'redcard') stats.redCards += e.duration;
-    });
-
-    if (phase === 'FirstHalf') {
-      this.calculations.firstHalf = stats;
-    } else {
-      this.calculations.secondHalf = stats;
-    }
   }
 
   private calculateSubstitutionTime(events: MatchEvent[], phase: string): number {
@@ -345,7 +261,33 @@ export class ExtraTimeCalculator {
           }
 
           const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
-          totalTime += duration;
+
+          // Check for overlap with existing injury events to avoid double counting
+          // Injuries are calculated first, so they are already in history
+          let overlapSeconds = 0;
+          const injuryEvents = this.calculations.history.filter(h => h.type === 'injury' && h.phase === phase);
+
+          for (const injury of injuryEvents) {
+            if (!injury.startTime || !injury.endTime) continue;
+
+            const iStart = new Date(injury.startTime).getTime();
+            const iEnd = new Date(injury.endTime).getTime();
+            const vStart = startTime.getTime();
+            const vEnd = endTime.getTime();
+
+            // Calculate intersection
+            const intersectStart = Math.max(iStart, vStart);
+            const intersectEnd = Math.min(iEnd, vEnd);
+
+            if (intersectEnd > intersectStart) {
+              overlapSeconds += (intersectEnd - intersectStart) / 1000;
+            }
+          }
+
+          // Only add the non-overlapping time to the total
+          // (We still record the full duration in history for distinct visibility, but adjust the sum)
+          const effectiveDuration = Math.max(0, duration - Math.floor(overlapSeconds));
+          totalTime += effectiveDuration;
 
           this.addToHistory({
             id: `var-${Date.now()}-${Math.random()}`,
