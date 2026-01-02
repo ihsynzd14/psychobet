@@ -34,6 +34,10 @@ export class ExtraTimeCalculator {
     this.calculations.secondHalf.redCards = this.calculateRedCardTime(events, 'SecondHalf');
     this.calculations.secondHalf.total = this.sumPhaseTime(this.calculations.secondHalf);
 
+    // Kesişen olayları temizle ve toplamları yeniden hesapla
+    this.removeOverlappingEvents();
+    this.recalculateTotals();
+
     return this.calculations;
   }
 
@@ -487,5 +491,88 @@ export class ExtraTimeCalculator {
 
   private addToHistory(event: ExtraTimeEvent): void {
     this.calculations.history.push(event);
+  }
+
+  /**
+   * Kesişen olayları tespit edip kısa olanı siler.
+   * Aynı zaman diliminde birden fazla olay varsa (VAR + Injury gibi),
+   * sadece en uzun olanı tutar.
+   */
+  private removeOverlappingEvents(): void {
+    const phases = ['FirstHalf', 'SecondHalf'] as const;
+
+    for (const phase of phases) {
+      const phaseEvents = this.calculations.history.filter(e => e.phase === phase);
+      const toRemove = new Set<string>();
+
+      for (let i = 0; i < phaseEvents.length; i++) {
+        if (toRemove.has(phaseEvents[i].id)) continue;
+
+        for (let j = i + 1; j < phaseEvents.length; j++) {
+          if (toRemove.has(phaseEvents[j].id)) continue;
+
+          const a = phaseEvents[i];
+          const b = phaseEvents[j];
+
+          // startTime veya endTime yoksa atla
+          if (!a.startTime || !a.endTime || !b.startTime || !b.endTime) continue;
+
+          // Kesişim kontrolü
+          const aStart = new Date(a.startTime).getTime();
+          const aEnd = new Date(a.endTime).getTime();
+          const bStart = new Date(b.startTime).getTime();
+          const bEnd = new Date(b.endTime).getTime();
+
+          const intersectStart = Math.max(aStart, bStart);
+          const intersectEnd = Math.min(aEnd, bEnd);
+
+          // Kesişim var mı?
+          if (intersectEnd > intersectStart) {
+            // Kısa olanı işaretle (silmek için)
+            const aDuration = a.duration || 0;
+            const bDuration = b.duration || 0;
+
+            if (aDuration <= bDuration) {
+              toRemove.add(a.id);
+            } else {
+              toRemove.add(b.id);
+            }
+          }
+        }
+      }
+
+      // Kısa olanları history'den kaldır
+      this.calculations.history = this.calculations.history.filter(e => !toRemove.has(e.id));
+    }
+  }
+
+  /**
+   * History'deki olaylara göre toplamları yeniden hesaplar.
+   */
+  private recalculateTotals(): void {
+    // İlk yarı
+    this.calculations.firstHalf.substitutions = this.sumByType('FirstHalf', 'substitution');
+    this.calculations.firstHalf.injuries = this.sumByType('FirstHalf', 'injury');
+    this.calculations.firstHalf.varChecks = this.sumByType('FirstHalf', 'var');
+    this.calculations.firstHalf.incidents = this.sumByType('FirstHalf', 'incident');
+    this.calculations.firstHalf.redCards = this.sumByType('FirstHalf', 'redCard');
+    this.calculations.firstHalf.total = this.sumPhaseTime(this.calculations.firstHalf);
+
+    // İkinci yarı
+    this.calculations.secondHalf.substitutions = this.sumByType('SecondHalf', 'substitution');
+    this.calculations.secondHalf.injuries = this.sumByType('SecondHalf', 'injury');
+    this.calculations.secondHalf.varChecks = this.sumByType('SecondHalf', 'var');
+    this.calculations.secondHalf.incidents = this.sumByType('SecondHalf', 'incident');
+    this.calculations.secondHalf.redCards = this.sumByType('SecondHalf', 'redCard');
+    this.calculations.secondHalf.total = this.sumPhaseTime(this.calculations.secondHalf);
+  }
+
+  /**
+   * Belirli bir faz ve tip için toplam süreyi hesaplar.
+   */
+  private sumByType(phase: string, type: string): number {
+    return this.calculations.history
+      .filter(e => e.phase === phase && e.type === type)
+      .reduce((sum, e) => sum + (e.duration || 0), 0);
   }
 }
