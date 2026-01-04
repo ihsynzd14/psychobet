@@ -234,36 +234,6 @@ export class ExtraTimeCalculator {
             }
           }
 
-          // 2. Goal Specific Override (More specific/robust for goals)
-          if (reasonLC.includes('goal')) {
-            // Search backwards for actual GOAL event
-            if (startIdx !== -1) {
-              for (let j = startIdx - 1; j >= 0; j--) {
-                const prev = sortedEvents[j];
-                if (startTime.getTime() - new Date(prev.timestamp).getTime() > 300000) break;
-
-                if (prev.type === 'goal') {
-                  startTime = new Date(prev.timestamp);
-                  timeElapsed = prev.timeElapsed;
-                  break;
-                }
-              }
-            }
-
-            // Search forwards for KICKOFF event
-            if (endIdx !== -1) {
-              for (let j = endIdx + 1; j < sortedEvents.length; j++) {
-                const next = sortedEvents[j];
-                if (new Date(next.timestamp).getTime() - endTime.getTime() > 300000) break;
-
-                if (next.type === 'kickOff') {
-                  endTime = new Date(next.timestamp);
-                  break;
-                }
-              }
-            }
-          }
-
           const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
 
           // Check for overlap with existing injury events to avoid double counting
