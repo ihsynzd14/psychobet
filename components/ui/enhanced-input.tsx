@@ -5,13 +5,14 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const inputVariants = cva(
-  'flex w-full rounded-lg border bg-background px-4 py-3 text-sm transition-all duration-200 ease-in-out file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+  'flex w-full rounded-lg border px-4 py-3 text-sm transition-all duration-200 ease-in-out file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'border-border focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20',
-        error: 'border-destructive focus-visible:border-destructive focus-visible:ring-2 focus-visible:ring-destructive/20',
-        success: 'border-green-500 focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-green-500/20',
+        default: 'bg-background border-border focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20',
+        radar: 'bg-slate-50 dark:bg-slate-800 border-slate-300 dark:border-slate-600 focus-visible:border-blue-500 dark:focus-visible:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-400/20',
+        error: 'bg-background border-destructive focus-visible:border-destructive focus-visible:ring-2 focus-visible:ring-destructive/20',
+        success: 'bg-background border-green-500 focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-green-500/20',
       },
       size: {
         default: 'h-12 px-4 py-3',
@@ -28,7 +29,7 @@ const inputVariants = cva(
 
 export interface EnhancedInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
-    VariantProps<typeof inputVariants> {
+  VariantProps<typeof inputVariants> {
   label?: string
   error?: string
   success?: string
@@ -38,45 +39,45 @@ export interface EnhancedInputProps
 }
 
 const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
-  ({ 
-    className, 
-    variant, 
-    size, 
-    type, 
-    label, 
-    error, 
-    success, 
-    hint, 
-    leftIcon, 
+  ({
+    className,
+    variant,
+    size,
+    type,
+    label,
+    error,
+    success,
+    hint,
+    leftIcon,
     rightIcon,
     id,
-    ...props 
+    ...props
   }, ref) => {
     const inputId = id || React.useId()
     const errorId = `${inputId}-error`
     const hintId = `${inputId}-hint`
-    
+
     // Determine variant based on state
     const effectiveVariant = error ? 'error' : success ? 'success' : variant
 
     return (
       <div className="space-y-2">
         {label && (
-          <label 
+          <label
             htmlFor={inputId}
             className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {label}
           </label>
         )}
-        
+
         <div className="relative">
           {leftIcon && (
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
               {leftIcon}
             </div>
           )}
-          
+
           <input
             id={inputId}
             type={type}
@@ -90,26 +91,26 @@ const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
             aria-invalid={error ? 'true' : 'false'}
             {...props}
           />
-          
+
           {rightIcon && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
               {rightIcon}
             </div>
           )}
         </div>
-        
+
         {error && (
           <p id={errorId} className="text-sm text-destructive font-medium animate-in slide-in-from-top-1 duration-200">
             {error}
           </p>
         )}
-        
+
         {success && !error && (
           <p className="text-sm text-green-600 font-medium animate-in slide-in-from-top-1 duration-200">
             {success}
           </p>
         )}
-        
+
         {hint && !error && !success && (
           <p id={hintId} className="text-sm text-muted-foreground">
             {hint}

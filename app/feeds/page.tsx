@@ -19,7 +19,8 @@ import {
   User,
   LogOut,
   Database,
-  Hash
+  Hash,
+  Settings2
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -28,11 +29,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ChannelStatusIndicator } from '@/components/channel-status-indicator';
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from '@/components/ui/tooltip';
 import {
   DropdownMenu,
@@ -40,7 +41,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FixturesTableV2 } from '@/components/fixtures-table-v2';
+import { FixturesTableV2, TABLE_COLUMNS } from '@/components/fixtures-table-v2';
 import { FixturesTableSkeleton } from '@/components/fixtures-table-skeleton';
 import { PaginationV2 } from '@/components/pagination-v2';
 import { ProtectedRoute } from '@/components/auth/protected-route';
@@ -50,9 +51,15 @@ import { apiV2, type FixturesResponse, type FixturesByIdsResponse } from '@/lib/
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { TbPremiumRights, TbVip } from 'react-icons/tb';
+import { VisibilityState, ColumnSizingState } from '@tanstack/react-table';
+import { DropdownMenuCheckboxItem } from '@/components/ui/dropdown-menu';
 
 // Available page size options
 const PAGE_SIZE_OPTIONS = [25, 50, 100, 150];
+
+// LocalStorage keys for persisting table preferences
+const STORAGE_KEY_COLUMN_VISIBILITY = 'fixtures-table-column-visibility';
+const STORAGE_KEY_COLUMN_SIZING = 'fixtures-table-column-sizing';
 
 // API mode options
 type ApiMode = 'competitions' | 'by-ids';
@@ -69,6 +76,34 @@ export default function FeedTableV2() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [apiMode, setApiMode] = useState<ApiMode>('competitions');
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+    // Initialize from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY_COLUMN_VISIBILITY);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse column visibility from localStorage:', e);
+        }
+      }
+    }
+    return {};
+  });
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() => {
+    // Initialize from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY_COLUMN_SIZING);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse column sizing from localStorage:', e);
+        }
+      }
+    }
+    return {};
+  });
 
   // Debounce search input for better performance
   useEffect(() => {
@@ -83,10 +118,24 @@ export default function FeedTableV2() {
     return () => clearTimeout(timer);
   }, [search, debouncedSearch]);
 
+  // Persist column visibility to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY_COLUMN_VISIBILITY, JSON.stringify(columnVisibility));
+    }
+  }, [columnVisibility]);
+
+  // Persist column sizing to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY_COLUMN_SIZING, JSON.stringify(columnSizing));
+    }
+  }, [columnSizing]);
+
   // Prefetch next page for smoother pagination
   const prefetchNextPage = useCallback((page: number, size: number, searchTerm: string, mode: ApiMode) => {
-    if (page < 1) return; 
-    
+    if (page < 1) return;
+
     // Only prefetch if we're not already loading this page
     const queryKey = ['fixturesV2', page, size, searchTerm, mode];
     if (!queryClient.getQueryData(queryKey)) {
@@ -214,7 +263,7 @@ export default function FeedTableV2() {
     visible: { opacity: 1, transition: { duration: 0.15 } },
     exit: { opacity: 0, transition: { duration: 0.1 } }
   };
-  
+
   // Get loading skeletons when loading
   const renderLoadingState = () => (
     <FixturesTableSkeleton rowCount={6} />
@@ -250,7 +299,7 @@ export default function FeedTableV2() {
             className="mb-6"
           >
           </motion.div>
-          
+
           {apiMode === 'competitions' && debouncedSearch ? (
             // Search results empty state for competitions mode
             <motion.div
@@ -266,16 +315,16 @@ export default function FeedTableV2() {
                 No fixtures match "{debouncedSearch}". Try a different search term.
               </p>
               <div className="flex gap-3 mt-4">
-                <Button 
-                  onClick={handleSearchClear} 
+                <Button
+                  onClick={handleSearchClear}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                 >
                   <X className="h-4 w-4 mr-2" />
                   Clear Search
                 </Button>
-                <Button 
-                  onClick={handleRefresh} 
-                  variant="outline" 
+                <Button
+                  onClick={handleRefresh}
+                  variant="outline"
                   className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-4 py-2 rounded-lg"
                 >
                   <RefreshCcw className="h-4 w-4 mr-2" />
@@ -294,25 +343,25 @@ export default function FeedTableV2() {
               <div className="inline-flex items-center justify-center p-3 rounded-full bg-purple-100 dark:bg-purple-900/30 mb-2">
                 <TbPremiumRights className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
-              
+
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 No Special Fixtures Available
               </h2>
               <p className="text-base text-gray-600 dark:text-gray-400 max-w-md px-4">
                 You don't have access to any special fixtures. Contact ersenguvenuk@gmail.com to get access to special fixtures.
               </p>
-              
+
               <div className="mt-4 flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={handleRefresh} 
-                  variant="outline" 
+                <Button
+                  onClick={handleRefresh}
+                  variant="outline"
                   className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-6 py-2.5 rounded-lg flex items-center"
                 >
                   <RefreshCcw className="h-4 w-4 mr-2" />
                   Refresh Data
                 </Button>
               </div>
-              
+
               <div className="mt-6 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   {apiMode === 'by-ids' && 'fixtureIds' in (fixturesData || {}) && (fixturesData as FixturesByIdsResponse).fixtureIds.length > 0
@@ -333,25 +382,25 @@ export default function FeedTableV2() {
               <div className="inline-flex items-center justify-center p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-2">
                 <Trophy className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              
+
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 No Fixtures Available
               </h2>
               <p className="text-base text-gray-600 dark:text-gray-400 max-w-md px-4">
                 You don't have access to any competitions or there are no fixtures available. Try switching to Special Fixtures mode or contact ersenguvenuk@gmail.com.
               </p>
-              
+
               <div className="mt-4 flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={handleRefresh} 
-                  variant="outline" 
+                <Button
+                  onClick={handleRefresh}
+                  variant="outline"
                   className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-6 py-2.5 rounded-lg flex items-center"
                 >
                   <RefreshCcw className="h-4 w-4 mr-2" />
                   Refresh Data
                 </Button>
               </div>
-              
+
               <div className="mt-6 flex items-center text-sm text-gray-500 dark:text-gray-500">
                 <div className="flex h-2 w-2 relative mr-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -368,7 +417,7 @@ export default function FeedTableV2() {
 
   // Determine if we have fixtures to display
   const hasFixtures = Boolean(fixturesData?.items?.length);
-  
+
 
 
   return (
@@ -403,8 +452,8 @@ export default function FeedTableV2() {
                   onClick={() => handleApiModeChange('competitions')}
                   className={cn(
                     "h-7 px-2 sm:px-3 text-xs sm:text-sm rounded-md transition-all",
-                    apiMode === 'competitions' 
-                      ? "bg-blue-500 text-white shadow-sm" 
+                    apiMode === 'competitions'
+                      ? "bg-blue-500 text-white shadow-sm"
                       : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
                   )}
                   disabled={isPending || isLoading}
@@ -419,8 +468,8 @@ export default function FeedTableV2() {
                   onClick={() => handleApiModeChange('by-ids')}
                   className={cn(
                     "h-7 px-2 sm:px-3 text-xs sm:text-sm rounded-md transition-all",
-                    apiMode === 'by-ids' 
-                      ? "bg-blue-500 text-white shadow-sm" 
+                    apiMode === 'by-ids'
+                      ? "bg-blue-500 text-white shadow-sm"
                       : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
                   )}
                   disabled={isPending || isLoading}
@@ -464,8 +513,8 @@ export default function FeedTableV2() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           className="h-8 sm:h-9 gap-1 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 text-xs sm:text-sm px-2 sm:px-3"
                           disabled={isPending || isLoading}
@@ -484,7 +533,7 @@ export default function FeedTableV2() {
                 </TooltipProvider>
                 <DropdownMenuContent align="end" className="min-w-[100px] sm:min-w-[120px]">
                   {PAGE_SIZE_OPTIONS.map(size => (
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       key={size}
                       className={cn(
                         "flex items-center justify-between text-xs sm:text-sm",
@@ -500,7 +549,7 @@ export default function FeedTableV2() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              
+
               <Button
                 variant="outline"
                 onClick={handleRefresh}
@@ -516,9 +565,9 @@ export default function FeedTableV2() {
               </Button>
 
               <ChannelStatusIndicator />
-              
+
               <ThemeToggle />
-              
+
               {/* User Menu */}
               {user && (
                 <DropdownMenu>
@@ -580,124 +629,164 @@ export default function FeedTableV2() {
           </div>
         </header>
 
-      {/* Stats bar with loading indicator - optimized rendering */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-1.5 sm:py-2 will-change-transform">
-        <div className="px-4 sm:px-8 md:px-12 mx-auto flex items-center justify-between overflow-x-auto">
-          <div className="flex items-center gap-3 sm:gap-6">
-            <Badge 
-              variant="outline" 
-              className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700"
-            >
-              {fixturesData?.totalItems ?? 0} {
-                apiMode === 'by-ids' 
-                  ? 'Fixtures by IDs' 
-                  : debouncedSearch 
-                    ? 'Results' 
-                    : 'Total Fixtures'
-              }
-            </Badge>
-            
-            {apiMode === 'competitions' && debouncedSearch && (
-              <Badge 
-                variant="secondary" 
-                className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
+        {/* Stats bar with loading indicator - optimized rendering */}
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-1.5 sm:py-2 will-change-transform">
+          <div className="px-4 sm:px-8 md:px-12 mx-auto flex items-center justify-between overflow-x-auto">
+            <div className="flex items-center gap-3 sm:gap-6">
+              <Badge
+                variant="outline"
+                className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700"
               >
-                Search: "{debouncedSearch}"
+                {fixturesData?.totalItems ?? 0} {
+                  apiMode === 'by-ids'
+                    ? 'Fixtures by IDs'
+                    : debouncedSearch
+                      ? 'Results'
+                      : 'Total Fixtures'
+                }
               </Badge>
-            )}
-            
-            <div className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
-              <div className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-green-500"></span>
+
+              {apiMode === 'competitions' && debouncedSearch && (
+                <Badge
+                  variant="secondary"
+                  className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
+                >
+                  Search: "{debouncedSearch}"
+                </Badge>
+              )}
+
+              <div className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                <div className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-green-500"></span>
+                </div>
+                <span>Auto-refreshes every minute</span>
               </div>
-              <span>Auto-refreshes every minute</span>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-7 text-xs sm:h-8">
+                    <Settings2 className="mr-2 h-3.5 w-3.5" />
+                    Columns
+                    <ChevronDown className="ml-2 h-3.5 w-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {TABLE_COLUMNS.filter((col) => col.canHide).map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={columnVisibility[column.id] !== false}
+                        onCheckedChange={(value) =>
+                          setColumnVisibility((prev) => ({
+                            ...prev,
+                            [column.id]: !!value,
+                          }))
+                        }
+                      >
+                        <div className="flex items-center gap-2">
+                          <column.icon className="h-4 w-4 text-gray-500" />
+                          <span>{column.label}</span>
+                        </div>
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1 whitespace-nowrap">
+                <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span>Page {currentPage} of {totalPages || 1}</span>
+                {isPending && (
+                  <span className="ml-2 text-amber-500 animate-pulse">
+                    <Loader2 className="h-2.5 w-2.5 sm:h-3 sm:w-3 inline mr-1 animate-spin" />
+                    Loading...
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-          
-          <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1 whitespace-nowrap">
-            <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            <span>Page {currentPage} of {totalPages || 1}</span>
-            {isPending && (
-              <span className="ml-2 text-amber-500 animate-pulse">
-                <Loader2 className="h-2.5 w-2.5 sm:h-3 sm:w-3 inline mr-1 animate-spin" />
-                Loading...
-              </span>
-            )}
-          </div>
         </div>
-      </div>
 
-      {/* Main content with optimized rendering */}
-      <main className="flex-1 overflow-hidden">
-        <div 
-          id="fixtures-container" 
-          ref={fixturesContainerRef}
-          className="h-full overflow-auto pb-10 overscroll-contain flex flex-col"
-        >
-          <div className="w-full px-12 mx-auto py-6">
-            <AnimatePresence mode="wait" initial={false}>
-              {isLoading ? (
-                // Loading state
-                <motion.div
-                  key="loading"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  {renderLoadingState()}
-                </motion.div>
-              ) : isError ? (
-                // Error state
-                <motion.div
-                  key="error"
-                  variants={pageTransitionVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  {renderErrorState()}
-                </motion.div>
-              ) : !hasFixtures ? (
-                // Empty state
-                <motion.div
-                  key="empty"
-                  variants={pageTransitionVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  {renderEmptyState()}
-                </motion.div>
-              ) : (
-                // Success state with fixtures
-                <motion.div
-                  key={`fixtures-page-${currentPage}-${pageSize}-${debouncedSearch}`}
-                  variants={pageTransitionVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  <FixturesTableV2 fixtures={fixturesData?.items ?? []} />
-                </motion.div>
+        {/* Main content with optimized rendering */}
+        <main className="flex-1 overflow-hidden">
+          <div
+            id="fixtures-container"
+            ref={fixturesContainerRef}
+            className="h-full overflow-auto pb-10 overscroll-contain flex flex-col"
+          >
+            <div className="w-full px-12 mx-auto py-6">
+              <AnimatePresence mode="wait" initial={false}>
+                {isLoading ? (
+                  // Loading state
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {renderLoadingState()}
+                  </motion.div>
+                ) : isError ? (
+                  // Error state
+                  <motion.div
+                    key="error"
+                    variants={pageTransitionVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    {renderErrorState()}
+                  </motion.div>
+                ) : !hasFixtures ? (
+                  // Empty state
+                  <motion.div
+                    key="empty"
+                    variants={pageTransitionVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    {renderEmptyState()}
+                  </motion.div>
+                ) : (
+                  // Success state with fixtures
+                  <motion.div
+                    key={`fixtures-page-${currentPage}-${pageSize}-${debouncedSearch}`}
+                    variants={pageTransitionVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <FixturesTableV2
+                      fixtures={fixturesData?.items ?? []}
+                      columnVisibility={columnVisibility}
+                      onColumnVisibilityChange={setColumnVisibility}
+                      columnSizing={columnSizing}
+                      onColumnSizingChange={setColumnSizing}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Pagination - only show when we have fixtures and aren't in initial loading, and only for competitions mode */}
+              {hasFixtures && apiMode === 'competitions' && (
+                <PaginationV2
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  className="mt-6"
+                  isLoading={isPending}
+                />
               )}
-            </AnimatePresence>
-
-            {/* Pagination - only show when we have fixtures and aren't in initial loading, and only for competitions mode */}
-            {hasFixtures && apiMode === 'competitions' && (
-              <PaginationV2
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-                className="mt-6"
-                isLoading={isPending}
-              />
-            )}
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
-    </ProtectedRoute>
+        </main>
+      </div>
+    </ProtectedRoute >
   );
 } 

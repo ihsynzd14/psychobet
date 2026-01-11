@@ -18,6 +18,7 @@ const enhancedButtonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring',
         link: 'text-primary underline-offset-4 hover:underline focus-visible:ring-ring',
         gradient: 'bg-gradient-to-r from-primary via-primary/90 to-primary text-primary-foreground shadow-lg hover:shadow-xl hover:from-primary/90 hover:to-primary focus-visible:ring-primary',
+        radar: 'bg-blue-600 dark:bg-blue-700 text-white shadow-lg shadow-blue-500/20 dark:shadow-blue-500/30 hover:bg-blue-500 dark:hover:bg-blue-600 hover:shadow-blue-500/30 dark:hover:shadow-blue-500/40 hover:scale-[1.02] focus-visible:ring-blue-500 border border-blue-500/50 dark:border-blue-500/60',
       },
       size: {
         default: 'h-12 px-6 py-3',
@@ -35,7 +36,7 @@ const enhancedButtonVariants = cva(
 
 export interface EnhancedButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof enhancedButtonVariants> {
+  VariantProps<typeof enhancedButtonVariants> {
   asChild?: boolean
   loading?: boolean
   leftIcon?: React.ReactNode
@@ -43,20 +44,20 @@ export interface EnhancedButtonProps
 }
 
 const EnhancedButton = React.forwardRef<HTMLButtonElement, EnhancedButtonProps>(
-  ({ 
-    className, 
-    variant, 
-    size, 
-    asChild = false, 
+  ({
+    className,
+    variant,
+    size,
+    asChild = false,
     loading = false,
     leftIcon,
     rightIcon,
     children,
     disabled,
-    ...props 
+    ...props
   }, ref) => {
     const Comp = asChild ? Slot : 'button'
-    
+
     return (
       <Comp
         className={cn(enhancedButtonVariants({ variant, size, className }))}

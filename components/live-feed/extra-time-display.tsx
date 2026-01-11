@@ -21,8 +21,12 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
     return secs > 0 ? `${minutes}:${secs.toString().padStart(2, '0')}` : `${minutes}m`;
   };
 
-  const firstHalfHistory = calculations.history.filter(event => event.phase === 'FirstHalf');
-  const secondHalfHistory = calculations.history.filter(event => event.phase === 'SecondHalf');
+  const firstHalfHistory = calculations.history
+    .filter(event => event.phase === 'FirstHalf')
+    .sort((a, b) => a.timeElapsed.localeCompare(b.timeElapsed));
+  const secondHalfHistory = calculations.history
+    .filter(event => event.phase === 'SecondHalf')
+    .sort((a, b) => a.timeElapsed.localeCompare(b.timeElapsed));
 
   const renderPhaseSection = (title: string, data: any, history: any[]) => {
     if (data.total === 0) return null;
@@ -70,9 +74,9 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col overflow-y-auto bg-white dark:bg-gray-900">
+    <div className="w-full h-full flex flex-col bg-white dark:bg-gray-900">
       {/* Header explaining the feature */}
-      <div className="px-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+      <div className="px-4 pb-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
         <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
           Expected Extra Time
         </h2>
@@ -81,8 +85,8 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
         </p>
       </div>
 
-      {/* Content */}
-      <div className="p-4">
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-4">
         {renderPhaseSection('First Half', calculations.firstHalf, firstHalfHistory)}
         {renderPhaseSection('Second Half', calculations.secondHalf, secondHalfHistory)}
 

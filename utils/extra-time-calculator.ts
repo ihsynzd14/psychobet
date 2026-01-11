@@ -2,6 +2,7 @@ import { MatchEvent, ExtraTimeCalculation, ExtraTimeEvent } from '../components/
 
 export class ExtraTimeCalculator {
   private calculations: ExtraTimeCalculation;
+  private stoppageTimeAnnounced: { 'FirstHalf': number | null; 'SecondHalf': number | null };
 
   constructor() {
     this.calculations = {
@@ -9,6 +10,7 @@ export class ExtraTimeCalculator {
       secondHalf: { substitutions: 0, injuries: 0, varChecks: 0, incidents: 0, redCards: 0, total: 0 },
       history: []
     };
+    this.stoppageTimeAnnounced = { 'FirstHalf': null, 'SecondHalf': null };
   }
 
   processEvents(events: MatchEvent[]): ExtraTimeCalculation {
@@ -18,6 +20,19 @@ export class ExtraTimeCalculator {
       secondHalf: { substitutions: 0, injuries: 0, varChecks: 0, incidents: 0, redCards: 0, total: 0 },
       history: []
     };
+
+    // Reset stoppage time announcements and capture them
+    this.stoppageTimeAnnounced = { 'FirstHalf': null, 'SecondHalf': null };
+
+    // Find stoppage time announcements for each phase
+    const stoppageEvents = events.filter(e => e.type === 'stoppageTime');
+    for (const event of stoppageEvents) {
+      if (event.phase === 'FirstHalf') {
+        this.stoppageTimeAnnounced.FirstHalf = new Date(event.timestamp).getTime();
+      } else if (event.phase === 'SecondHalf') {
+        this.stoppageTimeAnnounced.SecondHalf = new Date(event.timestamp).getTime();
+      }
+    }
 
     // Calculate for each phase
     this.calculations.firstHalf.substitutions = this.calculateSubstitutionTime(events, 'FirstHalf');
@@ -51,8 +66,17 @@ export class ExtraTimeCalculator {
     let batchStartEvent: MatchEvent | null = null;
     let batchSize = 0;
 
+    // Check if stoppage time was already announced for this phase
+    const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+
     for (const event of substitutionEvents) {
       const eventTime = new Date(event.timestamp);
+
+      // Check if stoppage time was already announced
+      if (stoppageAnnounced && eventTime.getTime() >= stoppageAnnounced) {
+        // Stoppage time already announced, ignore new substitution events
+        continue;
+      }
 
       if (!batchStartTime || eventTime.getTime() - batchStartTime.getTime() > 30000) {
         // New batch - add previous batch time
@@ -118,6 +142,13 @@ export class ExtraTimeCalculator {
 
         // START: Only count "the game is suspended due to an injured" messages
         if (message.includes('The game is suspended due to an injured')) {
+          // Check if stoppage time was already announced for this phase
+          const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+          if (stoppageAnnounced && eventTime >= stoppageAnnounced) {
+            // Stoppage time already announced, ignore new injury events
+            continue;
+          }
+
           // Look backwards for the nearest non-system event
           let startEvent = event;
           for (let j = i - 1; j >= 0; j--) {
@@ -139,10 +170,26 @@ export class ExtraTimeCalculator {
       else if (injuryStartTime && injuryStartEvent && event.type === 'dangerState') {
         const state = event.details.dangerState;
 
+        // Check if we are in a penalty context
+        const isPenalty = this.isPenaltyContext(sortedEvents, i);
+        if (isPenalty && state === 'DangerousAttack') {
+          continue;
+        }
+
         if (state === 'Safe' || state === 'Attack' || state === 'DangerousAttack') {
-          // Only count if it's been at least 10 seconds (avoid immediate state changes unrelated to stoppage)
-          if (eventTime - injuryStartTime.getTime() > 10000) {
+          // Only count if it's been at least 60 seconds (ignore brief injury stoppages)
+          if (eventTime - injuryStartTime.getTime() > 60000) {
             const endTime = new Date(event.timestamp);
+
+            // Check if stoppage time was announced during this injury
+            const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+            if (stoppageAnnounced && endTime.getTime() > stoppageAnnounced) {
+              // Stoppage time announced before injury ended, ignore this event
+              injuryStartTime = null;
+              injuryStartEvent = null;
+              continue;
+            }
+
             const duration = Math.floor((endTime.getTime() - injuryStartTime.getTime()) / 1000);
             totalTime += duration;
 
@@ -190,13 +237,20 @@ export class ExtraTimeCalculator {
       const state = event.details.state;
       const isInProgress = event.details.isInProgress;
 
-      // Start Condition: Danger (Possible VAR) or InProgress
-      const isStart = state === 'Danger' || isInProgress;
+      // Start Condition: Only count actual InProgress VAR (Danger/Possible VAR doesn't stop play)
+      const isStart = isInProgress;
       // End Condition: Safe (Completed) and NOT InProgress
       const isEnd = state === 'Safe' && !isInProgress;
 
       if (varStartTime === null) {
         if (isStart) {
+          // Check if stoppage time was already announced for this phase
+          const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+          if (stoppageAnnounced && new Date(event.timestamp).getTime() >= stoppageAnnounced) {
+            // Stoppage time already announced, ignore new VAR events
+            continue;
+          }
+
           varStartTime = new Date(event.timestamp);
           varStartEvent = event;
           varReason = event.details.reason || 'VAR Check';
@@ -235,6 +289,16 @@ export class ExtraTimeCalculator {
           }
 
           const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+
+          // Check if stoppage time was announced during this VAR
+          const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+          if (stoppageAnnounced && endTime.getTime() > stoppageAnnounced) {
+            // Stoppage time announced before VAR ended, skip this event
+            varStartTime = null;
+            varStartEvent = null;
+            varReason = '';
+            continue;
+          }
 
           // Check for overlap with existing injury events to avoid double counting
           // Injuries are calculated first, so they are already in history
@@ -315,6 +379,13 @@ export class ExtraTimeCalculator {
           );
 
           if (!nearbyInjury) {
+            // Check if stoppage time was already announced for this phase
+            const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+            if (stoppageAnnounced && eventTime >= stoppageAnnounced) {
+              // Stoppage time already announced, ignore new incident events
+              continue;
+            }
+
             // Look backwards for the nearest non-system event for START time
             let startEvent = event;
             for (let j = i - 1; j >= 0; j--) {
@@ -346,6 +417,17 @@ export class ExtraTimeCalculator {
         // End Condition 2: Play Active (Danger States)
         else if (event.type === 'dangerState') {
           const s = event.details.dangerState;
+
+          // Check if we are in a penalty context (Penalty recently awarded)
+          // If so, 'DangerousAttack' is likely a system artifact/false positive for resumption
+          // We should wait for a clearer resumption signal (like KickOff leading to Safe/Attack, or specific Resumed message)
+          const isPenalty = this.isPenaltyContext(sortedEvents, i);
+
+          if (isPenalty && s === 'DangerousAttack') {
+            // Ignore this signal - do not end the incident
+            continue;
+          }
+
           if (s === 'Safe' || s === 'Attack' || s === 'DangerousAttack') {
             // Only count if sufficient duration passed (e.g. > 10s)
             if (eventTime - incidentStartTime.getTime() > 10000) {
@@ -356,6 +438,15 @@ export class ExtraTimeCalculator {
 
         if (isEnd) {
           const duration = Math.floor((endTime.getTime() - incidentStartTime.getTime()) / 1000);
+
+          // Check if stoppage time was announced during this incident
+          const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+          if (stoppageAnnounced && endTime.getTime() > stoppageAnnounced) {
+            // Stoppage time announced before incident ended, ignore this event
+            incidentStartTime = null;
+            incidentStartEvent = null;
+            continue;
+          }
 
           if (duration > 5) {
             totalTime += duration;
@@ -390,6 +481,13 @@ export class ExtraTimeCalculator {
     let totalTime = 0;
 
     for (const redCardEvent of redCardEvents) {
+      // Check if stoppage time was already announced for this phase
+      const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
+      if (stoppageAnnounced && new Date(redCardEvent.timestamp).getTime() >= stoppageAnnounced) {
+        // Stoppage time already announced, ignore new red card events
+        continue;
+      }
+
       // Check if this red card is associated with injury or VAR
       const hasAssociatedInjury = this.hasAssociatedInjury(events, redCardEvent);
       const hasAssociatedVar = this.hasAssociatedVar(events, redCardEvent);
@@ -410,6 +508,12 @@ export class ExtraTimeCalculator {
             const delayStart = new Date(previousEvent.timestamp);
             const delayEnd = new Date(nextEvent.timestamp);
             const duration = Math.floor((delayEnd.getTime() - delayStart.getTime()) / 1000);
+
+            // Check if stoppage time was announced during this red card delay
+            if (stoppageAnnounced && delayEnd.getTime() > stoppageAnnounced) {
+              // Stoppage time announced before delay ended, ignore this event
+              continue;
+            }
 
             // Only count if delay is reasonable (between 30 seconds and 3 minutes)
             if (duration >= 30 && duration <= 180) {
@@ -453,6 +557,34 @@ export class ExtraTimeCalculator {
       Math.abs(new Date(e.timestamp).getTime() - redCardTime) < 120000 // Within 2 minutes
     );
     return varEvents.length > 0;
+  }
+
+  private isPenaltyContext(events: MatchEvent[], currentIndex: number): boolean {
+    const currentTime = new Date(events[currentIndex].timestamp).getTime();
+    // Look back 2 minutes (sufficient for VAR check + Penalty decision)
+    const lookbackWindow = 120000;
+
+    for (let j = currentIndex - 1; j >= 0; j--) {
+      const prev = events[j];
+      const prevTime = new Date(prev.timestamp).getTime();
+
+      if (currentTime - prevTime > lookbackWindow) break;
+
+      // 1. Check DangerState 'Penalty'
+      if (prev.type === 'dangerState' && prev.details.dangerState === 'Penalty') return true;
+
+      // 2. Check VAR outcome/reason
+      if (prev.type === 'var') {
+        const reason = prev.details.reason?.toLowerCase() || '';
+        const outcome = prev.details.originalOutcome?.toLowerCase() || '';
+        if (reason.includes('penalty') || outcome.includes('penalty')) return true;
+      }
+
+      // 3. Check System Message content
+      if (prev.type === 'systemMessage' && prev.details.message?.toLowerCase().includes('penalty')) return true;
+    }
+
+    return false;
   }
 
   private sumPhaseTime(phase: any): number {
