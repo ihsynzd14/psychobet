@@ -3,9 +3,9 @@
 import { LoginForm } from '@/components/auth/login-form'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 
-export default function LoginPage() {
+function LoginContent() {
   const searchParams = useSearchParams()
   const hasConflict = searchParams.get('conflict') === 'true'
   const wasKicked = searchParams.get('kicked') === 'true'
@@ -114,5 +114,17 @@ export default function LoginPage() {
         }
       `}</style>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex items-center justify-center">
+        <div className="text-slate-600 dark:text-slate-400">Loading...</div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   )
 }
