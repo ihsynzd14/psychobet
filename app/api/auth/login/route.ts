@@ -21,8 +21,10 @@ export async function POST(request: NextRequest) {
 
     if (serviceClient) {
       try {
-        // Get user ID for this email using service role
-        const { data: { user }, error: userError } = await serviceClient.auth.admin.getUserByEmail(email)
+        // Get user ID for this email using service role (getUserByEmail was removed in newer versions)
+        const { data: { users } } = await serviceClient.auth.admin.listUsers()
+        const user = users?.find((u: any) => u.email === email)
+        const userError = user ? null : new Error('User not found')
 
         if (user && !userError) {
           console.log(`Found user: ${user.id}, performing hard session invalidation`)
