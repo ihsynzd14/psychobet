@@ -78,8 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const serviceClient = await import('@/lib/supabase/service-role').then(m => m.createServiceRoleClient())
 
         if (serviceClient) {
-          // Get user ID for this email
-          const { data: { user } } = await serviceClient.auth.admin.getUserByEmail(email)
+          // Get user ID for this email (getUserByEmail was removed in newer versions)
+          const { data: { users } } = await serviceClient.auth.admin.listUsers()
+          const user = users?.find((u: any) => u.email === email)
 
           if (user) {
             console.log(`BRUTAL TERMINATION for user: ${user.id}`)

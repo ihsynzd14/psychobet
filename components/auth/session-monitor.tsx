@@ -68,16 +68,13 @@ export function SessionMonitor() {
         const timeAgo = new Date(sessionInfo.created_at).toLocaleString()
 
         toast.warning(
+          `Another session detected! Someone logged in from ${deviceName} at ${timeAgo}`,
           {
-            title: "Another session detected!",
-            description: `Someone logged in from ${deviceName} at ${timeAgo}`,
+            duration: 10000,
             action: {
               label: "Log Out Others",
               onClick: handleLogoutOthers
-            }
-          },
-          {
-            duration: 10000, // Show for 10 seconds
+            },
             icon: <AlertTriangle className="h-5 w-5 text-amber-500" />
           }
         )
@@ -111,10 +108,7 @@ export function SessionMonitor() {
       setOtherSessions([])
 
       toast.success(
-        {
-          title: "Other sessions logged out",
-          description: "All other sessions have been terminated"
-        },
+        "Other sessions logged out - All other sessions have been terminated",
         {
           icon: <Shield className="h-5 w-5 text-green-500" />
         }
