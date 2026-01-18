@@ -772,8 +772,8 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
 
         {/* Responsive Stats Panel */}
         {isMatchStatsExpanded && (
-          <div className="w-80 lg:w-96 xl:w-[340px] flex-shrink-0 border-l border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div className="border-b border-gray-100 dark:border-gray-700 p-2 py-[21.6px] flex items-center justify-between">
+          <div className="w-80 lg:w-96 xl:w-[360px] flex-shrink-0 border-l border-gray-100 dark:border-gray-700 flex flex-col h-full overflow-hidden">
+            <div className="border-b border-gray-100 dark:border-gray-700 p-2 py-[21.6px] flex items-center justify-between flex-shrink-0">
               <h2 className="text-sm font-normal flex items-center gap-2 truncate">
                 <LucideAlignHorizontalJustifyStart className="w-4 h-4 text-blue-500 flex-shrink-0" />
                 <span className="truncate">Match Details</span>
@@ -786,7 +786,7 @@ export function LiveFeedPage({ fixtureId, competitionName, matchName, startDateU
                 <ChevronRight className="w-4 h-4 text-gray-500" />
               </button>
             </div>
-            <div className="border-t border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="flex-1 min-h-0">
               <MatchStats
                 events={events}
                 possession={memoizedPossession}

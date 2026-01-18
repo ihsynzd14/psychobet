@@ -66,7 +66,7 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
         </div>
 
         <Card className="border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden bg-white dark:bg-gray-950/50">
-          <ScrollArea className="h-[240px] w-full rounded-md">
+          <ScrollArea className="w-full rounded-md">
             {/* 
               We use a raw table element here instead of the Shadcn Table component.
               The Shadcn Table component wraps the table in a div with overflow-auto,
@@ -122,7 +122,7 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
   const hasData = calculations.firstHalf.total > 0 || calculations.secondHalf.total > 0 || firstHalfHistory.length > 0 || secondHalfHistory.length > 0;
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50/50 dark:bg-gray-900/50 rounded-xl">
+    <div className="w-full flex flex-col bg-gray-50/50 dark:bg-gray-900/50 rounded-xl">
       <div className="px-5 py-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-t-xl sticky top-0 z-30">
         <div className="flex items-center gap-2.5">
           <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 rounded-lg">
@@ -144,7 +144,7 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
         )}
       </div>
 
-      <div className="flex-1 p-4 space-y-6 overflow-y-auto custom-scrollbar">
+      <div className="p-4 space-y-6">
         {!hasData ? (
           <div className="flex flex-col items-center justify-center h-[300px] text-center space-y-4">
             <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">

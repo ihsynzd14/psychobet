@@ -263,7 +263,7 @@ export function MatchStats({
         )}
 
         {activeTab === 'extraTime' && extraTimeCalculations && (
-          <div className="h-full flex items-center justify-center p-4">
+          <div className="p-4">
             <ExtraTimeDisplay
               calculations={extraTimeCalculations}
               currentPhase={currentPhase || 'FirstHalf'}
