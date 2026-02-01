@@ -177,27 +177,28 @@ export class ExtraTimeCalculator {
         }
 
         if (state === 'Safe' || state === 'Attack' || state === 'DangerousAttack') {
-          // Only count if it's been at least 60 seconds (ignore brief injury stoppages)
-          if (eventTime - injuryStartTime.getTime() > 60000) {
-            const endTime = new Date(event.timestamp);
+          const endTime = new Date(event.timestamp);
+          const duration = endTime.getTime() - injuryStartTime.getTime();
 
+          // Only count if it's been at least 60 seconds (ignore brief injury stoppages)
+          if (duration > 60000) {
             // Check if stoppage time was announced during this injury
             const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
-            if (stoppageAnnounced && endTime.getTime() > stoppageAnnounced) {
-              // Stoppage time announced before injury ended, ignore this event
-              injuryStartTime = null;
-              injuryStartEvent = null;
-              continue;
+            
+            // Only process if stoppage time hasn't cut it off
+            if (!stoppageAnnounced || endTime.getTime() <= stoppageAnnounced) {
+              const secondsDuration = Math.floor(duration / 1000);
+              totalTime += secondsDuration;
+
+              this.finishInjuryCalculation(injuryStartTime, endTime, phase, secondsDuration, injuryStartEvent.timeElapsed);
             }
-
-            const duration = Math.floor((endTime.getTime() - injuryStartTime.getTime()) / 1000);
-            totalTime += duration;
-
-            this.finishInjuryCalculation(injuryStartTime, endTime, phase, duration, injuryStartEvent.timeElapsed);
-
-            injuryStartTime = null;
-            injuryStartEvent = null;
           }
+          
+          // Reset regardless of duration.
+          // We found a valid end signal (Safe/Attack), so the injury period is over.
+          // If it was < 60s, we effectively discard it here.
+          injuryStartTime = null;
+          injuryStartEvent = null;
         }
       }
     }
@@ -429,10 +430,11 @@ export class ExtraTimeCalculator {
           }
 
           if (s === 'Safe' || s === 'Attack' || s === 'DangerousAttack') {
-            // Only count if sufficient duration passed (e.g. > 10s)
-            if (eventTime - incidentStartTime.getTime() > 10000) {
-              isEnd = true;
-            }
+            // Force end of incident on any valid game state change
+            isEnd = true;
+            
+            // Note: actual duration check happens inside the if(isEnd) block below
+            // to decide whether to COUNT it or just RESET it.
           }
         }
 
@@ -441,27 +443,24 @@ export class ExtraTimeCalculator {
 
           // Check if stoppage time was announced during this incident
           const stoppageAnnounced = this.stoppageTimeAnnounced[phase as 'FirstHalf' | 'SecondHalf'];
-          if (stoppageAnnounced && endTime.getTime() > stoppageAnnounced) {
-            // Stoppage time announced before incident ended, ignore this event
-            incidentStartTime = null;
-            incidentStartEvent = null;
-            continue;
-          }
+          
+          // Only process if stoppage time hasn't cut it off and duration is sufficient
+          if ((!stoppageAnnounced || endTime.getTime() <= stoppageAnnounced) && duration > 10) { // Using 10s threshold from original code
+             if (duration > 5) { // The original code had a second check for > 5, I'll keep the logic consistent but cleaner
+                totalTime += duration;
 
-          if (duration > 5) {
-            totalTime += duration;
-
-            this.addToHistory({
-              id: `incident-${Date.now()}-${Math.random()}`,
-              type: 'incident',
-              phase: phase as 'FirstHalf' | 'SecondHalf',
-              startTime: incidentStartTime.toISOString(),
-              endTime: endTime.toISOString(),
-              duration,
-              description: `Incident delay`,
-              timestamp: incidentStartTime.toISOString(),
-              timeElapsed: incidentStartEvent.timeElapsed
-            });
+                this.addToHistory({
+                  id: `incident-${Date.now()}-${Math.random()}`,
+                  type: 'incident',
+                  phase: phase as 'FirstHalf' | 'SecondHalf',
+                  startTime: incidentStartTime.toISOString(),
+                  endTime: endTime.toISOString(),
+                  duration,
+                  description: `Incident delay`,
+                  timestamp: incidentStartTime.toISOString(),
+                  timeElapsed: incidentStartEvent.timeElapsed
+                });
+             }
           }
 
           incidentStartTime = null;
