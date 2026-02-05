@@ -203,7 +203,7 @@ export function MatchStats({
           <Users className="w-4 h-4 flex-shrink-0" />
           <span className="truncate">Lineups</span>
         </button>
-        {isAdmin && extraTimeCalculations && (
+        {extraTimeCalculations && (
           <button
             onClick={() => setActiveTab('extraTime')}
             className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium flex-1 justify-center ${activeTab === 'extraTime'

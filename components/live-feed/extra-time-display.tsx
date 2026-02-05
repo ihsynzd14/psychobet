@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExtraTimeCalculation } from './types';
-import { Timer, History } from 'lucide-react';
+import { Timer, History, Info } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +12,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ExtraTimeDisplayProps {
   calculations: ExtraTimeCalculation;
@@ -24,7 +30,7 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
   currentPhase,
   isAdmin,
 }) => {
-  if (!isAdmin) return null;
+
 
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -129,9 +135,29 @@ export const ExtraTimeDisplay: React.FC<ExtraTimeDisplayProps> = ({
             <Timer className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-gray-900 dark:text-white leading-none">
-              Extra Time
-            </h2>
+            <div className="flex items-center gap-1.5">
+              <h2 className="text-base font-bold text-gray-900 dark:text-white leading-none">
+                Extra Time
+              </h2>
+              <TooltipProvider>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <Info className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="max-w-[280px] p-3 border-red-200 dark:border-red-900/30 bg-white dark:bg-gray-950">
+                    <div className="space-y-1">
+                      <p className="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                        <Info className="w-3 h-3" />
+                        WARNING
+                      </p>
+                      <p className="text-[11px] text-gray-600 dark:text-gray-300 leading-relaxed">
+                        The calculated stoppage/added time is based entirely on data provided by the on-field scout and may be significantly inaccurate.
+                      </p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 mt-1">
               Feature (Beta)
             </p>
