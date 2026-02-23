@@ -179,6 +179,33 @@ export const MatchHeader = memo<MatchHeaderProps>(({
       return;
     }
 
+    // SECOND HALF FALLBACK - Start timer if clock starts running after 1st half complete
+    if (isClockRunning &&
+      (matchPeriod === '1st Half Complete' ||
+        prevMatchPeriod === '1st Half Complete' ||
+        prevMatchPeriod === 'Half Time')) {
+      // Initialize time to 45:00 if not already set to second half time
+      const currentSeconds = timeElapsedToSeconds(displayTime);
+      if (currentSeconds < 45 * 60) {
+        setDisplayTime('45:00');
+      }
+
+      // Update time if we get a new time from events
+      if (matchTimeElapsed !== lastTimeElapsed) {
+        setDisplayTime(matchTimeElapsed);
+        setLastTimeElapsed(matchTimeElapsed);
+      }
+
+      const timer = setInterval(() => {
+        setDisplayTime(prevTime => {
+          const seconds = timeElapsedToSeconds(prevTime);
+          return secondsToTimeElapsed(seconds + 1);
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+
     // FULL TIME NORMAL TIME - Show last time from second half and stop timer
     if (currentPhase === 'FullTimeNormalTime' || matchPeriod === 'Full Time Normal Time') {
       // Keep the last elapsed time
