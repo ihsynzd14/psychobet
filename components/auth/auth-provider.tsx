@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
 
@@ -12,6 +12,57 @@ interface AuthContextType {
   signInWithEmail: (email: string, password: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
   clearSessionConflict: () => void
+}
+
+async function checkAndKickExpiredUser(userId: string, supabase: ReturnType<typeof createClient>): Promise<boolean> {
+  try {
+    const { data: membership, error } = await supabase
+      .from('user_memberships')
+      .select('id, status, expiry_date')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .single()
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Membership check error:', error)
+      return false
+    }
+
+    if (membership) {
+      const expiryDate = new Date(membership.expiry_date)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      expiryDate.setHours(0, 0, 0, 0)
+
+      if (expiryDate < today) {
+        console.log(`KICKING OUT: User ${userId} membership expired on ${membership.expiry_date}`)
+        
+        // Sign out the user
+        await supabase.auth.signOut()
+        
+        // Store flag for showing expired message on login page
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('membership_expired', 'true')
+        }
+        
+        return true
+      }
+    } else {
+      // No active membership - kick out
+      console.log(`KICKING OUT: User ${userId} has no active membership`)
+      await supabase.auth.signOut()
+      
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('membership_expired', 'true')
+      }
+      
+      return true
+    }
+  } catch (checkError) {
+    console.error('Membership validation error:', checkError)
+  }
+  
+  return false
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -62,6 +113,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setSessionConflict(true)
             localStorage.removeItem('session_conflict')
           }
+        }
+
+        // Check membership expiry on SIGNED_IN event
+        if (event === 'SIGNED_IN' && session?.user) {
+          await checkAndKickExpiredUser(session.user.id, supabase)
         }
       }
     )

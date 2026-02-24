@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,6 +28,18 @@ export function LoginForm() {
   const router = useRouter()
 
   const isProcessing = isLoading || authLoading
+
+  // Check for membership expiry on mount
+  useEffect(() => {
+    const wasExpired = localStorage.getItem('membership_expired')
+    if (wasExpired === 'true') {
+      localStorage.removeItem('membership_expired')
+      toast.error('Your subscription has expired. Please renew to continue.', {
+        icon: <AlertCircle className="h-4 w-4" />,
+        duration: 10000,
+      })
+    }
+  }, [])
 
   const schema = loginSchema
 

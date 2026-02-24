@@ -98,6 +98,53 @@ export async function POST(request: NextRequest) {
     const userId = session.user.id
     const sessionId = session.access_token
 
+    // STEP 3: CHECK IF USER HAS VALID (NON-EXPIRED) MEMBERSHIP
+    if (serviceClient) {
+      try {
+        const { data: membership, error: membershipError } = await serviceClient
+          .from('user_memberships')
+          .select('id, status, expiry_date')
+          .eq('user_id', userId)
+          .eq('status', 'active')
+          .single()
+
+        if (membershipError && membershipError.code !== 'PGRST116') {
+          console.error('Membership check error:', membershipError)
+        }
+
+        if (membership) {
+          const expiryDate = new Date(membership.expiry_date)
+          const today = new Date()
+          today.setHours(0, 0, 0, 0)
+          expiryDate.setHours(0, 0, 0, 0)
+
+          if (expiryDate < today) {
+            console.log(`BLOCKED: User ${userId} membership expired on ${membership.expiry_date}`)
+            
+            // Sign out the user immediately since they already authenticated
+            await supabase.auth.signOut()
+            
+            return NextResponse.json(
+              { error: 'Your subscription has expired. Please renew to continue.' },
+              { status: 403 }
+            )
+          }
+        } else {
+          // No active membership found - block login
+          console.log(`BLOCKED: User ${userId} has no active membership`)
+          await supabase.auth.signOut()
+          
+          return NextResponse.json(
+            { error: 'No active subscription found. Please contact support.' },
+            { status: 403 }
+          )
+        }
+      } catch (membershipCheckError) {
+        console.error('Membership validation error:', membershipCheckError)
+        // Continue with login on error, but log it
+      }
+    }
+
     // Get client IP address
     const clientIP = request.headers.get('x-forwarded-for') ||
                     request.headers.get('x-real-ip') ||

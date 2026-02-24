@@ -21,6 +21,35 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     
+    // Check membership expiry before allowing access
+    const { data: membership, error: membershipError } = await supabase
+      .from('user_memberships')
+      .select('id, status, expiry_date')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .single()
+
+    if (membershipError && membershipError.code !== 'PGRST116') {
+      console.error('Membership check error:', membershipError)
+    }
+
+    let isMembershipValid = false
+    if (membership) {
+      const expiryDate = new Date(membership.expiry_date)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      expiryDate.setHours(0, 0, 0, 0)
+      isMembershipValid = expiryDate >= today
+    }
+
+    if (!isMembershipValid) {
+      console.log(`BLOCKED: User ${user.id} has expired or no membership`)
+      return NextResponse.json({ 
+        error: 'Subscription expired', 
+        code: 'MEMBERSHIP_EXPIRED'
+      }, { status: 403 })
+    }
+    
     // Check if user is admin
     const { data: profile } = await supabase
       .from('profiles')

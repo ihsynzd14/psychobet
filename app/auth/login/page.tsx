@@ -9,6 +9,7 @@ function LoginContent() {
   const searchParams = useSearchParams()
   const hasConflict = searchParams.get('conflict') === 'true'
   const wasKicked = searchParams.get('kicked') === 'true'
+  const isExpired = searchParams.get('expired') === 'true'
 
   useEffect(() => {
     if (hasConflict) {
@@ -18,7 +19,11 @@ function LoginContent() {
     if (wasKicked) {
       localStorage.setItem('session_kicked', 'true')
     }
-  }, [hasConflict, wasKicked])
+
+    if (isExpired) {
+      localStorage.setItem('membership_expired', 'true')
+    }
+  }, [hasConflict, wasKicked, isExpired])
 
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 relative overflow-hidden">
