@@ -18,6 +18,7 @@ interface UserMembershipData {
   membership: UserMembership | null
   loading: boolean
   error: string | null
+  isExpired: boolean
 }
 
 export function useUserMembership(): UserMembershipData {
@@ -37,7 +38,7 @@ export function useUserMembership(): UserMembershipData {
 
       try {
         setLoading(true)
-        
+
         // Fetch the user's active membership
         const { data, error } = await supabase
           .from('user_memberships')
@@ -64,9 +65,15 @@ export function useUserMembership(): UserMembershipData {
     fetchMembership()
   }, [user, supabase])
 
+  const isExpired = !loading && (
+    !membership ||
+    (membership.expiry_date ? new Date(membership.expiry_date).getTime() < new Date().getTime() : true)
+  )
+
   return {
     membership,
     loading,
-    error
+    error,
+    isExpired
   }
 }
