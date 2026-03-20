@@ -19,3 +19,19 @@ export function formatTimestamp(timestamp: string | Date | number): string {
     return '--:--:--';
   }
 }
+
+/**
+ * Removes diacritics (accents) from a string for accent-insensitive matching.
+ * e.g. "Athlético" -> "Athletico", "Göteborg" -> "Goteborg"
+ */
+export function removeDiacritics(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
+ * Normalizes a search term for accent-insensitive, case-insensitive matching.
+ * Strips diacritics, lowercases, and trims whitespace.
+ */
+export function normalizeSearchTerm(str: string): string {
+  return removeDiacritics(str.toLowerCase().trim());
+}

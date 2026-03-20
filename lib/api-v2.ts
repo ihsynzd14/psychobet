@@ -5,8 +5,8 @@ import { createClient } from '@/lib/supabase/client';
 // Check if we're in production (accessed via domain)
 const isProduction = typeof window !== 'undefined' &&
   (window.location.hostname === 'www.psychoff.com' ||
-   window.location.hostname === 'psychoff.com' ||
-   window.location.hostname === 'radar.psychoff.com');
+    window.location.hostname === 'psychoff.com' ||
+    window.location.hostname === 'radar.psychoff.com');
 
 // Default BASE_URL with fallback
 const DEFAULT_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
@@ -47,7 +47,7 @@ const getFixedChannelAxiosInstance = () => {
 // Function to set the active channel
 export const setApiChannel = (channel: 'A' | 'B' | null) => {
   activeChannel = channel;
-  
+
   if (channel === 'A') {
     BASE_URL = CHANNEL_A_URL;
   } else if (channel === 'B') {
@@ -55,7 +55,7 @@ export const setApiChannel = (channel: 'A' | 'B' | null) => {
   } else {
     BASE_URL = DEFAULT_BASE_URL;
   }
-  
+
   console.log(`API channel set to ${channel || 'default'}, using URL: ${BASE_URL}`);
   return BASE_URL;
 };
@@ -107,7 +107,7 @@ export interface FixtureV2 {
     value: string;
     isDeleted: boolean;
   }>;
-  
+
   // Additional fields present in by-ids API response
   season?: {
     id: number;
@@ -149,6 +149,19 @@ export interface FixturesByIdsResponse extends Omit<FixturesResponse, 'next'> {
   fixtureIds: number[];
 }
 
+// Lightweight fixture name entry for client-side search
+export interface FixtureNameEntry {
+  id: number;
+  name: string;
+  competitionName: string;
+}
+
+// Response type for the fixture name index endpoint
+export interface FixtureNameIndexResponse {
+  items: FixtureNameEntry[];
+  totalItems: number;
+}
+
 export const apiV2 = {
   // Get recent fixtures with efficient pagination and search
   getRecentFixtures: async (page = 1, limit = 20, search?: string): Promise<FixturesResponse> => {
@@ -157,7 +170,7 @@ export const apiV2 = {
       if (search && search.trim()) {
         params.search = search.trim();
       }
-      
+
       // Always use port 3000 (Channel A) for this function
       const { data } = await getFixedChannelAxiosInstance().get<FixturesResponse>('/v2/fixtures/recent?status=notfinished', {
         params
@@ -180,7 +193,7 @@ export const apiV2 = {
       throw error;
     }
   },
-  
+
   // Get current active channel
   getActiveChannel: (): { channel: 'A' | 'B' | null, url: string } => {
     // Note: For display purposes, we show the selected channel
@@ -196,13 +209,13 @@ export const apiV2 = {
     try {
       // Check if user is admin
       const isAdmin = await adminService.isAdmin();
-      
+
       // Prepare params for both admin and user requests
       const params: { page: number; limit: number; search?: string } = { page, limit };
       if (search && search.trim()) {
         params.search = search.trim();
       }
-      
+
       if (isAdmin) {
         // Admins get all recent fixtures with pagination and search
         // Always use port 3000 (Channel A) for this function
@@ -214,31 +227,31 @@ export const apiV2 = {
         // Regular users get fixtures based on their league access
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        
+
         if (!user) {
           throw new Error('User not authenticated');
         }
-        
+
         // Get user's league access
         const userLeagues = await adminService.getUserLeagueAccess(user.id);
         const competitionIds = userLeagues.map(ul => ul.league_id);
-        
+
         // Check if user has the special "full bundle" competition ID (987123645)
         const hasFullBundle = competitionIds.includes('987123645');
-        
+
         if (hasFullBundle) {
           // If user has full bundle access, fetch all competition IDs from leagues table
           const { data: leaguesData, error: leaguesError } = await supabase
             .from('leagues')
             .select('id');
-          
+
           if (leaguesError) {
             console.error('Error fetching leagues:', leaguesError);
             throw new Error('Failed to fetch leagues data');
           }
-          
+
           const fullBundleCompetitionIds = leaguesData.map(league => league.id.toString());
-          
+
           // Always use port 3000 (Channel A) for this function
           const { data } = await getFixedChannelAxiosInstance().post<FixturesResponse>('/v2/fixtures/by-competitions', {
             competitionIds: fullBundleCompetitionIds
@@ -247,7 +260,7 @@ export const apiV2 = {
           });
           return data;
         }
-        
+
         // If user has no league access, return empty response
         if (competitionIds.length === 0) {
           return {
@@ -260,7 +273,7 @@ export const apiV2 = {
             last: ''
           };
         }
-        
+
         // Fetch fixtures for user's competitions with pagination and search
         // Always use port 3000 (Channel A) for this function
         const { data } = await getFixedChannelAxiosInstance().post<FixturesResponse>('/v2/fixtures/by-competitions', {
@@ -282,14 +295,14 @@ export const apiV2 = {
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         throw new Error('User not authenticated');
       }
 
       // Check if user is admin
       const isAdmin = await adminService.isAdmin();
-      
+
       if (isAdmin) {
         // Admins can see all fixtures, but we need to return some default IDs
         // or implement a different approach for admins
@@ -298,7 +311,7 @@ export const apiV2 = {
 
       // Get user's fixture access from database
       const userFixtureAccess = await adminService.getUserFixtureAccess(user.id);
-      
+
       // Convert fixture IDs to numbers (they're stored as strings in DB)
       const fixtureIds = userFixtureAccess
         .map(access => {
@@ -339,7 +352,7 @@ export const apiV2 = {
 
       // Check if user is admin
       const isAdmin = await adminService.isAdmin();
-      
+
       if (isAdmin) {
         // Admins can get fixtures by IDs directly
         // Always use port 3000 (Channel A) for this function
@@ -352,18 +365,18 @@ export const apiV2 = {
         // Regular users need to check league access
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        
+
         if (!user) {
           throw new Error('User not authenticated');
         }
-        
+
         // Get user's league access
         const userLeagues = await adminService.getUserLeagueAccess(user.id);
         const competitionIds = userLeagues.map(ul => ul.league_id);
-        
+
         // Check if user has the special "full bundle" competition ID (987123645)
         const hasFullBundle = competitionIds.includes('987123645');
-        
+
         if (hasFullBundle) {
           // If user has full bundle access, get fixtures by IDs
           // Always use port 3000 (Channel A) for this function
@@ -373,7 +386,7 @@ export const apiV2 = {
           });
           return data;
         }
-        
+
         // For regular users: If they have fixture IDs, they already have direct access
         // Fixture access is more specific than league access, so we don't filter by leagues
         // Always use port 3000 (Channel A) for this function
@@ -381,7 +394,7 @@ export const apiV2 = {
           fixtureIds,
           pageSize
         });
-        
+
         // Return the fixtures without filtering - user already has direct access to these specific fixtures
         return data;
       }
@@ -389,8 +402,80 @@ export const apiV2 = {
       console.error('Error fetching fixtures by IDs:', error);
       throw error;
     }
+  },
+
+  /**
+   * Get a lightweight fixture name index for client-side search.
+   * Uses the SAME access control logic as getFixturesByCompetitions:
+   * - Admin: gets recent fixture names
+   * - Full bundle user: gets all competition fixture names
+   * - Regular user: gets fixture names for their leagues only
+   * - No access: returns empty
+   */
+  getFixtureNameIndex: async (): Promise<FixtureNameIndexResponse> => {
+    try {
+      // Check if user is admin - same logic as getFixturesByCompetitions
+      const isAdmin = await adminService.isAdmin();
+
+      if (isAdmin) {
+        // Admins get recent fixture name index
+        const { data } = await getFixedChannelAxiosInstance().get<FixtureNameIndexResponse>('/v2/fixtures/name-index/recent');
+        return data;
+      } else {
+        // Regular users - get fixtures based on their league access
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+          throw new Error('User not authenticated');
+        }
+
+        // Get user's league access - same as getFixturesByCompetitions
+        const userLeagues = await adminService.getUserLeagueAccess(user.id);
+        const competitionIds = userLeagues.map(ul => ul.league_id);
+
+        // Check if user has the special "full bundle" competition ID (987123645)
+        const hasFullBundle = competitionIds.includes('987123645');
+
+        if (hasFullBundle) {
+          // Full bundle: fetch all competition IDs from leagues table
+          const { data: leaguesData, error: leaguesError } = await supabase
+            .from('leagues')
+            .select('id');
+
+          if (leaguesError) {
+            console.error('Error fetching leagues:', leaguesError);
+            throw new Error('Failed to fetch leagues data');
+          }
+
+          const fullBundleCompetitionIds = leaguesData.map(league => league.id.toString());
+
+          const { data } = await getFixedChannelAxiosInstance().post<FixtureNameIndexResponse>('/v2/fixtures/name-index/by-competitions', {
+            competitionIds: fullBundleCompetitionIds
+          });
+          return data;
+        }
+
+        // If user has no league access, return empty response
+        if (competitionIds.length === 0) {
+          return {
+            items: [],
+            totalItems: 0
+          };
+        }
+
+        // Regular user: fetch name index for their competitions
+        const { data } = await getFixedChannelAxiosInstance().post<FixtureNameIndexResponse>('/v2/fixtures/name-index/by-competitions', {
+          competitionIds
+        });
+        return data;
+      }
+    } catch (error) {
+      console.error('Error fetching fixture name index:', error);
+      throw error;
+    }
   }
-}; 
+};
 
 
 

@@ -49,8 +49,8 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { useUserMembership } from '@/hooks/use-user-membership';
 import { MembershipExpiredGate } from '@/components/membership-expired-gate';
 import { Avatar } from '@/components/ui/avatar';
-import { apiV2, type FixturesResponse, type FixturesByIdsResponse } from '@/lib/api-v2';
-import { cn } from '@/lib/utils';
+import { apiV2, type FixturesResponse, type FixturesByIdsResponse, type FixtureNameIndexResponse } from '@/lib/api-v2';
+import { cn, normalizeSearchTerm } from '@/lib/utils';
 import { toast } from 'sonner';
 import { TbPremiumRights, TbVip } from 'react-icons/tb';
 import { VisibilityState, ColumnSizingState } from '@tanstack/react-table';
@@ -135,12 +135,12 @@ export default function FeedTableV2() {
     }
   }, [columnSizing]);
 
-  // Prefetch next page for smoother pagination
-  const prefetchNextPage = useCallback((page: number, size: number, searchTerm: string, mode: ApiMode) => {
+  // Prefetch next page for smoother pagination (only when NOT searching)
+  const prefetchNextPage = useCallback((page: number, size: number, mode: ApiMode) => {
     if (page < 1) return;
 
     // Only prefetch if we're not already loading this page
-    const queryKey = ['fixturesV2', page, size, searchTerm, mode];
+    const queryKey = ['fixturesV2', page, size, mode];
     if (!queryClient.getQueryData(queryKey)) {
       queryClient.prefetchQuery({
         queryKey,
@@ -148,7 +148,7 @@ export default function FeedTableV2() {
           if (mode === 'by-ids') {
             return await apiV2.getFixturesByIds(undefined, size);
           } else {
-            return await apiV2.getFixturesByCompetitions(page, size, searchTerm);
+            return await apiV2.getFixturesByCompetitions(page, size);
           }
         },
         staleTime: 30000,
@@ -156,7 +156,46 @@ export default function FeedTableV2() {
     }
   }, [queryClient]);
 
+  // ============================================================
+  // FIXTURE NAME INDEX for client-side search
+  // Uses the SAME access control as getFixturesByCompetitions
+  // (admin/league/full-bundle checks happen inside getFixtureNameIndex)
+  // ============================================================
+  const {
+    data: nameIndex,
+    isLoading: isNameIndexLoading,
+  } = useQuery<FixtureNameIndexResponse>({
+    queryKey: ['fixtureNameIndex'],
+    queryFn: () => apiV2.getFixtureNameIndex(),
+    staleTime: 60000,      // Refresh every 60s (matches existing auto-refresh interval)
+    refetchInterval: 60000, // Keep in sync with fixture data
+    enabled: apiMode === 'competitions', // Only load for competitions mode
+  });
+
+  // Client-side search: filter the name index to get matching fixture IDs
+  const searchFilteredIds = useMemo(() => {
+    if (!debouncedSearch || !nameIndex?.items?.length) return null;
+    const normalized = normalizeSearchTerm(debouncedSearch);
+    if (!normalized) return null;
+    return nameIndex.items
+      .filter(f => normalizeSearchTerm(f.name).includes(normalized))
+      .map(f => Number(f.id));
+  }, [debouncedSearch, nameIndex]);
+
+  // Are we in "search mode"? (user typed something and we have results to filter)
+  const isSearchActive = apiMode === 'competitions' && debouncedSearch.length > 0;
+
+  // When searching, compute which IDs to show on the current page (client-side pagination of filtered IDs)
+  const searchPageIds = useMemo(() => {
+    if (!isSearchActive || !searchFilteredIds) return null;
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return searchFilteredIds.slice(start, end);
+  }, [isSearchActive, searchFilteredIds, currentPage, pageSize]);
+
   // Main query to fetch fixtures with pagination and improved caching
+  // When NOT searching: uses server-side pagination (no search param sent - fast path)
+  // When searching: fetches only the matching IDs for the current page
   const {
     data: fixturesData,
     isLoading,
@@ -164,28 +203,49 @@ export default function FeedTableV2() {
     refetch,
     isFetching
   } = useQuery<FixturesResponse | FixturesByIdsResponse>({
-    queryKey: ['fixturesV2', currentPage, pageSize, debouncedSearch, apiMode],
+    queryKey: isSearchActive
+      ? ['fixturesV2-search', searchPageIds, apiMode]
+      : ['fixturesV2', currentPage, pageSize, apiMode],
     queryFn: async () => {
       if (apiMode === 'by-ids') {
         return await apiV2.getFixturesByIds(undefined, pageSize);
-      } else {
-        return await apiV2.getFixturesByCompetitions(currentPage, pageSize, debouncedSearch);
       }
+
+      // Search mode: fetch only the specific matching fixture IDs for this page
+      if (isSearchActive && searchPageIds && searchPageIds.length > 0) {
+        return await apiV2.getFixturesByIds(searchPageIds, searchPageIds.length);
+      }
+
+      // Search mode but no results
+      if (isSearchActive && searchFilteredIds !== null && searchFilteredIds.length === 0) {
+        return {
+          page: 1,
+          pageSize: 0,
+          totalItems: 0,
+          items: [],
+          self: '',
+          first: '',
+          last: '',
+        } as FixturesResponse;
+      }
+
+      // Normal mode: server-side pagination, no search param
+      return await apiV2.getFixturesByCompetitions(currentPage, pageSize);
     },
     refetchInterval: 60000, // Auto-refresh every minute
     staleTime: 30000,      // Consider data fresh for 30 seconds
     placeholderData: keepPreviousData, // Use the imported helper function from react-query
   });
 
-  // Handle prefetching next page - moved outside the onSuccess callback
+  // Handle prefetching next page - only when NOT searching (search uses client-side pagination)
   useEffect(() => {
-    if (fixturesData && apiMode === 'competitions') {
-      const totalPages = Math.ceil((fixturesData?.totalItems ?? 0) / pageSize);
-      if (currentPage < totalPages) {
-        prefetchNextPage(currentPage + 1, pageSize, debouncedSearch, apiMode);
+    if (fixturesData && apiMode === 'competitions' && !isSearchActive) {
+      const totalPagesCount = Math.ceil((fixturesData?.totalItems ?? 0) / pageSize);
+      if (currentPage < totalPagesCount) {
+        prefetchNextPage(currentPage + 1, pageSize, apiMode);
       }
     }
-  }, [fixturesData, currentPage, pageSize, prefetchNextPage, debouncedSearch, apiMode]);
+  }, [fixturesData, currentPage, pageSize, prefetchNextPage, apiMode, isSearchActive]);
 
   // Handle refresh with smooth transition
   const handleRefresh = useCallback(async () => {
@@ -195,9 +255,13 @@ export default function FeedTableV2() {
   }, [refetch]);
 
   // Calculate total pages based on total items and page size
+  // In search mode, total comes from the client-side filtered IDs count
   const totalPages = useMemo(() => {
+    if (isSearchActive && searchFilteredIds !== null) {
+      return Math.ceil(searchFilteredIds.length / pageSize);
+    }
     return Math.ceil((fixturesData?.totalItems ?? 0) / pageSize);
-  }, [fixturesData?.totalItems, pageSize]);
+  }, [fixturesData?.totalItems, pageSize, isSearchActive, searchFilteredIds]);
 
   // Handle page change with transition to avoid blocking UI
   const handlePageChange = useCallback((page: number) => {
@@ -650,7 +714,10 @@ export default function FeedTableV2() {
                   variant="outline"
                   className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-xs text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700"
                 >
-                  {fixturesData?.totalItems ?? 0} {
+                  {isSearchActive && searchFilteredIds !== null
+                    ? searchFilteredIds.length
+                    : (fixturesData?.totalItems ?? 0)
+                  } {
                     apiMode === 'by-ids'
                       ? 'Fixtures by IDs'
                       : debouncedSearch
