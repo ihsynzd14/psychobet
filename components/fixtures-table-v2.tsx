@@ -290,7 +290,7 @@ function FixturesTableV2Component({
   return (
     <div className="w-full space-y-4">
       <div className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm overflow-hidden">
-        <div className="w-full overflow-x-auto">
+        <div className="w-full overflow-x-auto overscroll-x-contain">
           <Table className="w-full table-fixed">
             <TableHeader className="bg-gray-50 dark:bg-gray-800">
               {table.getHeaderGroups().map((headerGroup) => (

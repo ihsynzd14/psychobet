@@ -796,7 +796,7 @@ export default function FeedTableV2() {
             <div
               id="fixtures-container"
               ref={fixturesContainerRef}
-              className="h-full overflow-auto pb-10 overscroll-contain flex flex-col"
+              className="h-full overflow-auto pb-10 overscroll-y-contain flex flex-col"
             >
               <div className="w-full px-12 mx-auto py-6">
                 <AnimatePresence mode="wait" initial={false}>
