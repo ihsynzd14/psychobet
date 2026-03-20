@@ -499,7 +499,7 @@ export default function FeedTableV2() {
       ) : isExpired ? (
         <MembershipExpiredGate />
       ) : (
-        <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-950">
+        <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-950">
           {/* Header with backdrop blur for better performance and visual aesthetics */}
           <header className="sticky top-0 z-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 shadow-sm will-change-transform">
             <div className="w-full px-4 sm:px-8 md:px-12 mx-auto flex items-center justify-between h-14 sm:h-16">
