@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { adminService, UserDetails, UserFixtureAccessWithDetails } from '@/lib/admin-service';
-import { apiV2, FixtureV2 } from '@/lib/api-v2';
+import { apiV2, FixtureV2, type FixtureNameIndexResponse } from '@/lib/api-v2';
+import { normalizeSearchTerm } from '@/lib/utils';
 import { toast } from 'sonner';
 
 interface FixtureAccessState {
@@ -28,6 +29,8 @@ interface FixtureAccessState {
   userFixtureAccessData: UserFixtureAccessWithDetails[];
   loadingUserFixtureAccess: boolean;
   removingUserId: string | null;
+  nameIndex: FixtureNameIndexResponse | null;
+  nameIndexLoading: boolean;
 }
 
 interface UseFixtureAccessReturn {
@@ -47,6 +50,7 @@ interface UseFixtureAccessReturn {
   getSelectedFixturesData: () => FixtureV2[];
   fetchUserFixtureAccess: (userId: string) => Promise<void>;
   handleRemoveUserAccess: (userId: string, fixtureId: string) => Promise<void>;
+  filteredFixtures: FixtureV2[];
 }
 
 export function useFixtureAccess(): UseFixtureAccessReturn {
@@ -74,7 +78,9 @@ export function useFixtureAccess(): UseFixtureAccessReturn {
     selectedUserForDetails: null,
     userFixtureAccessData: [],
     loadingUserFixtureAccess: false,
-    removingUserId: null
+    removingUserId: null,
+    nameIndex: null,
+    nameIndexLoading: false
   });
 
   const fetchUsers = useCallback(async (search = '') => {
@@ -98,11 +104,12 @@ export function useFixtureAccess(): UseFixtureAccessReturn {
     }
   }, []);
 
-  const fetchFixtures = useCallback(async (page = 1, search = '') => {
+  const fetchFixtures = useCallback(async (page = 1, _search = '') => {
     try {
       setState(prev => ({ ...prev, loadingFixtures: true, error: null }));
       
-      const result = await apiV2.getRecentFixtures(page, 20, search || undefined);
+      // Do NOT pass search to the API — filtering is done client-side via name index
+      const result = await apiV2.getRecentFixtures(page, 20);
       
       setState(prev => ({
         ...prev,
@@ -171,6 +178,34 @@ export function useFixtureAccess(): UseFixtureAccessReturn {
   useEffect(() => {
     fetchFixtures(state.currentPage, state.fixtureSearchTerm);
   }, [fetchFixtures, state.currentPage, state.fixtureSearchTerm]);
+
+  // Fetch and periodically refresh the fixture name index (used for client-side search)
+  useEffect(() => {
+    const loadNameIndex = async () => {
+      setState(prev => ({ ...prev, nameIndexLoading: true }));
+      try {
+        const index = await apiV2.getFixtureNameIndex();
+        setState(prev => ({ ...prev, nameIndex: index, nameIndexLoading: false }));
+      } catch {
+        setState(prev => ({ ...prev, nameIndexLoading: false }));
+      }
+    };
+    loadNameIndex();
+    const interval = setInterval(loadNameIndex, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Client-side filtering using the name index — avoids server-side search with 1000+ fixtures
+  const filteredFixtures = useMemo(() => {
+    if (!state.fixtureSearchTerm || !state.nameIndex?.items?.length) return state.fixtures;
+    const normalized = normalizeSearchTerm(state.fixtureSearchTerm);
+    const matchingIds = new Set(
+      state.nameIndex.items
+        .filter(f => normalizeSearchTerm(f.name).includes(normalized))
+        .map(f => String(f.id))
+    );
+    return state.fixtures.filter(f => matchingIds.has(String(f.id)));
+  }, [state.fixtures, state.fixtureSearchTerm, state.nameIndex]);
 
   const handleUserSearch = (value: string) => {
     setState(prev => ({ ...prev, userSearchTerm: value }));
@@ -423,6 +458,7 @@ export function useFixtureAccess(): UseFixtureAccessReturn {
     getSelectedUsersData,
     getSelectedFixturesData,
     fetchUserFixtureAccess,
-    handleRemoveUserAccess
+    handleRemoveUserAccess,
+    filteredFixtures
   };
 }

@@ -45,7 +45,8 @@ export default function AdminFixturesPage() {
     getSelectedUsersData,
     getSelectedFixturesData,
     fetchUserFixtureAccess,
-    handleRemoveUserAccess
+    handleRemoveUserAccess,
+    filteredFixtures
   } = useFixtureAccess();
 
   return (
@@ -71,7 +72,7 @@ export default function AdminFixturesPage() {
             />
 
             <FixturesSection
-              fixtures={state.fixtures}
+              fixtures={filteredFixtures}
               loadingFixtures={state.loadingFixtures}
               selectedFixtures={state.selectedFixtures}
               fixtureSearchTerm={state.fixtureSearchTerm}
